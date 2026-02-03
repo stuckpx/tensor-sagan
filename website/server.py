@@ -18,16 +18,28 @@ app = Flask(__name__, static_folder='.', static_url_path='')
 # Path to service account key in parent directory
 FIREBASE_CREDENTIALS_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'harmainfridays-firebase-adminsdk-fbsvc-c21f19e297.json')
 
-if os.path.exists(FIREBASE_CREDENTIALS_PATH):
-    try:
+# Support environment variable for Vercel
+FIREBASE_ENV_JSON = os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON')
+
+try:
+    if FIREBASE_ENV_JSON:
+        import json
+        cred_dict = json.loads(FIREBASE_ENV_JSON)
+        cred = credentials.Certificate(cred_dict)
+        firebase_admin.initialize_app(cred)
+        db = firestore.client()
+        print("✓ Connected to Firebase using Environment Variable")
+    elif os.path.exists(FIREBASE_CREDENTIALS_PATH):
         cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
         firebase_admin.initialize_app(cred)
         db = firestore.client()
         print(f"✓ Connected to Firebase using {FIREBASE_CREDENTIALS_PATH}")
-    except Exception as e:
-        print(f"Error initializing Firebase: {e}")
+    else:
+        print("Warning: No Firebase credentials found (File or Env)")
         db = None
-else:
+except Exception as e:
+    print(f"Error initializing Firebase: {e}")
+    db = None
     print(f"⚠️ Firebase credentials not found at {FIREBASE_CREDENTIALS_PATH}")
     print("Please set FIREBASE_CREDENTIALS_PATH environment variable or place serviceAccountKey.json in this directory.")
     db = None
