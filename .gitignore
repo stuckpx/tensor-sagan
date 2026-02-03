@@ -10,3 +10,4 @@ venv/
 !package.json
 debug_scraping.py
 .gemini/
+.vercel

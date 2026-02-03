@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HaramainFriday - Flask Backend Server
+Haramain Fridays - Flask Backend Server
 Handles email subscriptions using Firebase Firestore.
 """
 
@@ -129,7 +129,7 @@ def unsubscribe():
             users_ref.document(doc.id).update({'active': False})
             
         if found:
-            return render_status_page("✓ Unsubscribed", "You have been successfully unsubscribed from HaramainFriday.<br><br><a href='/'>Subscribe again</a>")
+            return render_status_page("✓ Unsubscribed", "You have been successfully unsubscribed from Haramain Fridays.<br><br><a href='/'>Subscribe again</a>")
         else:
             return render_status_page("🔍 Not Found", "This subscription was not found or has already been removed.", 404)
             
@@ -144,7 +144,7 @@ def render_status_page(title, message, status_code=200):
     <!DOCTYPE html>
     <html>
     <head>
-        <title>{title.split(' ')[-1]} - HaramainFriday</title>
+        <title>{title.split(' ')[-1]} - Haramain Fridays</title>
         <style>
             body {{ font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f5f5f0; }}
             .card {{ background: white; padding: 40px; border-radius: 16px; text-align: center; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }}
@@ -183,7 +183,7 @@ def list_subscribers():
 
 if __name__ == '__main__':
     print("=" * 50)
-    print("🕌 HaramainFriday Server (Firebase Edition)")
+    print("🕌 Haramain Fridays Server (Firebase Edition)")
     print("=" * 50)
     print("\nStarting server at http://localhost:3000")
     print("Press Ctrl+C to stop\n")

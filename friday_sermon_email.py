@@ -681,7 +681,7 @@ def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: st
 
 def main():
     print("=" * 60)
-    print("🕌 HaramainFriday - Friday Sermon Email Automation")
+    print("🕌 Haramain Fridays - Friday Sermon Email Automation")
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
     
