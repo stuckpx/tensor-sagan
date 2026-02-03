@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaramainFriday - Weekly Sermon Summaries</title>
+    <meta name="description"
+        content="Subscribe to receive weekly Friday sermon summaries from Masjid al-Haram and Masjid an-Nabawi in your preferred language.">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-pattern"></div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <span class="logo-icon">🕌</span>
+                <span class="logo-text">HaramainFriday</span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="arabic-text">الجمعة المباركة</span>
+                        <span class="english-text">Weekly Sermon Summaries</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Receive beautiful summaries of Friday sermons from the Two Holy Mosques
+                        delivered to your inbox every week, in your preferred language.
+                    </p>
+
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">🕋</span>
+                            <span>Masjid al-Haram</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🌙</span>
+                            <span>Masjid an-Nabawi</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="subscribe-card" id="subscribe-section">
+                    <div class="card-header">
+                        <h2>Subscribe for Free</h2>
+                        <p>Join thousands of Muslims worldwide</p>
+                    </div>
+
+                    <form id="subscribe-form" class="subscribe-form">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="your.email@example.com" required
+                                autocomplete="email">
+                        </div>
+
+                        <input type="hidden" id="language" name="language" value="en">
+
+                        <button type="submit" class="btn-subscribe" id="submit-btn">
+                            <span class="btn-text">Subscribe Now</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                    </form>
+
+                    <div id="success-message" class="success-message hidden">
+                        <div class="success-icon">✓</div>
+                        <h3>Subscription Confirmed!</h3>
+                        <p>Jazakallah Khair! You'll receive your first sermon summary this Friday.</p>
+                    </div>
+
+                    <div id="error-message" class="error-message hidden">
+                        <p></p>
+                    </div>
+
+                    <p class="privacy-note">
+                        📧 We respect your privacy. Unsubscribe anytime with one click.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="preview-section">
+            <div class="container">
+                <h2 class="section-title">What You'll Receive</h2>
+                <div class="preview-grid">
+                    <div class="preview-item">
+                        <div class="preview-icon">📖</div>
+                        <h3>Sermon Summaries</h3>
+                        <p>Detailed summaries of the khutbah topics and key messages from both mosques.</p>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-icon">👤</div>
+                        <h3>Imam Biographies</h3>
+                        <p>Learn about the scholars who lead prayers at Islam's holiest sites.</p>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-icon">🎧</div>
+                        <h3>Audio Links</h3>
+                        <p>Links to full audio recordings for those who want to listen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="footer-text">
+                <span class="footer-brand">🕌 HaramainFriday</span>
+                <span class="footer-divider">•</span>
+                <span>Connecting Muslims to the Two Holy Mosques</span>
+            </p>
+            <p class="footer-copyright">
+                Sermon recordings from <a href="http://www.haramain.info" target="_blank">haramain.info</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const form = document.getElementById('subscribe-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const language = document.getElementById('language').value;
+
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.querySelector('.btn-text').textContent = 'Subscribing...';
+
+            try {
+                const response = await fetch('/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, language }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    form.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+                    errorMessage.classList.add('hidden');
+                } else {
+                    throw new Error(data.error || 'Subscription failed');
+                }
+            } catch (error) {
+                errorMessage.querySelector('p').textContent = error.message;
+                errorMessage.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.querySelector('.btn-text').textContent = 'Subscribe Now';
+            }
+        });
+    </script>
+</body>
+
+</html>

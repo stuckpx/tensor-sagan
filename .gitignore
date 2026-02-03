@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+.DS_Store
+*.json
+!subscribers.json
+!vercel.json
+!package.json
+debug_scraping.py
+.gemini/
