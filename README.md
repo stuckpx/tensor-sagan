@@ -47,11 +47,11 @@ This interactive script will:
 Run the script manually at any time:
  
 ```bash
-# PROD MODE: Sends to ALL subscribers
+# TEST MODE (Default): Sends ONLY to mjeelani@gmail.com
 python3 friday_sermon_email.py
 
-# TEST MODE: Sends ONLY to mjeelani@gmail.com
-python3 friday_sermon_email.py --test
+# PROD MODE: Sends to ALL subscribers (Use with caution)
+python3 friday_sermon_email.py --prod
 ```
 
 ## Scheduling

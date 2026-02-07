@@ -9,6 +9,7 @@
     <array>
         <string>/usr/bin/python3</string>
         <string>/Users/mj/.gemini/antigravity/playground/tensor-sagan/friday_sermon_email.py</string>
+        <string>--prod</string>
     </array>
     
     <key>WorkingDirectory</key>

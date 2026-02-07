@@ -734,24 +734,25 @@ def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: st
 def main():
     import sys
     
-    # Check for Test Mode
-    is_test_mode = len(sys.argv) > 1 and (sys.argv[1] == '--test' or sys.argv[1] == 'test')
+    # Check for Prod Mode
+    # Default is TEST MODE unless --prod is specified
+    is_prod_mode = len(sys.argv) > 1 and (sys.argv[1] == '--prod' or sys.argv[1] == 'prod')
     
     print("=" * 60)
     print("🕌 Haramain Fridays - Friday Sermon Email Automation")
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Mode: {'🧪 TEST (mjeelani@gmail.com only)' if is_test_mode else '🚀 PROD (All Subscribers)'}")
+    print(f"Mode: {'🚀 PROD (All Subscribers)' if is_prod_mode else '🧪 TEST (mjeelani@gmail.com only)'}")
     print("=" * 60)
     
-    # 1. Load Subscribers
     print("\n[1/5] Loading subscribers...")
     
-    if is_test_mode:
-        subscribers = [{'email': 'mjeelani@gmail.com', 'active': True, 'language': 'en'}]
-        print(f"  ✓ Loaded 1 test subscriber")
-    else:
-        # Load from Firebase in Prod
+    if is_prod_mode:
+        # Load from Firebase in Prod - ONLY if --prod is passed
         subscribers = load_subscribers()
+    else:
+        # Default to Test Mode
+        subscribers = [{'email': 'mjeelani@gmail.com', 'active': True, 'language': 'en'}]
+        print(f"  ✓ Loaded 1 test subscriber (Safe Mode)")
         
     if not subscribers:
         print("No subscribers found. Exiting.")
