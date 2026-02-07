@@ -43,11 +43,15 @@ This interactive script will:
 - Install the weekly scheduler
 
 ## Manual Usage
-
+ 
 Run the script manually at any time:
-
+ 
 ```bash
+# PROD MODE: Sends to ALL subscribers
 python3 friday_sermon_email.py
+
+# TEST MODE: Sends ONLY to mjeelani@gmail.com
+python3 friday_sermon_email.py --test
 ```
 
 ## Scheduling

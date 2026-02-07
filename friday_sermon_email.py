@@ -123,6 +123,10 @@ IMAM_BIOS = {
         "name": "Sheikh Salah Al-Budair",
         "bio": "Sheikh Salah bin Muhammad Al-Budair is an Imam of Masjid an-Nabawi in Madinah. He is known for his beautiful voice and emotional delivery. He holds a PhD in Islamic Studies and serves as a judge in the Madinah courts alongside his duties as Imam."
     },
+    "muhanna": {
+        "name": "Sheikh Khalid Al-Muhanna",
+        "bio": "Sheikh Khalid bin Sulaiman Al-Muhanna is an Imam of Masjid an-Nabawi, appointed in 1441 AH (2019). He is a respected scholar and faculty member at the Islamic University of Madinah. Known for his clear and precise recitation, he brings a deep scholarly background to his position at the Prophet's Mosque."
+    },
 }
 
 
@@ -153,7 +157,9 @@ def get_imam_key(imam_name: str) -> str:
         "qasim": "qasim",
         "budair": "thubayti",
         "budayr": "thubayti",
+        "budayr": "thubayti",
         "thubaity": "thubayti",
+        "muhanna": "muhanna",
     }
     
     for keyword, key in keywords.items():
@@ -181,25 +187,71 @@ def fetch_khutbah_data() -> dict:
         makkah_link = None
         madinah_link = None
         
+        # Collect candidate links
+        makkah_candidates = []
+        madinah_candidates = []
+        
         for link in all_links:
             href = link.get('href', '')
             text = link.get_text().lower()
             
-            # Skip non-html posts (like mp3s) if href ends in known extensions
+            # Skip non-html posts
             if href.lower().endswith(('.mp3', '.pdf', '.jpg', '.png')):
                 continue
             
-            # Look for this week's sermon links
+            # Identify candidates
+            # Identify candidates
             if 'jumuah' in href.lower() or 'jumu' in text:
+                # Extract date from URL for sorting (YYYY/MM)
+                # Format: http://www.haramain.info/2026/02/...
+                date_match = re.search(r'/(\d{4})/(\d{2})/', href)
+                year, month, day = 0, 0, 0
+                
+                # Month mapping
+                month_map = {
+                    'january': 1, 'february': 2, 'march': 3, 'april': 4,
+                    'may': 5, 'june': 6, 'july': 7, 'august': 8,
+                    'september': 9, 'october': 10, 'november': 11, 'december': 12
+                }
+                
+                if date_match:
+                    year = int(date_match.group(1))
+                    # Default month from URL (archive month)
+                    month = int(date_match.group(2))
+                    
+                    # Try to extract REAL month and day from slug
+                    # e.g. makkah-jumuah-30th-january-2026.html
+                    slug_match = re.search(r'-(\d{1,2})(?:st|nd|rd|th)?-([a-z]+)-(\d{4})', href.lower())
+                    
+                    if slug_match:
+                        # Use the extracted date from the slug as it's the actual event date
+                        day = int(slug_match.group(1))
+                        month_str = slug_match.group(2)
+                        year = int(slug_match.group(3))
+                        if month_str in month_map:
+                            month = month_map[month_str]
+                    else:
+                        # Fallback to just day extraction if full pattern fails
+                        day_match = re.search(r'-(\d{1,2})(?:st|nd|rd|th)?-', href.lower())
+                        if day_match:
+                            day = int(day_match.group(1))
+
+                sort_key = (year, month, day)
+
                 if 'makkah' in href.lower() or 'makkah' in text:
-                    if not makkah_link:
-                        makkah_link = href
+                    makkah_candidates.append({'href': href, 'date': sort_key})
                 elif 'madeenah' in href.lower() or 'madinah' in href.lower() or 'madinah' in text:
-                    if not madinah_link:
-                        madinah_link = href
-            
-            if makkah_link and madinah_link:
-                break
+                    madinah_candidates.append({'href': href, 'date': sort_key})
+
+        # Sort descending by date (YYYY, MM, DD)
+        makkah_candidates.sort(key=lambda x: x['date'], reverse=True)
+        madinah_candidates.sort(key=lambda x: x['date'], reverse=True)
+        
+        if makkah_candidates:
+            makkah_link = makkah_candidates[0]['href']
+        
+        if madinah_candidates:
+            madinah_link = madinah_candidates[0]['href']
         
         # Fetch Makkah sermon page to get imam name
         if makkah_link:
@@ -680,18 +732,30 @@ def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: st
 
 
 def main():
+    import sys
+    
+    # Check for Test Mode
+    is_test_mode = len(sys.argv) > 1 and (sys.argv[1] == '--test' or sys.argv[1] == 'test')
+    
     print("=" * 60)
     print("🕌 Haramain Fridays - Friday Sermon Email Automation")
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Mode: {'🧪 TEST (mjeelani@gmail.com only)' if is_test_mode else '🚀 PROD (All Subscribers)'}")
     print("=" * 60)
     
     # 1. Load Subscribers
     print("\n[1/5] Loading subscribers...")
-    subscribers = load_subscribers()
+    
+    if is_test_mode:
+        subscribers = [{'email': 'mjeelani@gmail.com', 'active': True, 'language': 'en'}]
+        print(f"  ✓ Loaded 1 test subscriber")
+    else:
+        # Load from Firebase in Prod
+        subscribers = load_subscribers()
+        
     if not subscribers:
-        print("No active subscribers found.")
-        # We can continue for testing purposes even if no subscribers, 
-        # or return if we want to be strict.
+        print("No subscribers found. Exiting.")
+        return
         
     print(f"  ✓ Found {len(subscribers)} active subscriber(s)")
     
