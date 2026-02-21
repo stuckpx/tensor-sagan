@@ -5,6 +5,7 @@ Handles email subscriptions using Firebase Firestore.
 """
 
 import os
+import re
 import json
 import uuid
 import hashlib
@@ -44,6 +45,87 @@ except Exception as e:
     print(f"⚠️ Firebase credentials not found at {FIREBASE_CREDENTIALS_PATH}")
     print("Please set FIREBASE_CREDENTIALS_PATH environment variable or place serviceAccountKey.json in this directory.")
     db = None
+
+
+# Known valid email domains for typo detection
+KNOWN_DOMAINS = {
+    'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com',
+    'aol.com', 'protonmail.com', 'live.com', 'msn.com', 'mail.com',
+    'zoho.com', 'yandex.com', 'gmx.com', 'fastmail.com', 'me.com',
+    'yahoo.co.uk', 'hotmail.co.uk', 'googlemail.com',
+}
+
+# Common typos mapping to correct domains
+DOMAIN_TYPOS = {
+    'gmial.com': 'gmail.com', 'gmal.com': 'gmail.com', 'gmai.com': 'gmail.com',
+    'gmail.cmo': 'gmail.com', 'gmail.co': 'gmail.com', 'gmail.cim': 'gmail.com',
+    'gmail.con': 'gmail.com', 'gmail.vom': 'gmail.com', 'gmail.xom': 'gmail.com',
+    'gmail.comm': 'gmail.com', 'gmail.comi': 'gmail.com', 'gmail.coim': 'gmail.com',
+    'gamil.com': 'gmail.com', 'gnail.com': 'gmail.com', 'hmail.com': 'gmail.com',
+    'gmaill.com': 'gmail.com', 'gmail.om': 'gmail.com',
+    'yaho.com': 'yahoo.com', 'yahooo.com': 'yahoo.com', 'yahoo.cmo': 'yahoo.com',
+    'yahoo.con': 'yahoo.com', 'yahoo.co': 'yahoo.com',
+    'hotmal.com': 'hotmail.com', 'hotmial.com': 'hotmail.com', 'hotmail.con': 'hotmail.com',
+    'hotmail.cmo': 'hotmail.com', 'hotamil.com': 'hotmail.com',
+    'outlok.com': 'outlook.com', 'outllook.com': 'outlook.com', 'outlook.con': 'outlook.com',
+    'icloud.con': 'icloud.com', 'icoud.com': 'icloud.com', 'iclould.com': 'icloud.com',
+}
+
+# Valid TLDs (most common)
+VALID_TLDS = {
+    'com', 'org', 'net', 'edu', 'gov', 'io', 'co', 'uk', 'ca', 'au', 'de',
+    'fr', 'jp', 'in', 'br', 'ru', 'info', 'biz', 'me', 'tv', 'us', 'za',
+    'sa', 'ae', 'pk', 'eg', 'my', 'sg', 'id', 'ng', 'ke', 'gh', 'tr',
+}
+
+
+def validate_email(email):
+    """
+    Validate an email address. Returns (is_valid, error_message, suggestion).
+    - is_valid: True if email is acceptable
+    - error_message: Human-readable error if invalid
+    - suggestion: Corrected email if a typo is detected, else None
+    """
+    if not email or not isinstance(email, str):
+        return False, 'Please provide an email address.', None
+
+    email = email.strip().lower()
+
+    # Basic format check with regex
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if not re.match(pattern, email):
+        return False, 'Please enter a valid email address (e.g. name@example.com).', None
+
+    local, domain = email.rsplit('@', 1)
+
+    # Check local part length
+    if len(local) > 64 or len(local) < 1:
+        return False, 'The email username is invalid.', None
+
+    # Check domain length
+    if len(domain) > 253 or len(domain) < 3:
+        return False, 'The email domain is invalid.', None
+
+    # Extract TLD
+    tld = domain.rsplit('.', 1)[-1]
+
+    # Check for known domain typos
+    if domain in DOMAIN_TYPOS:
+        corrected = DOMAIN_TYPOS[domain]
+        suggestion = f"{local}@{corrected}"
+        return False, f'Did you mean {suggestion}?', suggestion
+
+    # If domain is known valid, accept immediately
+    if domain in KNOWN_DOMAINS:
+        return True, None, None
+
+    # For unknown domains, check TLD validity
+    if tld not in VALID_TLDS and len(tld) > 3:
+        # Likely a typo like .comi, .comm, .coim
+        return False, f'The domain "{domain}" doesn\'t look right. Please check for typos.', None
+
+    # Accept the email (unknown but plausible domain)
+    return True, None, None
 
 
 def generate_token(email):
@@ -90,8 +172,12 @@ def subscribe():
         email = data.get('email', '').strip().lower()
         
         # Validate email
-        if not email or '@' not in email:
-            return jsonify({'error': 'Please provide a valid email address'}), 400
+        is_valid, error_msg, suggestion = validate_email(email)
+        if not is_valid:
+            response = {'error': error_msg}
+            if suggestion:
+                response['suggestion'] = suggestion
+            return jsonify(response), 400
         
         # Check if already subscribed
         users_ref = db.collection('subscribers')

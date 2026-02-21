@@ -164,16 +164,18 @@
         const submitBtn = document.getElementById('submit-btn');
         const successMessage = document.getElementById('success-message');
         const errorMessage = document.getElementById('error-message');
+        const emailInput = document.getElementById('email');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const email = document.getElementById('email').value;
+            const email = emailInput.value.trim();
             const language = document.getElementById('language').value;
 
             // Disable button and show loading
             submitBtn.disabled = true;
             submitBtn.querySelector('.btn-text').textContent = 'Subscribing...';
+            errorMessage.classList.add('hidden');
 
             try {
                 const response = await fetch('/subscribe', {
@@ -191,7 +193,24 @@
                     successMessage.classList.remove('hidden');
                     errorMessage.classList.add('hidden');
                 } else {
-                    throw new Error(data.error || 'Subscription failed');
+                    // Build error message with optional suggestion
+                    let msg = data.error || 'Subscription failed';
+                    if (data.suggestion) {
+                        errorMessage.querySelector('p').innerHTML =
+                            msg + ' <a href="#" id="use-suggestion" style="color: #0d5c3f; font-weight: bold;">Use this instead</a>';
+                        errorMessage.classList.remove('hidden');
+                        document.getElementById('use-suggestion').addEventListener('click', (ev) => {
+                            ev.preventDefault();
+                            emailInput.value = data.suggestion;
+                            errorMessage.classList.add('hidden');
+                            emailInput.focus();
+                        });
+                    } else {
+                        errorMessage.querySelector('p').textContent = msg;
+                        errorMessage.classList.remove('hidden');
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.querySelector('.btn-text').textContent = 'Subscribe Now';
                 }
             } catch (error) {
                 errorMessage.querySelector('p').textContent = error.message;
