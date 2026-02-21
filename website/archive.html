@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sermon Archive - Haramain Fridays</title>
+    <meta name="description"
+        content="Browse past Friday sermon summaries from Masjid al-Haram and Masjid an-Nabawi by date or imam.">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="archive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-pattern"></div>
+
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <span class="logo-icon">🕌</span>
+                <span class="logo-text">Haramain Fridays</span>
+            </a>
+            <div class="nav-links">
+                <a href="/archive" class="nav-link active">📚 Archive</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="archive-hero">
+            <div class="container">
+                <h1 class="archive-title">
+                    <span class="arabic-text">أرشيف الخطب</span>
+                    <span class="english-text">Sermon Archive</span>
+                </h1>
+                <p class="archive-subtitle">
+                    Browse past Friday sermons from the Two Holy Mosques since January 2025.
+                </p>
+            </div>
+        </section>
+
+        <!-- Tab Navigation -->
+        <section class="archive-tabs-section">
+            <div class="container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="date" id="tab-date">
+                        <span class="tab-icon">📅</span>
+                        <span class="tab-label">Pick by Date</span>
+                    </button>
+                    <button class="tab-btn" data-tab="imam" id="tab-imam">
+                        <span class="tab-icon">👤</span>
+                        <span class="tab-label">Pick by Imam</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Date View -->
+        <section class="tab-content active" id="date-view">
+            <div class="container">
+                <div class="calendar-card">
+                    <div class="calendar-nav">
+                        <button class="cal-nav-btn" id="prev-month">‹</button>
+                        <h2 class="cal-month-title" id="cal-month-title">February 2026</h2>
+                        <button class="cal-nav-btn" id="next-month">›</button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="cal-header">Sun</div>
+                        <div class="cal-header">Mon</div>
+                        <div class="cal-header">Tue</div>
+                        <div class="cal-header">Wed</div>
+                        <div class="cal-header">Thu</div>
+                        <div class="cal-header">Fri</div>
+                        <div class="cal-header">Sat</div>
+                    </div>
+                    <div class="calendar-days" id="calendar-days"></div>
+                </div>
+
+                <div class="sermon-detail-card hidden" id="sermon-detail">
+                    <div class="detail-date" id="detail-date"></div>
+                    <div class="sermon-pair" id="sermon-pair"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Imam View -->
+        <section class="tab-content" id="imam-view">
+            <div class="container">
+                <div class="imam-selector-card">
+                    <label for="imam-select" class="imam-select-label">Select an Imam</label>
+                    <select id="imam-select" class="imam-dropdown">
+                        <option value="">— Choose an Imam —</option>
+                    </select>
+                </div>
+
+                <div class="imam-bio-card hidden" id="imam-bio-card">
+                    <div class="imam-bio-header">
+                        <div class="imam-avatar" id="imam-avatar">👤</div>
+                        <div class="imam-bio-info">
+                            <h2 id="imam-bio-name"></h2>
+                            <span class="imam-mosque-badge" id="imam-mosque-badge"></span>
+                        </div>
+                    </div>
+                    <p class="imam-bio-text" id="imam-bio-text"></p>
+                    <div class="imam-stats" id="imam-stats"></div>
+                </div>
+
+                <div class="imam-sermons-list" id="imam-sermons-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="copyright">
+                &copy; 2026 <span class="footer-brand">🕌 Haramain Fridays</span>. All rights reserved.
+                <span class="footer-divider">•</span>
+                <span>Connecting Muslims to the Two Holy Mosques</span>
+            </p>
+            <p class="footer-copyright">
+                Sermon recordings from <a href="http://www.haramain.info" target="_blank">haramain.info</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ==== Global State ====
+        let archiveData = null;
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        const ARCHIVE_START = new Date(2025, 0, 1); // Jan 2025
+
+        // ==== Load Archive Data ====
+        async function loadArchiveData() {
+            try {
+                const resp = await fetch('/api/archive');
+                archiveData = await resp.json();
+                initCalendar();
+                initImamDropdown();
+            } catch (e) {
+                console.error('Failed to load archive:', e);
+            }
+        }
+
+        // ==== Tabs ====
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab + '-view').classList.add('active');
+            });
+        });
+
+        // ==== Calendar ====
+        function initCalendar() {
+            renderCalendar();
+            document.getElementById('prev-month').addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+                // Don't go before archive start
+                if (new Date(currentYear, currentMonth + 1, 0) < ARCHIVE_START) {
+                    currentMonth++;
+                    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+                    return;
+                }
+                renderCalendar();
+            });
+            document.getElementById('next-month').addEventListener('click', () => {
+                const now = new Date();
+                if (currentYear > now.getFullYear() ||
+                    (currentYear === now.getFullYear() && currentMonth >= now.getMonth())) {
+                    return;
+                }
+                currentMonth++;
+                if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+                renderCalendar();
+            });
+        }
+
+        function renderCalendar() {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('cal-month-title').textContent = `${months[currentMonth]} ${currentYear}`;
+
+            const container = document.getElementById('calendar-days');
+            container.innerHTML = '';
+
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+
+            // Get dates that have sermons this month
+            const sermonDates = new Set();
+            if (archiveData && archiveData.sermons) {
+                archiveData.sermons.forEach(s => {
+                    const d = new Date(s.date + 'T00:00:00');
+                    if (d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
+                        sermonDates.add(d.getDate());
+                    }
+                });
+            }
+
+            // Empty cells before first day
+            for (let i = 0; i < firstDay; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cal-day empty';
+                container.appendChild(cell);
+            }
+
+            // Day cells
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                const dateObj = new Date(currentYear, currentMonth, day);
+                const isFriday = dateObj.getDay() === 5;
+                const hasSermon = sermonDates.has(day);
+                const isToday = dateObj.toDateString() === today.toDateString();
+                const isFuture = dateObj > today;
+
+                let classes = 'cal-day';
+                if (isFriday) classes += ' friday';
+                if (hasSermon) classes += ' has-sermon';
+                if (isToday) classes += ' today';
+                if (isFuture) classes += ' future';
+
+                cell.className = classes;
+                cell.textContent = day;
+
+                if (hasSermon) {
+                    cell.addEventListener('click', () => showSermonForDate(currentYear, currentMonth, day));
+                    cell.title = 'Click to view sermon';
+                }
+
+                container.appendChild(cell);
+            }
+        }
+
+        function showSermonForDate(year, month, day) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const sermons = archiveData.sermons.filter(s => s.date === dateStr);
+
+            const detailCard = document.getElementById('sermon-detail');
+            const detailDate = document.getElementById('detail-date');
+            const sermonPair = document.getElementById('sermon-pair');
+
+            const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            detailDate.innerHTML = `<span class="detail-day">${months[month]} ${day}, ${year}</span><span class="detail-label">Friday Sermons</span>`;
+
+            // Highlight selected day
+            document.querySelectorAll('.cal-day.selected').forEach(d => d.classList.remove('selected'));
+            document.querySelectorAll('.cal-day.has-sermon').forEach(d => {
+                if (parseInt(d.textContent) === day) d.classList.add('selected');
+            });
+
+            let html = '';
+            const makkahSermon = sermons.find(s => s.mosque === 'makkah');
+            const madinahSermon = sermons.find(s => s.mosque === 'madinah');
+
+            if (makkahSermon) {
+                html += renderSermonCard(makkahSermon, '🕋', 'Masjid al-Haram, Makkah');
+            }
+            if (madinahSermon) {
+                html += renderSermonCard(madinahSermon, '🌙', 'Masjid an-Nabawi, Madinah');
+            }
+            if (!makkahSermon && !madinahSermon) {
+                html = '<p class="no-data">No sermon data available for this date.</p>';
+            }
+
+            sermonPair.innerHTML = html;
+            detailCard.classList.remove('hidden');
+            detailCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function renderSermonCard(sermon, icon, mosqueName) {
+            const bio = archiveData.imams[sermon.imam_key]?.bio || '';
+            return `
+                <div class="sermon-card-detail">
+                    <div class="sermon-header">
+                        <span class="mosque-icon">${icon}</span>
+                        <div>
+                            <h3 class="mosque-name">${mosqueName}</h3>
+                            <p class="imam-name">${sermon.imam_name}</p>
+                        </div>
+                    </div>
+                    <div class="sermon-topic">${sermon.topic || 'Friday Sermon'}</div>
+                    <p class="sermon-summary">${sermon.summary || 'Summary not available.'}</p>
+                    ${sermon.audio_url ? `<a href="${sermon.audio_url}" target="_blank" class="audio-link">🎧 Listen to Khutbah</a>` : ''}
+                    ${sermon.page_url ? `<a href="${sermon.page_url}" target="_blank" class="page-link">📄 View on haramain.info</a>` : ''}
+                </div>
+            `;
+        }
+
+        // ==== Imam View ====
+        function initImamDropdown() {
+            const select = document.getElementById('imam-select');
+            if (!archiveData || !archiveData.imams) return;
+
+            const makkahImams = [];
+            const madinahImams = [];
+
+            Object.entries(archiveData.imams).forEach(([key, imam]) => {
+                // Only include imams that have sermons
+                const hasSermons = archiveData.sermons.some(s => s.imam_key === key);
+                if (!hasSermons) return;
+
+                if (imam.mosque === 'makkah') {
+                    makkahImams.push({ key, ...imam });
+                } else {
+                    madinahImams.push({ key, ...imam });
+                }
+            });
+
+            // Sort alphabetically
+            makkahImams.sort((a, b) => a.name.localeCompare(b.name));
+            madinahImams.sort((a, b) => a.name.localeCompare(b.name));
+
+            // Makkah group
+            const makkahGroup = document.createElement('optgroup');
+            makkahGroup.label = '🕋 Makkah — Masjid al-Haram';
+            makkahImams.forEach(imam => {
+                const opt = document.createElement('option');
+                opt.value = imam.key;
+                opt.textContent = imam.name;
+                makkahGroup.appendChild(opt);
+            });
+            select.appendChild(makkahGroup);
+
+            // Madinah group
+            const madinahGroup = document.createElement('optgroup');
+            madinahGroup.label = '🌙 Madinah — Masjid an-Nabawi';
+            madinahImams.forEach(imam => {
+                const opt = document.createElement('option');
+                opt.value = imam.key;
+                opt.textContent = imam.name;
+                madinahGroup.appendChild(opt);
+            });
+            select.appendChild(madinahGroup);
+
+            select.addEventListener('change', () => {
+                const key = select.value;
+                if (key) showImamSermons(key);
+                else {
+                    document.getElementById('imam-bio-card').classList.add('hidden');
+                    document.getElementById('imam-sermons-list').innerHTML = '';
+                }
+            });
+        }
+
+        function showImamSermons(imamKey) {
+            const imam = archiveData.imams[imamKey];
+            if (!imam) return;
+
+            // Bio card
+            const bioCard = document.getElementById('imam-bio-card');
+            document.getElementById('imam-bio-name').textContent = imam.name;
+            document.getElementById('imam-bio-text').textContent = imam.bio || 'Biography not available.';
+
+            const badge = document.getElementById('imam-mosque-badge');
+            badge.textContent = imam.mosque === 'makkah' ? '🕋 Masjid al-Haram' : '🌙 Masjid an-Nabawi';
+            badge.className = `imam-mosque-badge mosque-${imam.mosque}`;
+
+            // Stats
+            const sermons = archiveData.sermons.filter(s => s.imam_key === imamKey);
+            const stats = document.getElementById('imam-stats');
+            stats.innerHTML = `
+                <div class="stat"><span class="stat-number">${sermons.length}</span><span class="stat-label">Sermons</span></div>
+                <div class="stat"><span class="stat-number">${sermons.length > 0 ? sermons[sermons.length - 1].date.slice(0, 7) : 'N/A'}</span><span class="stat-label">Latest</span></div>
+            `;
+
+            bioCard.classList.remove('hidden');
+
+            // Sermon list
+            const list = document.getElementById('imam-sermons-list');
+            const sorted = [...sermons].sort((a, b) => b.date.localeCompare(a.date));
+
+            list.innerHTML = sorted.map(s => {
+                const d = new Date(s.date + 'T00:00:00');
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const dateFormatted = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+                const icon = s.mosque === 'makkah' ? '🕋' : '🌙';
+
+                return `
+                    <div class="imam-sermon-item">
+                        <div class="sermon-item-header">
+                            <span class="sermon-item-date">${icon} ${dateFormatted}</span>
+                            <span class="sermon-item-topic">${s.topic || 'Friday Sermon'}</span>
+                        </div>
+                        <p class="sermon-item-summary">${s.summary || 'Summary not available.'}</p>
+                        <div class="sermon-item-links">
+                            ${s.audio_url ? `<a href="${s.audio_url}" target="_blank" class="audio-link-sm">🎧 Audio</a>` : ''}
+                            ${s.page_url ? `<a href="${s.page_url}" target="_blank" class="page-link-sm">📄 Details</a>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==== Init ====
+        loadArchiveData();
+    </script>
+</body>
+
+</html>

@@ -731,6 +731,64 @@ def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: st
 
 
 
+def save_to_archive(sermon_data: dict, ai_content: dict):
+    """Save this week's sermon data to the static archive JSON."""
+    archive_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "website", "sermons_archive.json")
+    
+    try:
+        # Load existing archive
+        if os.path.exists(archive_path):
+            with open(archive_path, 'r', encoding='utf-8') as f:
+                archive = json.load(f)
+        else:
+            archive = {"sermons": [], "imams": {}, "last_updated": ""}
+        
+        today = datetime.now().strftime("%Y-%m-%d")
+        existing_dates = {s["date"] for s in archive["sermons"]}
+        
+        # Don't add duplicates
+        if today in existing_dates:
+            print(f"  ⚠️ Archive already has entries for {today}, skipping.")
+            return
+        
+        for mosque_key in ["makkah", "madinah"]:
+            data = sermon_data.get(mosque_key, {})
+            if not data:
+                continue
+            
+            imam_name = data.get("imam", "Unknown Imam")
+            imam_key = get_imam_key(imam_name) or "unknown"
+            
+            # Get topic/summary from AI content
+            content = ai_content.get(mosque_key, {})
+            topic = content.get("topic", "Friday Sermon")
+            summary = content.get("summary", f"Friday sermon delivered at {mosque_key}.")
+            
+            sermon_entry = {
+                "date": today,
+                "mosque": mosque_key,
+                "imam_key": imam_key,
+                "imam_name": IMAM_BIOS.get(imam_key, {}).get("name", imam_name),
+                "topic": topic,
+                "summary": summary,
+                "audio_url": data.get("audio_url", data.get("link", "")),
+                "page_url": data.get("page_url", data.get("link", ""))
+            }
+            archive["sermons"].append(sermon_entry)
+        
+        archive["last_updated"] = datetime.now().isoformat()
+        
+        # Sort by date
+        archive["sermons"].sort(key=lambda x: x["date"])
+        
+        with open(archive_path, 'w', encoding='utf-8') as f:
+            json.dump(archive, f, indent=2, ensure_ascii=False)
+        
+        print(f"  ✓ Saved to archive ({len(archive['sermons'])} total sermons)")
+    except Exception as e:
+        print(f"  ⚠️ Failed to save to archive: {e}")
+
+
 def main():
     import sys
     
@@ -785,6 +843,10 @@ def main():
         # Send
         if send_email_to_subscriber(html_content, email, token):
             sent_count += 1
+    
+    # 5. Save to Archive
+    print("\n[5/5] Saving to sermon archive...")
+    save_to_archive(sermon_data, ai_content)
             
     # Summary
     print("\n" + "=" * 60)

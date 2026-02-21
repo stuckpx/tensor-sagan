@@ -8,6 +8,7 @@ venv/
 !subscribers.json
 !vercel.json
 !package.json
+!website/sermons_archive.json
 debug_scraping.py
 .gemini/
 .vercel

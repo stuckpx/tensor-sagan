@@ -5,6 +5,7 @@ Handles email subscriptions using Firebase Firestore.
 """
 
 import os
+import json
 import uuid
 import hashlib
 from datetime import datetime
@@ -55,6 +56,23 @@ def generate_token(email):
 def index():
     """Serve the main website."""
     return send_from_directory('.', 'index.html')
+
+
+@app.route('/archive')
+def archive():
+    """Serve the archive page."""
+    return send_from_directory('.', 'archive.html')
+
+
+@app.route('/api/archive')
+def archive_data():
+    """Serve the sermon archive JSON."""
+    archive_path = os.path.join(os.path.dirname(__file__), 'sermons_archive.json')
+    if os.path.exists(archive_path):
+        with open(archive_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    return jsonify({'sermons': [], 'imams': {}}), 404
 
 
 @app.route('/subscribe', methods=['POST'])
