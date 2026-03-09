@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.mj.friday-sermon-email</string>
+    <string>com.mj.friday-send</string>
     
     <key>ProgramArguments</key>
     <array>
         <string>/usr/bin/python3</string>
         <string>/Users/mj/.gemini/antigravity/playground/tensor-sagan/friday_sermon_email.py</string>
-        <string>--prod</string>
+        <string>--send</string>
     </array>
     
     <key>WorkingDirectory</key>
     <string>/Users/mj/.gemini/antigravity/playground/tensor-sagan</string>
     
-    <!-- Run every Friday at 6:00 PM PST (= 5:00 AM Saturday Makkah time / 02:00 Saturday UTC) -->
+    <!-- Run every Friday at 6:00 PM PST -->
     <key>StartCalendarInterval</key>
     <dict>
         <key>Weekday</key>
@@ -27,10 +27,10 @@
     </dict>
     
     <key>StandardOutPath</key>
-    <string>/Users/mj/Library/Logs/friday-sermon-email.log</string>
+    <string>/Users/mj/Library/Logs/friday-sermon-send.log</string>
     
     <key>StandardErrorPath</key>
-    <string>/Users/mj/Library/Logs/friday-sermon-email.log</string>
+    <string>/Users/mj/Library/Logs/friday-sermon-send.log</string>
     
     <key>EnvironmentVariables</key>
     <dict>

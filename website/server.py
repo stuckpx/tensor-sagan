@@ -269,6 +269,43 @@ def render_status_page(title, message, status_code=200):
     return html, status_code
 
 
+@app.route('/api/approve_draft')
+def approve_draft():
+    """Handle draft approval requests."""
+    date_str = request.args.get('date', '').strip()
+    token = request.args.get('token', '').strip()
+    
+    if not date_str or not token or not db:
+        return render_status_page("❌ Invalid Link", "This approval link is invalid or missing parameters.", 400)
+        
+    try:
+        draft_ref = db.collection('drafts').document(date_str)
+        doc = draft_ref.get()
+        
+        if not doc.exists:
+            return render_status_page("🔍 Not Found", "No draft found for this date.", 404)
+            
+        draft_data = doc.to_dict()
+        
+        if draft_data.get('token') != token:
+            return render_status_page("❌ Invalid Token", "The security token does not match.", 403)
+            
+        if draft_data.get('status') == 'approved':
+            return render_status_page("✓ Already Approved", "This draft has already been approved and is scheduled to send at 6 PM.", 200)
+            
+        if draft_data.get('status') == 'sent':
+            return render_status_page("✓ Already Sent", "This draft was already fully sent to subscribers.", 200)
+            
+        # Update status
+        draft_ref.update({'status': 'approved'})
+        
+        return render_status_page("✅ Draft Approved!", "The sermon summary has been approved. It will be sent automatically to all subscribers at 6:00 PM PST.", 200)
+        
+    except Exception as e:
+        print(f"Error approving draft: {e}")
+        return render_status_page("⚠️ Error", "An error occurred while approving the draft. Please try again later.", 500)
+
+
 @app.route('/api/debug/subscribers')
 def list_subscribers():
     """Debug endpoint to list subscribers."""

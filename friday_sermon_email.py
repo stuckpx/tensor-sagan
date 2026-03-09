@@ -789,69 +789,178 @@ def save_to_archive(sermon_data: dict, ai_content: dict):
         print(f"  ⚠️ Failed to save to archive: {e}")
 
 
+def save_draft(sermon_data: dict, ai_content: dict) -> str:
+    """Save sermon data as a draft in Firestore and return an approval token."""
+    import uuid
+    if not db:
+        print("Error: Database connection not established for saving draft.")
+        return None
+        
+    today = datetime.now().strftime("%Y-%m-%d")
+    token = str(uuid.uuid4())
+    
+    draft_data = {
+        'id': today,
+        'sermon_data': sermon_data,
+        'ai_content': ai_content,
+        'status': 'pending',
+        'token': token,
+        'created_at': datetime.now().isoformat()
+    }
+    
+    try:
+        db.collection('drafts').document(today).set(draft_data)
+        print(f"  ✓ Draft saved for {today}")
+        return token
+    except Exception as e:
+        print(f"  ⚠️ Failed to save draft: {e}")
+        return None
+
+def get_draft(date_str: str) -> dict:
+    """Get a draft from Firestore."""
+    if not db:
+        return None
+    try:
+        doc = db.collection('drafts').document(date_str).get()
+        if doc.exists:
+            return doc.to_dict()
+    except Exception as e:
+        print(f"  ⚠️ Failed to get draft: {e}")
+    return None
+
+def update_draft_status(date_str: str, status: str):
+    """Update the status of a draft in Firestore."""
+    if not db:
+        return
+    try:
+        db.collection('drafts').document(date_str).update({'status': status})
+    except Exception as e:
+        print(f"  ⚠️ Failed to update draft status: {e}")
+
 def main():
     import sys
     
-    # Check for Prod Mode
-    # Default is TEST MODE unless --prod is specified
-    is_prod_mode = len(sys.argv) > 1 and (sys.argv[1] == '--prod' or sys.argv[1] == 'prod')
+    # Check for Mode
+    is_draft_mode = '--draft' in sys.argv
+    is_send_mode = '--send' in sys.argv
+    
+    if not is_draft_mode and not is_send_mode:
+        print("Please specify --draft (5 PM run) or --send (6 PM run).")
+        print("Usage: python3 friday_sermon_email.py [--draft | --send]")
+        return
     
     print("=" * 60)
     print("🕌 Haramain Fridays - Friday Sermon Email Automation")
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Mode: {'🚀 PROD (All Subscribers)' if is_prod_mode else '🧪 TEST (mjeelani@gmail.com only)'}")
+    print(f"Mode: {'📝 DRAFT (mjeelani@gmail.com only)' if is_draft_mode else '🚀 SEND (All Subscribers)'}")
     print("=" * 60)
     
-    print("\n[1/5] Loading subscribers...")
-    
-    if is_prod_mode:
-        # Load from Firebase in Prod - ONLY if --prod is passed
-        subscribers = load_subscribers()
-    else:
-        # Default to Test Mode
-        subscribers = [{'email': 'mjeelani@gmail.com', 'active': True, 'language': 'en'}]
-        print(f"  ✓ Loaded 1 test subscriber (Safe Mode)")
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    if is_draft_mode:
+        print("\n[1/4] Fetching sermon data from haramain.info...")
+        sermon_data = fetch_khutbah_data()
+        print(f"  Makkah: {sermon_data.get('makkah', {}).get('imam', 'Unknown')} ({sermon_data.get('makkah', {}).get('link', 'No Link')})")
+        print(f"  Madinah: {sermon_data.get('madinah', {}).get('imam', 'Unknown')} ({sermon_data.get('madinah', {}).get('link', 'No Link')})")
         
-    if not subscribers:
-        print("No subscribers found. Exiting.")
-        return
+        print("\n[2/4] Generating AI summaries...")
+        ai_content = generate_ai_content(sermon_data)
+        print("  ✓ Content generated")
         
-    print(f"  ✓ Found {len(subscribers)} active subscriber(s)")
-    
-    # 2. Fetch Sermon Data
-    print("\n[2/5] Fetching sermon data from haramain.info...")
-    sermon_data = fetch_khutbah_data()
-    print(f"  Makkah: {sermon_data.get('makkah', {}).get('imam', 'Unknown')} ({sermon_data.get('makkah', {}).get('link', 'No Link')})")
-    print(f"  Madinah: {sermon_data.get('madinah', {}).get('imam', 'Unknown')} ({sermon_data.get('madinah', {}).get('link', 'No Link')})")
-    
-    # 3. Generate AI Content
-    print("\n[3/5] Generating AI summaries...")
-    ai_content = generate_ai_content(sermon_data)
-    print("  ✓ Content generated")
-    
-    # 4. Send Emails
-    print("\n[4/5] Sending emails...")
-    sent_count = 0
-    
-    for sub in subscribers:
-        email = sub.get('email')
-        token = sub.get('token', '')
+        print("\n[3/4] Saving Draft...")
+        token = save_draft(sermon_data, ai_content)
         
-        # Create HTML content
-        html_content = create_email_html(sermon_data, ai_content, token)
-        
-        # Send
-        if send_email_to_subscriber(html_content, email, token):
-            sent_count += 1
-    
-    # 5. Save to Archive
-    print("\n[5/5] Saving to sermon archive...")
-    save_to_archive(sermon_data, ai_content)
+        if not token:
+            print("Failed to save draft. Exiting.")
+            return
             
-    # Summary
-    print("\n" + "=" * 60)
-    print(f"✓ Completed: {sent_count}/{len(subscribers)} emails sent successfully")
-    print("=" * 60)
+        print("\n[4/4] Sending draft email for review...")
+        approval_link = f"https://www.haramainfridays.com/api/approve_draft?date={today}&token={token}"
+        
+        # Prepend an approval box to the email for the draft
+        html_content = create_email_html(sermon_data, ai_content, None)
+        draft_notice = f"""
+        <div style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center;">
+            <h3 style="margin-top: 0;">📝 Draft Review</h3>
+            <p>Please review the summary below. If everything looks good, approve it so it can be sent at 6 PM.</p>
+            <a href="{approval_link}" style="display: inline-block; background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 10px;">Approve Draft</a>
+        </div>
+        """
+        html_content = html_content.replace('<body>', f'<body>\n{draft_notice}')
+        
+        # Send only to the reviewer
+        if send_email_to_subscriber(html_content, "mjeelani@gmail.com", None):
+            print("  ✓ Draft email sent to mjeelani@gmail.com")
+        else:
+            print("  ⚠️ Failed to send draft email.")
+            
+    elif is_send_mode:
+        print(f"\n[1/5] Checking for approved draft for {today}...")
+        draft = get_draft(today)
+        
+        if not draft:
+            print("  ⚠️ No draft found for today. Exiting.")
+            return
+            
+        status = draft.get('status')
+        if status != 'approved':
+            print(f"  ⚠️ Draft status is '{status}', not 'approved'. Aborting send.")
+            
+            # Optional: Send a notification that it was aborted
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = f"⚠️ Friday Sermon Send Aborted"
+            msg['From'] = SMTP_EMAIL
+            msg['To'] = "mjeelani@gmail.com"
+            msg.attach(MIMEText(f"The 6 PM Friday Sermon email blast was aborted because the draft ({today}) was not approved. Current status: {status}.", 'plain'))
+            
+            try:
+                context = ssl.create_default_context()
+                with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+                    server.starttls(context=context)
+                    server.login(SMTP_EMAIL, SMTP_PASSWORD)
+                    server.sendmail(SMTP_EMAIL, "mjeelani@gmail.com", msg.as_string())
+            except Exception as e:
+                pass
+            return
+            
+        print("  ✓ Draft is approved.")
+        
+        sermon_data = draft.get('sermon_data', {})
+        ai_content = draft.get('ai_content', {})
+        
+        print("\n[2/5] Loading active subscribers...")
+        subscribers = load_subscribers()
+        
+        if not subscribers:
+            print("No subscribers found. Exiting.")
+            return
+            
+        print(f"  ✓ Found {len(subscribers)} active subscriber(s)")
+        
+        print("\n[3/5] Sending emails to all subscribers...")
+        sent_count = 0
+        
+        for sub in subscribers:
+            email = sub.get('email')
+            token = sub.get('token', '')
+            
+            # Create HTML content
+            html_content = create_email_with_unsubscribe(sermon_data, ai_content, token)
+            
+            # Send
+            if send_email_to_subscriber(html_content, email, token):
+                sent_count += 1
+                
+        print(f"\n[4/5] Marking draft as sent...")
+        update_draft_status(today, 'sent')
+        
+        print("\n[5/5] Saving to sermon archive...")
+        save_to_archive(sermon_data, ai_content)
+                
+        # Summary
+        print("\n" + "=" * 60)
+        print(f"✓ Completed: {sent_count}/{len(subscribers)} emails sent successfully")
+        print("=" * 60)
 
 if __name__ == "__main__":
     main()

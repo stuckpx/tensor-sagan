@@ -1119,6 +1119,46 @@
       "page_url": "http://www.haramain.info/2026/02/makkah-jumuah-20th-february-2026.html",
       "topic": "The Quran: A Guide, Healing, and Mercy for Humanity",
       "summary": "Sheikh Abdullah Awad Al-Juhany will highlight the immense blessings and timeless guidance contained within the Holy Quran. The sermon will encourage regular recitation, deep understanding, and consistent implementation of its teachings as a source of spiritual healing and mercy in daily life."
+    },
+    {
+      "date": "2026-02-27",
+      "mosque": "makkah",
+      "imam_key": "juhany",
+      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
+      "topic": "Friday Sermon",
+      "summary": "Friday sermon delivered at makkah.",
+      "audio_url": "http://www.haramain.info/2026/02/makkah-jumuah-20th-february-2026.html",
+      "page_url": "http://www.haramain.info/2026/02/makkah-jumuah-20th-february-2026.html"
+    },
+    {
+      "date": "2026-02-27",
+      "mosque": "madinah",
+      "imam_key": "thubayti",
+      "imam_name": "Sheikh Salah Al-Budair",
+      "topic": "Friday Sermon",
+      "summary": "Friday sermon delivered at madinah.",
+      "audio_url": "http://www.haramain.info/2026/02/madeenah-jumuah-20th-february-2026.html",
+      "page_url": "http://www.haramain.info/2026/02/madeenah-jumuah-20th-february-2026.html"
+    },
+    {
+      "date": "2026-03-06",
+      "mosque": "makkah",
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "topic": "Friday Sermon",
+      "summary": "Friday sermon delivered at makkah.",
+      "audio_url": "http://www.haramain.info/2026/03/makkah-jumuah-17th-ramadan-6th-mar-2026.html",
+      "page_url": "http://www.haramain.info/2026/03/makkah-jumuah-17th-ramadan-6th-mar-2026.html"
+    },
+    {
+      "date": "2026-03-06",
+      "mosque": "madinah",
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "topic": "Friday Sermon",
+      "summary": "Friday sermon delivered at madinah.",
+      "audio_url": "http://www.haramain.info/2026/03/madeenah-jumuah-17th-ramadan-6th-mar.html",
+      "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-17th-ramadan-6th-mar.html"
     }
   ],
   "imams": {
@@ -1198,5 +1238,5 @@
       "bio": "Sheikh Abdul Aziz ibn Abdullah Ale al-Sheikh is the Grand Mufti of Saudi Arabia and President of the Council of Senior Scholars. He is a leading Islamic authority known for his rulings on contemporary issues."
     }
   },
-  "last_updated": "2026-02-20T19:52:31.127705"
+  "last_updated": "2026-03-06T18:00:47.797596"
 }
