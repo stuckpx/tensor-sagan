@@ -333,38 +333,55 @@ def main():
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
 
+    # Load existing archive
+    existing_archive = {"sermons": [], "imams": {}}
+    if os.path.exists(ARCHIVE_PATH):
+        with open(ARCHIVE_PATH, 'r', encoding='utf-8') as f:
+            existing_archive = json.load(f)
+            
+    existing_sermons_map = {f"{s['date']}_{s['mosque']}": s for s in existing_archive.get("sermons", [])}
+
     # Step 1: Scrape sermon listings
     print("\n[1/3] Scraping sermon listings from haramain.info...")
-    sermons = scrape_sermon_listing()
-    print(f"  ✓ Found {len(sermons)} sermon entries (Jan 2025 - present)")
+    scraped_sermons = scrape_sermon_listing()
+    print(f"  ✓ Found {len(scraped_sermons)} sermon entries (Jan 2025 - present)")
 
-    if not sermons:
-        print("  No sermons found. Exiting.")
+    if not scraped_sermons:
+        print("  No missing sermons found. Exiting.")
         return
 
     # De-duplicate by date + mosque
     seen = set()
     unique_sermons = []
-    for s in sermons:
+    for s in scraped_sermons:
         key = f"{s['date']}_{s['mosque']}"
         if key not in seen:
             seen.add(key)
             unique_sermons.append(s)
-    sermons = sorted(unique_sermons, key=lambda x: x["date"])
-    print(f"  ✓ {len(sermons)} unique sermons after de-duplication")
+            
+    # Filter out ones already in archive
+    new_sermons = [s for s in unique_sermons if f"{s['date']}_{s['mosque']}" not in existing_sermons_map]
+    print(f"  ✓ {len(new_sermons)} new sermons to add to archive")
 
-    # Step 2: Generate summaries in batches
-    print("\n[2/3] Generating sermon summaries with Gemini AI...")
-    batch_size = 8
-    for i in range(0, len(sermons), batch_size):
-        batch = sermons[i:i + batch_size]
-        print(f"  Processing batch {i // batch_size + 1}/{(len(sermons) + batch_size - 1) // batch_size} ({len(batch)} sermons)...")
-        generate_summaries_batch(batch)
-        if i + batch_size < len(sermons):
-            time.sleep(2)  # Rate limiting
+    # Step 2: Generate summaries in batches for NEW sermons only
+    if new_sermons:
+        print("\n[2/3] Generating sermon summaries with Gemini AI for new ones...")
+        batch_size = 8
+        for i in range(0, len(new_sermons), batch_size):
+            batch = new_sermons[i:i + batch_size]
+            print(f"  Processing batch {i // batch_size + 1}/{(len(new_sermons) + batch_size - 1) // batch_size} ({len(batch)} sermons)...")
+            generate_summaries_batch(batch)
+            if i + batch_size < len(new_sermons):
+                time.sleep(2)  # Rate limiting
+    else:
+        print("\n[2/3] No new sermons to generate summaries for.")
 
     # Step 3: Build the archive JSON
-    print("\n[3/3] Writing archive to file...")
+    print("\n[3/3] Merging and writing archive to file...")
+
+    # Combine existing and new sermons
+    all_sermons = existing_archive.get("sermons", []) + new_sermons
+    all_sermons = sorted(all_sermons, key=lambda x: x["date"])
 
     # Build imam index with mosque info
     imams = {}
@@ -376,7 +393,7 @@ def main():
         }
 
     archive = {
-        "sermons": sermons,
+        "sermons": all_sermons,
         "imams": imams,
         "last_updated": datetime.now().isoformat()
     }
@@ -386,19 +403,20 @@ def main():
         json.dump(archive, f, indent=2, ensure_ascii=False)
 
     print(f"  ✓ Archive written to {ARCHIVE_PATH}")
-    print(f"  ✓ {len(sermons)} sermons | {len(imams)} imams")
+    print(f"  ✓ {len(all_sermons)} total sermons | {len(imams)} imams")
 
     # Summary
     print("\n" + "=" * 60)
     print("✓ Archive build complete!")
 
     # Show date range
-    dates = [s["date"] for s in sermons]
-    print(f"  Date range: {min(dates)} → {max(dates)}")
+    if all_sermons:
+        dates = [s["date"] for s in all_sermons]
+        print(f"  Date range: {min(dates)} → {max(dates)}")
 
     # Show imam distribution
     imam_counts = {}
-    for s in sermons:
+    for s in all_sermons:
         imam_counts[s["imam_name"]] = imam_counts.get(s["imam_name"], 0) + 1
     print("  Imam distribution:")
     for imam, count in sorted(imam_counts.items(), key=lambda x: -x[1]):

@@ -10,7 +10,7 @@ import json
 import uuid
 import hashlib
 from datetime import datetime
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, render_template_string, abort
 import firebase_admin
 from firebase_admin import credentials, firestore
 
@@ -320,6 +320,182 @@ def list_subscribers():
         users.append(d.get('email'))
         
     return jsonify({'count': len(users), 'emails': users})
+
+
+@app.route('/sermons/<slug>')
+def sermon_page(slug):
+    """Serve a dedicated, server-side rendered SEO page for a single sermon."""
+    slug_parts = slug.split('-', 1)
+    if len(slug_parts) != 2:
+        return abort(404)
+    mosque, date = slug_parts
+        
+    if mosque not in ('makkah', 'madinah'):
+        return abort(404)
+        
+    if not re.match(r'^\d{4}-\d{2}-\d{2}$', date):
+        return abort(404)
+        
+    archive_path = os.path.join(os.path.dirname(__file__), 'sermons_archive.json')
+    if not os.path.exists(archive_path):
+        return abort(404)
+        
+    with open(archive_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        
+    sermons = data.get('sermons', [])
+    imams = data.get('imams', {})
+    
+    sermon = next((s for s in sermons if s['date'] == date and s['mosque'] == mosque), None)
+    if not sermon:
+        return abort(404)
+        
+    imam_key = sermon.get('imam_key')
+    imam = imams.get(imam_key, {})
+    imam_name = sermon.get('imam_name', 'Unknown Imam')
+    imam_bio = imam.get('bio', '')
+    
+    mosque_name = "Masjid al-Haram, Makkah" if mosque == 'makkah' else "Masjid an-Nabawi, Madinah"
+    mosque_icon = "🕋" if mosque == 'makkah' else "🌙"
+    
+    date_obj = datetime.strptime(date, '%Y-%m-%d')
+    date_formatted = date_obj.strftime('%B %d, %Y')
+    
+    html_template = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ sermon.topic }} | {{ imam_name }} | Friday Sermon</title>
+        <meta name="description" content="{{ sermon.summary }}">
+        <meta property="og:title" content="{{ sermon.topic }} - {{ mosque_name }}">
+        <meta property="og:description" content="{{ sermon.summary }}">
+        <meta property="og:type" content="article">
+        <link rel="stylesheet" href="/index.css">
+        <link rel="stylesheet" href="/archive.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="background-pattern"></div>
+        <header>
+            <nav class="container">
+                <a href="/" class="logo">
+                    <span class="logo-icon">🕌</span>
+                    <span class="logo-text">Haramain Fridays</span>
+                </a>
+                <div class="nav-links">
+                    <a href="/archive" class="nav-link">📚 Archive</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container" style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+            <article class="sermon-detail-card" style="display: block; opacity: 1;">
+                <div class="sermon-header" style="text-align: center; margin-bottom: 30px;">
+                    <span class="mosque-icon" style="font-size: 3em; display: block; margin-bottom: 20px;">{{ mosque_icon }}</span>
+                    <h1 style="color: #0d5c3f; margin-bottom: 15px; font-size: 2.2em;">{{ sermon.topic or 'Friday Sermon' }}</h1>
+                    <div style="font-size: 1.1em; color: #555; margin-bottom: 20px; line-height: 1.5;">
+                        <strong>{{ imam_name }}</strong><br>
+                        {{ mosque_name }}<br>
+                        {{ date_formatted }}
+                    </div>
+                </div>
+
+                <div class="sermon-summary" style="background: #f8f9f8; padding: 25px; border-radius: 12px; border-left: 5px solid #c89d2a; margin-bottom: 30px; font-size: 1.15em; line-height: 1.8;">
+                    {{ sermon.summary or 'Summary not available.' }}
+                </div>
+
+                <div class="imam-bio" style="margin-bottom: 40px; padding: 25px; border: 1px solid #eee; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 12px;">
+                    <h3 style="color: #0d5c3f; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">About the Imam</h3>
+                    <p style="color: #666; line-height: 1.7; margin: 0; font-size: 0.95em;">{{ imam_bio or 'Biography not available.' }}</p>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 50px; flex-wrap: wrap;">
+                    {% if sermon.audio_url %}
+                    <a href="{{ sermon.audio_url }}" target="_blank" class="audio-link" style="padding: 12px 24px;">🎧 Listen to Khutbah</a>
+                    {% endif %}
+                    {% if sermon.page_url %}
+                    <a href="{{ sermon.page_url }}" target="_blank" class="page-link" style="padding: 12px 24px;">📄 View original on haramain.info</a>
+                    {% endif %}
+                </div>
+
+                <!-- Email Capture Form -->
+                <div class="hero-card" style="margin-top: 40px; text-align: center; max-width: 100%; box-shadow: 0 10px 30px rgba(13, 92, 63, 0.1);">
+                    <div class="hero-content">
+                        <h2 style="color: #0d5c3f; margin-bottom: 15px;">Get Weekly Summaries</h2>
+                        <p style="color: #555; margin-bottom: 25px;">Join our newsletter to receive the Makkah and Madinah Friday sermon summaries straight to your inbox.</p>
+                        <form id="subscribe-form" style="max-width: 450px; margin: 0 auto; display: flex; flex-direction: column;">
+                            <div class="input-group" style="display: flex; gap: 10px;">
+                                <input type="email" id="email" placeholder="Enter your email" required class="email-input" style="flex: 1;">
+                                <button type="submit" class="submit-btn" id="submit-btn" style="white-space: nowrap;">Subscribe</button>
+                            </div>
+                            <p id="form-message" class="form-message" style="margin-top: 15px; height: 20px;"></p>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        </main>
+
+        <footer>
+            <div class="container">
+                <p class="copyright">
+                    &copy; 2026 <span class="footer-brand">🕌 Haramain Fridays</span>. All rights reserved.
+                </p>
+            </div>
+        </footer>
+
+        <script>
+            document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const messageEl = document.getElementById('form-message');
+                const btn = document.getElementById('submit-btn');
+                
+                messageEl.textContent = '';
+                messageEl.className = 'form-message';
+                btn.disabled = true;
+                btn.innerHTML = 'Subscribing...';
+                
+                try {
+                    const resp = await fetch('/subscribe', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email })
+                    });
+                    
+                    const data = await resp.json();
+                    
+                    if (resp.ok) {
+                        messageEl.textContent = data.message || 'Successfully subscribed!';
+                        messageEl.style.color = '#0d5c3f';
+                        document.getElementById('email').value = '';
+                    } else {
+                        messageEl.textContent = data.error || data.suggestion || 'Failed to subscribe.';
+                        messageEl.style.color = '#dc3545';
+                    }
+                } catch (err) {
+                    messageEl.textContent = 'An error occurred. Please try again later.';
+                    messageEl.style.color = '#dc3545';
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Subscribe';
+                }
+            });
+        </script>
+    </body>
+    </html>
+    """
+    
+    return render_template_string(html_template, 
+                                sermon=sermon, 
+                                imam_name=imam_name, 
+                                imam_bio=imam_bio,
+                                mosque_name=mosque_name,
+                                mosque_icon=mosque_icon,
+                                date_formatted=date_formatted)
 
 
 if __name__ == '__main__':

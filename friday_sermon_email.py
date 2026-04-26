@@ -119,13 +119,21 @@ IMAM_BIOS = {
         "name": "Sheikh Ahmad bin Taleb Hameed",
         "bio": "Sheikh Ahmad bin Taleb Hameed is an Imam of Masjid an-Nabawi. He is known for his beautiful recitation and thoughtful sermons that address contemporary issues while remaining grounded in classical Islamic scholarship."
     },
-    "thubayti": {
+    "budair": {
         "name": "Sheikh Salah Al-Budair",
         "bio": "Sheikh Salah bin Muhammad Al-Budair is an Imam of Masjid an-Nabawi in Madinah. He is known for his beautiful voice and emotional delivery. He holds a PhD in Islamic Studies and serves as a judge in the Madinah courts alongside his duties as Imam."
+    },
+    "thubayti": {
+        "name": "Sheikh Saleh bin Muhammad Al-Thubayti",
+        "bio": "Sheikh Saleh bin Muhammad Al-Thubayti is a respected Imam of Masjid an-Nabawi in Madinah. He is known for his calm and powerful recitation, and his Friday Khutbahs are known to be very articulate and scholarly."
     },
     "muhanna": {
         "name": "Sheikh Khalid Al-Muhanna",
         "bio": "Sheikh Khalid bin Sulaiman Al-Muhanna is an Imam of Masjid an-Nabawi, appointed in 1441 AH (2019). He is a respected scholar and faculty member at the Islamic University of Madinah. Known for his clear and precise recitation, he brings a deep scholarly background to his position at the Prophet's Mosque."
+    },
+    "alesheikh": {
+        "name": "Sheikh Hussayn Aal Sheikh",
+        "bio": "Sheikh Hussayn bin Abdulaziz Aal Sheikh is an Imam and Khateeb of Masjid an-Nabawi in Madinah. A descendant of Sheikh Muhammad bin Abdul Wahhab, he holds a doctorate in Fiqh (Islamic Jurisprudence) and serves as a judge in Madinah. His khutbahs are known for their strong scholarly foundation."
     },
 }
 
@@ -141,25 +149,31 @@ def get_imam_key(imam_name: str) -> str:
         "muaiqly": "muaiqly",
         "mu'aiqly": "muaiqly",
         "moaiqly": "muaiqly",
+        "muayqali": "muaiqly",
         "juhany": "juhany",
         "juhani": "juhany",
         "baleelah": "baleelah",
         "balilah": "baleelah",
         "dawsari": "dawsari",
         "dosari": "dawsari",
+        "dosary": "dawsari",
         "ghazzawi": "ghazzawi",
         "gazzawi": "ghazzawi",
         "humaid": "humaid",
         "khayyat": "khayyat",
         "khayat": "khayyat",
         "hudhaify": "hudhaify",
-        "hudaifi": "hudhaify",
+        "hudhaifi": "hudhaify",
         "qasim": "qasim",
-        "budair": "thubayti",
-        "budayr": "thubayti",
-        "budayr": "thubayti",
+        "qaasim": "qasim",
+        "budair": "budair",
+        "budayr": "budair",
+        "thubayti": "thubayti",
+        "thubaiti": "thubayti",
         "thubaity": "thubayti",
         "muhanna": "muhanna",
+        "ale sheikh": "alesheikh",
+        "aal sheikh": "alesheikh",
     }
     
     for keyword, key in keywords.items():
@@ -211,7 +225,9 @@ def fetch_khutbah_data() -> dict:
                 month_map = {
                     'january': 1, 'february': 2, 'march': 3, 'april': 4,
                     'may': 5, 'june': 6, 'july': 7, 'august': 8,
-                    'september': 9, 'october': 10, 'november': 11, 'december': 12
+                    'september': 9, 'october': 10, 'november': 11, 'december': 12,
+                    'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'jun': 6, 'jul': 7,
+                    'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12
                 }
                 
                 if date_match:
@@ -220,17 +236,15 @@ def fetch_khutbah_data() -> dict:
                     month = int(date_match.group(2))
                     
                     # Try to extract REAL month and day from slug
-                    # e.g. makkah-jumuah-30th-january-2026.html
-                    slug_match = re.search(r'-(\d{1,2})(?:st|nd|rd|th)?-([a-z]+)-(\d{4})', href.lower())
+                    patterns = re.findall(r'-(\d{1,2})(?:st|nd|rd|th)?-([a-z]+)', href.lower())
+                    found_gregorian = False
+                    for d_str, m_str in patterns:
+                        if m_str in month_map:
+                            day = int(d_str)
+                            month = month_map[m_str]
+                            found_gregorian = True
                     
-                    if slug_match:
-                        # Use the extracted date from the slug as it's the actual event date
-                        day = int(slug_match.group(1))
-                        month_str = slug_match.group(2)
-                        year = int(slug_match.group(3))
-                        if month_str in month_map:
-                            month = month_map[month_str]
-                    else:
+                    if not found_gregorian:
                         # Fallback to just day extraction if full pattern fails
                         day_match = re.search(r'-(\d{1,2})(?:st|nd|rd|th)?-', href.lower())
                         if day_match:
@@ -301,36 +315,39 @@ def fetch_sermon_details(url: str, mosque_name: str) -> dict:
                     imam_name = name
                     break
         
+        audio_url = ""
         # Try extracting from page body if not found
-        if imam_name == "Unknown Imam":
-            # Look for imam name in page content - restrict to post body if possible
-            content_div = soup.find('div', class_='post-body') or soup.find('div', class_='entry-content')
-            
-            if content_div:
-                # 1. Check Text
+        content_div = soup.find('div', class_='post-body') or soup.find('div', class_='entry-content')
+        
+        if content_div:
+            # 1. Check Text
+            if imam_name == "Unknown Imam":
                 body_text = content_div.get_text()
                 imam_name = extract_imam_from_text(body_text)
                 
-                # 2. Check MP3 Links (common on this site)
-                if imam_name == "Unknown Imam":
-                    links = content_div.find_all('a', href=True)
-                    for link in links:
-                        href = link.get('href', '').lower()
-                        if '.mp3' in href or 'audio' in href:
-                            # Try to find imam key in the filename
-                            key = get_imam_key(href)
-                            if key and key in IMAM_BIOS:
-                                imam_name = IMAM_BIOS[key]['name']
-                                break
-            else:
-                body_text = soup.get_text() # Fallback to full text
-                imam_name = extract_imam_from_text(body_text)
+            # 2. Check MP3 Links (common on this site)
+            links = content_div.find_all('a', href=True)
+            for link in links:
+                href = link.get('href', '')
+                href_lower = href.lower()
+                if '.mp3' in href_lower or 'audio' in href_lower:
+                    if 'khutbah' in href_lower and not audio_url:
+                        audio_url = href
+                    # Try to find imam key in the filename
+                    if imam_name == "Unknown Imam":
+                        key = get_imam_key(href_lower)
+                        if key and key in IMAM_BIOS:
+                            imam_name = IMAM_BIOS[key]['name']
+        elif imam_name == "Unknown Imam":
+            body_text = soup.get_text() # Fallback to full text
+            imam_name = extract_imam_from_text(body_text)
         
         return {
             "title": title_text,
             "link": url,
             "imam": imam_name,
-            "mosque": mosque_name
+            "mosque": mosque_name,
+            "audio_url": audio_url
         }
 
 
@@ -342,7 +359,8 @@ def fetch_sermon_details(url: str, mosque_name: str) -> dict:
             "title": "Friday Sermon",
             "link": url,
             "imam": "Unknown Imam",
-            "mosque": mosque_name
+            "mosque": mosque_name,
+            "audio_url": ""
         }
 
 
@@ -359,8 +377,10 @@ def extract_imam_from_text(text: str) -> str:
         "muaiqly": "Sheikh Maher al-Mu'aiqly",
         "mu'aiqly": "Sheikh Maher al-Mu'aiqly",
         "maher": "Sheikh Maher al-Mu'aiqly",
+        "muayqali": "Sheikh Maher al-Mu'aiqly",
         "dawsari": "Sheikh Yasir al-Dawsari",
         "dosari": "Sheikh Yasir al-Dawsari",
+        "dosary": "Sheikh Yasir al-Dawsari",
         "baleelah": "Sheikh Bandar Baleelah",
         "bandar": "Sheikh Bandar Baleelah",
         "ghazzawi": "Sheikh Faisal Ghazzawi",
@@ -373,11 +393,14 @@ def extract_imam_from_text(text: str) -> str:
         "hudaifi": "Sheikh Ali Al-Hudhaify",
         "hudhaifi": "Sheikh Ali Al-Hudhaify",
         "qasim": "Sheikh Abdul Muhsin Al-Qasim",
+        "qaasim": "Sheikh Abdul Muhsin Al-Qasim",
         "budair": "Sheikh Salah Al-Budair",
         "buayjan": "Sheikh Ahmad bin Taleb Hameed",
-        "bu'ayjan": "Sheikh Ahmad bin Taleb Hameed",
         "thubayti": "Sheikh Saleh bin Muhammad Al-Thubayti",
         "thubaiti": "Sheikh Saleh bin Muhammad Al-Thubayti",
+        "thubaity": "Sheikh Saleh bin Muhammad Al-Thubayti",
+        "ale sheikh": "Sheikh Hussayn Aal Sheikh",
+        "aal sheikh": "Sheikh Hussayn Aal Sheikh",
     }
     
     for keyword, full_name in imam_mappings.items():
@@ -408,6 +431,52 @@ def extract_imam_name(title: str, text_content: str = "") -> str:
     return "Unknown Imam"
 
 
+def upload_audio_to_gemini(audio_url: str) -> str:
+    """Download audio from URL and upload to Gemini File API."""
+    import tempfile
+    
+    if not audio_url or not GEMINI_API_KEY:
+        return None
+        
+    try:
+        print(f"  Downloading auth for AI text generation from {audio_url}")
+        resp = requests.get(audio_url, stream=True)
+        resp.raise_for_status()
+        
+        fd, temp_path = tempfile.mkstemp(suffix=".mp3")
+        with os.fdopen(fd, 'wb') as f:
+            for chunk in resp.iter_content(chunk_size=8192):
+                f.write(chunk)
+                
+        num_bytes = os.path.getsize(temp_path)
+        
+        print(f"  Uploading {num_bytes} bytes to Gemini...")
+        upload_url = f"https://generativelanguage.googleapis.com/upload/v1beta/files?key={GEMINI_API_KEY}"
+        headers = {
+            "X-Goog-Upload-Command": "start, upload, finalize",
+            "X-Goog-Upload-Header-Content-Length": str(num_bytes),
+            "X-Goog-Upload-Header-Content-Type": "audio/mp3",
+            "Content-Type": "audio/mp3"
+        }
+        
+        with open(temp_path, "rb") as f:
+            upl_resp = requests.post(upload_url, headers=headers, data=f, timeout=120)
+            
+        os.remove(temp_path) # Clean up
+        
+        if upl_resp.status_code == 200:
+            file_uri = upl_resp.json().get("file", {}).get("uri")
+            print(f"  ✓ Uploaded audio to {file_uri}")
+            return file_uri
+        else:
+            print(f"  ⚠️ Error uploading to Gemini: {upl_resp.text}")
+            return None
+            
+    except Exception as e:
+        print(f"  ⚠️ Error processing audio URL {audio_url}: {e}")
+        return None
+
+
 def generate_ai_content(sermon_data: dict) -> dict:
     """Generate sermon summaries using Gemini API."""
     if not GEMINI_API_KEY:
@@ -415,6 +484,13 @@ def generate_ai_content(sermon_data: dict) -> dict:
         
     makkah_imam = sermon_data.get('makkah', {}).get('imam', 'the Imam')
     madinah_imam = sermon_data.get('madinah', {}).get('imam', 'the Imam')
+    
+    makkah_audio = sermon_data.get('makkah', {}).get('audio_url')
+    madinah_audio = sermon_data.get('madinah', {}).get('audio_url')
+    
+    # Upload audios first
+    makkah_uri = upload_audio_to_gemini(makkah_audio) if makkah_audio else None
+    madinah_uri = upload_audio_to_gemini(madinah_audio) if madinah_audio else None
     
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
     
@@ -427,16 +503,25 @@ def generate_ai_content(sermon_data: dict) -> dict:
     
     prompt = f"""You are an expert on Friday sermons (khutbah) from the Two Holy Mosques in Makkah and Madinah.
 
-Today is {date_str}. Generate authentic-style Friday sermon summaries for:
+Today is {date_str}. Generate authentic Friday sermon summaries for:
 
 1. **Masjid al-Haram, Makkah** - Imam: {makkah_imam}
 2. **Masjid an-Nabawi, Madinah** - Imam: {madinah_imam}
 
 FOR EACH MOSQUE, provide:
 - **topic**: A meaningful Islamic topic appropriate for this week
-- **summary**: A detailed 4-6 sentence summary of the sermon's key messages, Quranic references, and lessons
+- **summary**: A detailed 4-6 sentence summary of the sermon's key messages, Quranic references, and lessons. """
 
-Format your response ONLY as JSON (no markdown):
+    if makkah_uri or madinah_uri:
+        prompt += "\n\nI have provided audio files for the sermons. Please listen to them to generate accurate summaries from the actual Arabic khutbahs. "
+        if makkah_uri and madinah_uri:
+            prompt += "The FIRST audio file attached is Makkah's khutbah, and the SECOND audio file attached is Madinah's khutbah."
+        elif makkah_uri:
+            prompt += "The attached audio file is Makkah's khutbah. For Madinah, provide a general but realistic summary."
+        elif madinah_uri:
+            prompt += "The attached audio file is Madinah's khutbah. For Makkah, provide a general but realistic summary."
+            
+    prompt += f"""\n\nFormat your response ONLY as JSON (no markdown):
 {{
   "makkah": {{
     "topic": "Topic title",
@@ -449,11 +534,20 @@ Format your response ONLY as JSON (no markdown):
   "introduction": "A warm 2-3 sentence welcome for the newsletter."
 }}"""
 
+    parts = []
+    if makkah_uri:
+        parts.append({"fileData": {"mimeType": "audio/mp3", "fileUri": makkah_uri}})
+    if madinah_uri:
+        parts.append({"fileData": {"mimeType": "audio/mp3", "fileUri": madinah_uri}})
+        
+    parts.append({"text": prompt})
+
     payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
+        "contents": [{"parts": parts}],
         "generationConfig": {
             "temperature": 0.7,
-            "maxOutputTokens": 4096
+            "maxOutputTokens": 8192,
+            "responseMimeType": "application/json"
         }
     }
     
@@ -583,9 +677,14 @@ def create_email_html(sermon_data: dict, ai_content: dict, unsubscribe_token: st
             .rtl {{ direction: rtl; text-align: right; }}
         </style>
     </head>
-        </div>
+    <body>
+        <div class="container">
+            <div class="header" style="background-color: #1a5f3c; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+                <h1 style="margin: 0; font-size: 24px;">🕌 Haramain Fridays</h1>
+                <p style="margin: 5px 0 0 0; opacity: 0.9;">Weekly Sermon Summary</p>
+            </div>
         
-        <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             
             <p style="font-size: 16px; line-height: 1.6;">Assalamu Alaikum wa Rahmatullahi wa Barakatuh,</p>
             {intro_html}
@@ -673,6 +772,7 @@ def create_email_html(sermon_data: dict, ai_content: dict, unsubscribe_token: st
                 Audio recordings sourced from <a href="http://www.haramain.info" style="color: #1a5f3c;">haramain.info</a>
             </p>
         </div>
+        </div>
     </body>
     </html>
     """
@@ -712,7 +812,7 @@ def send_email_to_subscriber(html_content: str, email: str, token: str = None) -
 
 def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: str = None) -> str:
     """Create email HTML with optional unsubscribe link."""
-    html = create_email_html(sermon_data, ai_content)
+    html = create_email_html(sermon_data, ai_content, token)
     
     # Add unsubscribe link if token provided
     if token:

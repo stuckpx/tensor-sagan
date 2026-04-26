@@ -291,7 +291,7 @@
                     <div class="sermon-topic">${sermon.topic || 'Friday Sermon'}</div>
                     <p class="sermon-summary">${sermon.summary || 'Summary not available.'}</p>
                     ${sermon.audio_url ? `<a href="${sermon.audio_url}" target="_blank" class="audio-link">🎧 Listen to Khutbah</a>` : ''}
-                    ${sermon.page_url ? `<a href="${sermon.page_url}" target="_blank" class="page-link">📄 View on haramain.info</a>` : ''}
+                    <a href="/sermons/${sermon.mosque}-${sermon.date}" class="page-link">📄 View Details</a>
                 </div>
             `;
         }
@@ -395,7 +395,7 @@
                         <p class="sermon-item-summary">${s.summary || 'Summary not available.'}</p>
                         <div class="sermon-item-links">
                             ${s.audio_url ? `<a href="${s.audio_url}" target="_blank" class="audio-link-sm">🎧 Audio</a>` : ''}
-                            ${s.page_url ? `<a href="${s.page_url}" target="_blank" class="page-link-sm">📄 Details</a>` : ''}
+                            <a href="/sermons/${s.mosque}-${s.date}" class="page-link-sm">📄 Details</a>
                         </div>
                     </div>
                 `;
