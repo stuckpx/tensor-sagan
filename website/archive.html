@@ -138,7 +138,7 @@
         // ==== Load Archive Data ====
         async function loadArchiveData() {
             try {
-                const resp = await fetch('/api/archive');
+                const resp = await fetch('/api/archive?t=' + Date.now());
                 archiveData = await resp.json();
                 initCalendar();
                 initImamDropdown();
@@ -199,7 +199,7 @@
             const sermonDates = new Set();
             if (archiveData && archiveData.sermons) {
                 archiveData.sermons.forEach(s => {
-                    const d = new Date(s.date + 'T00:00:00');
+                    const d = new Date(s.date + 'T12:00:00');
                     if (d.getMonth() === currentMonth && d.getFullYear() === currentYear) {
                         sermonDates.add(d.getDate());
                     }
@@ -380,7 +380,7 @@
             const sorted = [...sermons].sort((a, b) => b.date.localeCompare(a.date));
 
             list.innerHTML = sorted.map(s => {
-                const d = new Date(s.date + 'T00:00:00');
+                const d = new Date(s.date + 'T12:00:00');
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 const dateFormatted = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
