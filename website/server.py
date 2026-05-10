@@ -16,6 +16,10 @@ from firebase_admin import credentials, firestore
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 
+# Public base URL used in canonical/og:url tags, sitemap, and share intents.
+# Override with WEBSITE_BASE_URL env var for staging/preview deployments.
+WEBSITE_BASE_URL = os.environ.get('WEBSITE_BASE_URL', 'https://www.haramainfridays.com').rstrip('/')
+
 # Firebase Setup
 # Path to service account key in parent directory
 FIREBASE_CREDENTIALS_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'harmainfridays-firebase-adminsdk-fbsvc-c21f19e297.json')
@@ -173,6 +177,59 @@ def _load_archive() -> dict:
         with open(archive_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     return {'sermons': [], 'imams': {}, 'last_updated': ''}
+
+
+@app.route('/robots.txt')
+def robots_txt():
+    """Tell crawlers everything is indexable and point them to the sitemap."""
+    body = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /api/\n"
+        "Disallow: /unsubscribe\n"
+        f"Sitemap: {WEBSITE_BASE_URL}/sitemap.xml\n"
+    )
+    resp = make_response(body)
+    resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    resp.headers['Cache-Control'] = 'public, max-age=86400'
+    return resp
+
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    """Generated sitemap covering homepage, archive, and every individual
+    sermon page. Helps Google index the 145+ /sermons/<slug> pages."""
+    data = _load_archive()
+    sermons = data.get('sermons', [])
+    last_updated = data.get('last_updated', '')
+
+    # ISO date for sitemap <lastmod>
+    def iso(s):
+        # Accept either YYYY-MM-DD or ISO datetime; return YYYY-MM-DD
+        return (s or '')[:10] or datetime.now().strftime('%Y-%m-%d')
+
+    out = ['<?xml version="1.0" encoding="UTF-8"?>',
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    out.append(
+        f'  <url><loc>{WEBSITE_BASE_URL}/</loc>'
+        f'<lastmod>{iso(last_updated)}</lastmod>'
+        f'<changefreq>weekly</changefreq><priority>0.9</priority></url>')
+    out.append(
+        f'  <url><loc>{WEBSITE_BASE_URL}/archive</loc>'
+        f'<lastmod>{iso(last_updated)}</lastmod>'
+        f'<changefreq>weekly</changefreq><priority>0.9</priority></url>')
+    for s in sermons:
+        slug = f"{s['mosque']}-{s['date']}"
+        out.append(
+            f'  <url><loc>{WEBSITE_BASE_URL}/sermons/{slug}</loc>'
+            f'<lastmod>{iso(s["date"])}</lastmod>'
+            f'<changefreq>yearly</changefreq><priority>0.7</priority></url>')
+    out.append('</urlset>')
+
+    resp = make_response('\n'.join(out))
+    resp.headers['Content-Type'] = 'application/xml; charset=utf-8'
+    resp.headers['Cache-Control'] = 'public, max-age=3600, s-maxage=86400'
+    return resp
 
 
 @app.route('/api/archive')
@@ -397,9 +454,51 @@ def sermon_page(slug):
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{ sermon.topic }} | {{ imam_name }} | Friday Sermon</title>
         <meta name="description" content="{{ sermon.summary }}">
-        <meta property="og:title" content="{{ sermon.topic }} - {{ mosque_name }}">
+        <link rel="canonical" href="{{ canonical_url }}">
+
+        <!-- Open Graph (Facebook, WhatsApp, LinkedIn, iMessage) -->
+        <meta property="og:title" content="{{ sermon.topic }} — {{ mosque_name }}">
         <meta property="og:description" content="{{ sermon.summary }}">
         <meta property="og:type" content="article">
+        <meta property="og:url" content="{{ canonical_url }}">
+        <meta property="og:site_name" content="Haramain Fridays">
+        <meta property="og:locale" content="en_US">
+        <meta property="article:published_time" content="{{ sermon.date }}T12:00:00+03:00">
+        <meta property="article:author" content="{{ imam_name }}">
+        <meta property="article:section" content="Friday Sermon">
+
+        <!-- Twitter / X cards -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ sermon.topic }} — {{ mosque_name }}">
+        <meta name="twitter:description" content="{{ sermon.summary }}">
+
+        <!-- Schema.org structured data — helps Google show rich results
+             and tags this as an Article authored by the imam, on the
+             Friday it was delivered. -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": {{ sermon.topic | tojson }},
+          "description": {{ sermon.summary | tojson }},
+          "datePublished": "{{ sermon.date }}",
+          "dateModified": "{{ sermon.date }}",
+          "url": "{{ canonical_url }}",
+          "author": {
+            "@type": "Person",
+            "name": {{ imam_name | tojson }}
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Haramain Fridays",
+            "url": "{{ site_base }}"
+          },
+          "mainEntityOfPage": "{{ canonical_url }}",
+          "articleSection": "Friday Sermon",
+          "inLanguage": "en"
+        }
+        </script>
+
         <link rel="stylesheet" href="/index.css">
         <link rel="stylesheet" href="/archive.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -439,6 +538,22 @@ def sermon_page(slug):
                 <div class="imam-bio" style="margin-bottom: 40px; padding: 25px; border: 1px solid #eee; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 12px;">
                     <h3 style="color: #0d5c3f; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">About the Imam</h3>
                     <p style="color: #666; line-height: 1.7; margin: 0; font-size: 0.95em;">{{ imam_bio or 'Biography not available.' }}</p>
+                </div>
+
+                <!-- Share buttons — biggest single growth lever for an Islamic-content
+                     site is WhatsApp shares. Buttons sized for thumb taps on mobile. -->
+                <div style="margin-bottom: 30px; padding: 20px; border-radius: 12px; background: #f8f9f8; text-align: center;">
+                    <p style="margin: 0 0 12px 0; color: #555; font-size: 0.95em;">Share this sermon with someone who would benefit:</p>
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <a href="https://wa.me/?text={{ share_text_url }}%20{{ canonical_url|urlencode }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp"
+                           style="background: #25D366; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95em;">💬 WhatsApp</a>
+                        <a href="https://twitter.com/intent/tweet?text={{ share_text_url }}&url={{ canonical_url|urlencode }}" target="_blank" rel="noopener" aria-label="Share on X"
+                           style="background: #000; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95em;">𝕏 Post on X</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ canonical_url|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Facebook"
+                           style="background: #1877F2; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95em;">📘 Facebook</a>
+                        <button type="button" onclick="navigator.clipboard.writeText('{{ canonical_url }}').then(()=>{this.innerText='✓ Copied'; setTimeout(()=>this.innerText='🔗 Copy link',2000);});"
+                           style="background: #555; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95em; border: none; cursor: pointer;">🔗 Copy link</button>
+                    </div>
                 </div>
 
                 <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 50px; flex-wrap: wrap;">
@@ -517,13 +632,22 @@ def sermon_page(slug):
     </html>
     """
     
+    canonical_url = f"{WEBSITE_BASE_URL}/sermons/{mosque}-{date}"
+    # Pre-encoded share text (without the URL — that's a separate template var)
+    from urllib.parse import quote
+    share_text = f"{sermon.get('topic') or 'Friday Sermon'} — {mosque_name}, {date_formatted}"
+    share_text_url = quote(share_text)
+
     rendered = render_template_string(html_template,
                                 sermon=sermon,
                                 imam_name=imam_name,
                                 imam_bio=imam_bio,
                                 mosque_name=mosque_name,
                                 mosque_icon=mosque_icon,
-                                date_formatted=date_formatted)
+                                date_formatted=date_formatted,
+                                canonical_url=canonical_url,
+                                site_base=WEBSITE_BASE_URL,
+                                share_text_url=share_text_url)
     resp = make_response(rendered)
     # Per-sermon pages are immutable once published; cache aggressively.
     resp.headers['Cache-Control'] = 'public, max-age=600, s-maxage=86400, stale-while-revalidate=604800'

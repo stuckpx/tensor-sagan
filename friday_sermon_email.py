@@ -30,6 +30,10 @@ SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 FIREBASE_CREDENTIALS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'harmainfridays-firebase-adminsdk-fbsvc-c21f19e297.json')
 
+# Public website URL — used for unsubscribe links + the "subscribe / view online"
+# CTAs in the weekly email. Override locally with WEBSITE_BASE_URL=...
+WEBSITE_BASE_URL = os.getenv("WEBSITE_BASE_URL", "https://www.haramainfridays.com").rstrip("/")
+
 # Initialize Firebase
 db = None
 if os.path.exists(FIREBASE_CREDENTIALS_PATH):
@@ -670,8 +674,14 @@ def create_email_html(sermon_data: dict, ai_content: dict, unsubscribe_token: st
     madinah_summary = ai_content.get('madinah_summary', '')
     intro_html = ai_content.get('introduction', f"Welcome to this week's Friday Sermon Summary.")
 
-    # Using port 3000 as configured
-    unsubscribe_link = f"http://localhost:3000/unsubscribe?token={unsubscribe_token}"
+    unsubscribe_link = f"{WEBSITE_BASE_URL}/unsubscribe?token={unsubscribe_token}"
+    subscribe_link = f"{WEBSITE_BASE_URL}/?utm_source=email&utm_medium=forward&utm_campaign=weekly"
+    # Pre-built share text for the "forward to a friend" buttons
+    from urllib.parse import quote as _q
+    forward_subject = _q("Friday Sermon Summary — Masjid al-Haram & Masjid an-Nabawi")
+    forward_body = _q(f"Assalamu Alaikum,\n\nThought you'd appreciate this week's Friday sermon "
+                      f"summary from the Two Holy Mosques. Subscribe (free) here:\n{subscribe_link}\n")
+    whatsapp_share = _q(f"Friday sermon summary from Masjid al-Haram & Masjid an-Nabawi — subscribe for weekly emails: {subscribe_link}")
     
     html = f"""
     <!DOCTYPE html>
@@ -772,7 +782,24 @@ def create_email_html(sermon_data: dict, ai_content: dict, unsubscribe_token: st
             </div>
             
             <hr style="border: none; border-top: 2px solid #1a5f3c; margin: 30px 0;">
-            
+
+            <!-- Forward + Subscribe CTA — gives recipients an obvious way to share
+                 the email with friends/family, and for forwarded copies, a clear
+                 path to subscribe. Single biggest lever for organic growth. -->
+            <div style="background: #f0f4f0; padding: 22px; border-radius: 10px; text-align: center; margin: 25px 0;">
+                <h3 style="color: #1a5f3c; margin: 0 0 8px 0; font-size: 17px;">📨 Found this beneficial?</h3>
+                <p style="margin: 0 0 16px 0; color: #555; font-size: 14px;">Forward to someone who would appreciate it. Each share is sadaqah jariyah, in shaa Allah.</p>
+                <div style="margin-bottom: 14px;">
+                    <a href="https://wa.me/?text={whatsapp_share}"
+                       style="display: inline-block; background: #25D366; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; margin: 4px;">💬 Share on WhatsApp</a>
+                    <a href="mailto:?subject={forward_subject}&body={forward_body}"
+                       style="display: inline-block; background: #1a5f3c; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; margin: 4px;">✉️ Forward by Email</a>
+                </div>
+                <p style="margin: 12px 0 0 0; font-size: 13px; color: #777;">
+                    Were you forwarded this email? <a href="{subscribe_link}" style="color: #1a5f3c; font-weight: 600;">Subscribe to receive it weekly →</a>
+                </p>
+            </div>
+
             <div style="text-align: center; padding: 20px 0;">
                 <p style="color: #1a5f3c; font-size: 16px; margin: 0;">
                     <em>"And remind, for indeed, the reminder benefits the believers."</em>
@@ -842,7 +869,7 @@ def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: st
     if token:
         unsubscribe_html = f"""
             <p style="text-align: center; color: #999; font-size: 11px; margin-top: 15px;">
-                <a href="http://localhost:3000/unsubscribe?token={token}" style="color: #999;">Unsubscribe</a>
+                <a href="{WEBSITE_BASE_URL}/unsubscribe?token={token}" style="color: #999;">Unsubscribe</a>
             </p>
         </div>
     </body>
