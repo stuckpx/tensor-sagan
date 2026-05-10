@@ -849,10 +849,17 @@ def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: st
 
 
 
-def save_to_archive(sermon_data: dict, ai_content: dict):
-    """Save this week's sermon data to the static archive JSON."""
+def save_to_archive(sermon_data: dict, ai_content: dict, target_date_str: str = None):
+    """Save this week's sermon data to the static archive JSON.
+
+    `target_date_str` ("YYYY-MM-DD") should be the Friday the sermon was
+    delivered. If omitted, falls back to today's date for backwards
+    compatibility — but note that running the archive write on Saturday
+    (e.g. via --auto catch-up) without this argument will mis-date the
+    entry to the run date.
+    """
     archive_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "website", "sermons_archive.json")
-    
+
     try:
         # Load existing archive
         if os.path.exists(archive_path):
@@ -860,30 +867,42 @@ def save_to_archive(sermon_data: dict, ai_content: dict):
                 archive = json.load(f)
         else:
             archive = {"sermons": [], "imams": {}, "last_updated": ""}
-        
-        today = datetime.now().strftime("%Y-%m-%d")
-        existing_dates = {s["date"] for s in archive["sermons"]}
-        
-        # Don't add duplicates
-        if today in existing_dates:
-            print(f"  ⚠️ Archive already has entries for {today}, skipping.")
-            return
-        
+
+        date_str = target_date_str or datetime.now().strftime("%Y-%m-%d")
+        # Per-(date, mosque) dedup, not per-date — a Madinah entry shouldn't
+        # block a Makkah entry for the same Friday, and vice versa.
+        existing_keys = {(s["date"], s["mosque"]) for s in archive["sermons"]}
+
+        added = 0
         for mosque_key in ["makkah", "madinah"]:
+            if (date_str, mosque_key) in existing_keys:
+                continue
+
             data = sermon_data.get(mosque_key, {})
             if not data:
                 continue
-            
+
             imam_name = data.get("imam", "Unknown Imam")
             imam_key = get_imam_key(imam_name) or "unknown"
-            
-            # Get topic/summary from AI content
-            content = ai_content.get(mosque_key, {})
-            topic = content.get("topic", "Friday Sermon")
-            summary = content.get("summary", f"Friday sermon delivered at {mosque_key}.")
-            
+
+            # generate_ai_content returns flat keys (makkah_topic /
+            # makkah_summary / madinah_topic / madinah_summary), not nested.
+            # Read both shapes so this works whether ai_content came from
+            # the live --auto path or build_archive.py.
+            nested = ai_content.get(mosque_key) or {}
+            topic = (
+                ai_content.get(f"{mosque_key}_topic")
+                or nested.get("topic")
+                or "Friday Sermon"
+            )
+            summary = (
+                ai_content.get(f"{mosque_key}_summary")
+                or nested.get("summary")
+                or f"Friday sermon delivered at {mosque_key}."
+            )
+
             sermon_entry = {
-                "date": today,
+                "date": date_str,
                 "mosque": mosque_key,
                 "imam_key": imam_key,
                 "imam_name": IMAM_BIOS.get(imam_key, {}).get("name", imam_name),
@@ -893,16 +912,21 @@ def save_to_archive(sermon_data: dict, ai_content: dict):
                 "page_url": data.get("page_url", data.get("link", ""))
             }
             archive["sermons"].append(sermon_entry)
-        
+            added += 1
+
+        if added == 0:
+            print(f"  ⚠️ Archive already has entries for {date_str} (both mosques), skipping.")
+            return
+
         archive["last_updated"] = datetime.now().isoformat()
-        
+
         # Sort by date
         archive["sermons"].sort(key=lambda x: x["date"])
-        
+
         with open(archive_path, 'w', encoding='utf-8') as f:
             json.dump(archive, f, indent=2, ensure_ascii=False)
-        
-        print(f"  ✓ Saved to archive ({len(archive['sermons'])} total sermons)")
+
+        print(f"  ✓ Saved {added} entry/entries for {date_str} to archive ({len(archive['sermons'])} total)")
     except Exception as e:
         print(f"  ⚠️ Failed to save to archive: {e}")
 
@@ -1154,7 +1178,7 @@ def run_auto_tick():
         except Exception:
             pass
         try:
-            save_to_archive(sermon_data, ai_content)
+            save_to_archive(sermon_data, ai_content, target_date_str=tf_str)
         except Exception as e:
             print(f"  ⚠️ archive save failed: {e}")
         print(f"  ✓ sent {sent_count}/{len(subscribers)} → status=sent")

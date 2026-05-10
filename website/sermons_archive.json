@@ -2,16 +2,6 @@
   "sermons": [
     {
       "date": "2025-01-03",
-      "mosque": "makkah",
-      "imam_key": "khayyat",
-      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
-      "audio_url": "http://archive.org/download/January2025MakkahJumuah/3rdJan2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/01/makkah-jumuah-3rd-january-2025.html",
-      "topic": "Renewing Intentions and Reflecting on Our Purpose in Life",
-      "summary": "This sermon emphasizes the importance of sincerity (niyyah) in all actions as Muslims embark on a new period of time. It calls upon the congregation to reflect on their ultimate purpose of worshipping Allah and striving for His pleasure in every aspect of their lives."
-    },
-    {
-      "date": "2025-01-03",
       "mosque": "madinah",
       "imam_key": "hudhaify",
       "imam_name": "Sheikh Ali Al-Hudhaify",
@@ -21,14 +11,14 @@
       "summary": "Highlighting the countless blessings bestowed by Allah, both seen and unseen, this sermon urges believers to cultivate a heart of gratitude. It encourages expressing thankfulness through constant remembrance of Allah and by utilizing these blessings in obedience to Him, following the noble example of the Prophet (PBUH)."
     },
     {
-      "date": "2025-01-10",
+      "date": "2025-01-03",
       "mosque": "makkah",
-      "imam_key": "juhany",
-      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
-      "audio_url": "http://archive.org/download/January2025MakkahJumuah/10thJan2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/01/makkah-jumuah-10th-january-2025.html",
-      "topic": "The Pillar of Prayer: Our Connection to Allah",
-      "summary": "This sermon stresses the profound significance of Salat as the cornerstone of Islam and the direct link between a servant and their Lord. It encourages upholding prayers with humility, devotion, and understanding, recognizing its power to purify hearts and prevent evil and indecency."
+      "imam_key": "khayyat",
+      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
+      "audio_url": "http://archive.org/download/January2025MakkahJumuah/3rdJan2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/01/makkah-jumuah-3rd-january-2025.html",
+      "topic": "Renewing Intentions and Reflecting on Our Purpose in Life",
+      "summary": "This sermon emphasizes the importance of sincerity (niyyah) in all actions as Muslims embark on a new period of time. It calls upon the congregation to reflect on their ultimate purpose of worshipping Allah and striving for His pleasure in every aspect of their lives."
     },
     {
       "date": "2025-01-10",
@@ -41,14 +31,14 @@
       "summary": "The sermon calls for strengthening the bonds of brotherhood and sisterhood among Muslims, emphasizing the Quranic and Prophetic commands for unity and compassion. It warns against factors leading to disunity, such as backbiting, suspicion, and contention, urging mutual respect and cooperation for the collective good."
     },
     {
-      "date": "2025-01-17",
+      "date": "2025-01-10",
       "mosque": "makkah",
-      "imam_key": "sudais",
-      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
-      "audio_url": "http://archive.org/download/January2025MakkahJumuah/17thJan2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/01/makkah-jumuah-17th-january-2025.html",
-      "topic": "True Reliance on Allah (Tawakkul) in Our Lives",
-      "summary": "This sermon explains the concept of true Tawakkul, which involves striving and taking all permissible means while placing ultimate trust and reliance on Allah's plan and wisdom. It reminds believers that with sincere Tawakkul, Allah will suffice them and open paths where none seemed to exist, bringing tranquility to the heart."
+      "imam_key": "juhany",
+      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
+      "audio_url": "http://archive.org/download/January2025MakkahJumuah/10thJan2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/01/makkah-jumuah-10th-january-2025.html",
+      "topic": "The Pillar of Prayer: Our Connection to Allah",
+      "summary": "This sermon stresses the profound significance of Salat as the cornerstone of Islam and the direct link between a servant and their Lord. It encourages upholding prayers with humility, devotion, and understanding, recognizing its power to purify hearts and prevent evil and indecency."
     },
     {
       "date": "2025-01-17",
@@ -61,14 +51,14 @@
       "summary": "This sermon elaborates on the immense virtue of Sabr (patience) in the face of adversity, in abstaining from sins, and in performing acts of obedience. It highlights how patience is a hallmark of true believers, leading to great rewards in this life and the Hereafter, and drawing one closer to Allah."
     },
     {
-      "date": "2025-01-24",
+      "date": "2025-01-17",
       "mosque": "makkah",
-      "imam_key": "baleelah",
-      "imam_name": "Sheikh Bandar Baleelah",
-      "audio_url": "http://archive.org/download/January2025MakkahJumuah/24thJan2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/01/makkah-jumuah-24th-january-2025.html",
-      "topic": "The Pursuit of Beneficial Knowledge in Islam",
-      "summary": "Emphasizing the high status of seeking beneficial knowledge in Islam, both religious and worldly, this sermon highlights its role in understanding Allah's signs and fulfilling one's duties. It urges Muslims to dedicate themselves to learning, reflecting, and acting upon knowledge, recognizing its power to uplift individuals and communities."
+      "imam_key": "sudais",
+      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
+      "audio_url": "http://archive.org/download/January2025MakkahJumuah/17thJan2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/01/makkah-jumuah-17th-january-2025.html",
+      "topic": "True Reliance on Allah (Tawakkul) in Our Lives",
+      "summary": "This sermon explains the concept of true Tawakkul, which involves striving and taking all permissible means while placing ultimate trust and reliance on Allah's plan and wisdom. It reminds believers that with sincere Tawakkul, Allah will suffice them and open paths where none seemed to exist, bringing tranquility to the heart."
     },
     {
       "date": "2025-01-24",
@@ -81,14 +71,14 @@
       "summary": "This sermon discusses the comprehensive meaning of Haya (modesty or shyness), encompassing shame before Allah, self-respect, and ethical conduct in interactions with others. It explains how Haya is an integral part of faith, promoting purity, dignity, and preventing one from falling into sins and indecency."
     },
     {
-      "date": "2025-01-31",
+      "date": "2025-01-24",
       "mosque": "makkah",
-      "imam_key": "dawsari",
-      "imam_name": "Sheikh Yasir al-Dawsari",
-      "audio_url": "http://archive.org/download/January2025MakkahJumuah/31stJan2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/02/makkah-jumuah-31st-january-2025.html",
-      "topic": "Sincerity (Ikhlas): Foundation of Accepted Deeds and Blessings",
-      "summary": "This sermon emphasizes the critical role of sincerity (Ikhlas) in all aspects of a Muslim's life, from worship to daily interactions. It reminds believers that Allah accepts only deeds performed purely for His sake, urging them to purify their intentions to attain divine reward and inner peace."
+      "imam_key": "baleelah",
+      "imam_name": "Sheikh Bandar Baleelah",
+      "audio_url": "http://archive.org/download/January2025MakkahJumuah/24thJan2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/01/makkah-jumuah-24th-january-2025.html",
+      "topic": "The Pursuit of Beneficial Knowledge in Islam",
+      "summary": "Emphasizing the high status of seeking beneficial knowledge in Islam, both religious and worldly, this sermon highlights its role in understanding Allah's signs and fulfilling one's duties. It urges Muslims to dedicate themselves to learning, reflecting, and acting upon knowledge, recognizing its power to uplift individuals and communities."
     },
     {
       "date": "2025-01-31",
@@ -101,14 +91,14 @@
       "summary": "The sermon highlights the profound blessings and guidance found within the Holy Quran, the divine word of Allah. It encourages Muslims to strengthen their relationship with the Quran through recitation, contemplation, and implementation of its teachings in their lives, for it is a source of healing and wisdom."
     },
     {
-      "date": "2025-02-07",
+      "date": "2025-01-31",
       "mosque": "makkah",
-      "imam_key": "ghazzawi",
-      "imam_name": "Sheikh Faisal Ghazzawi",
-      "audio_url": "http://archive.org/download/February2025MakkahJumuah/7thFeb2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/02/makkah-jumuah-8th-february-2025.html",
-      "topic": "Fulfilling Trusts (Amanat): A Cornerstone of Faith and Society",
-      "summary": "This sermon addresses the comprehensive concept of Amanah (trust) in Islam, encompassing responsibilities towards Allah, oneself, family, and society. It stresses the grave importance of fulfilling all trusts faithfully, emphasizing that trustworthiness is a hallmark of true believers and essential for a just and harmonious community."
+      "imam_key": "dawsari",
+      "imam_name": "Sheikh Yasir al-Dawsari",
+      "audio_url": "http://archive.org/download/January2025MakkahJumuah/31stJan2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/02/makkah-jumuah-31st-january-2025.html",
+      "topic": "Sincerity (Ikhlas): Foundation of Accepted Deeds and Blessings",
+      "summary": "This sermon emphasizes the critical role of sincerity (Ikhlas) in all aspects of a Muslim's life, from worship to daily interactions. It reminds believers that Allah accepts only deeds performed purely for His sake, urging them to purify their intentions to attain divine reward and inner peace."
     },
     {
       "date": "2025-02-07",
@@ -121,14 +111,14 @@
       "summary": "The sermon explores the virtues of patience (Sabr) in the face of adversity, trials, and temptations, drawing lessons from the life of the Prophet (PBUH). It reminds believers that enduring hardships with steadfastness and hope in Allah's mercy leads to immense rewards and spiritual growth."
     },
     {
-      "date": "2025-02-14",
+      "date": "2025-02-07",
       "mosque": "makkah",
-      "imam_key": "muaiqly",
-      "imam_name": "Sheikh Maher al-Mu'aiqly",
-      "audio_url": "http://archive.org/download/February2025MakkahJumuah/14thFeb2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/02/makkah-jumuah-14th-february-2025.html",
-      "topic": "Muslim Unity: Preserving the Ummah's Strength and Cohesion",
-      "summary": "This sermon calls upon the Muslim Ummah to uphold unity and brotherhood, warning against the dangers of division, sectarianism, and discord. It emphasizes that strength lies in adherence to the Quran and Sunnah, fostering mutual respect, and working together for the common good."
+      "imam_key": "ghazzawi",
+      "imam_name": "Sheikh Faisal Ghazzawi",
+      "audio_url": "http://archive.org/download/February2025MakkahJumuah/7thFeb2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/02/makkah-jumuah-8th-february-2025.html",
+      "topic": "Fulfilling Trusts (Amanat): A Cornerstone of Faith and Society",
+      "summary": "This sermon addresses the comprehensive concept of Amanah (trust) in Islam, encompassing responsibilities towards Allah, oneself, family, and society. It stresses the grave importance of fulfilling all trusts faithfully, emphasizing that trustworthiness is a hallmark of true believers and essential for a just and harmonious community."
     },
     {
       "date": "2025-02-14",
@@ -141,14 +131,14 @@
       "summary": "The sermon focuses on the paramount importance of good character and manners (Akhlaq) in Islam, as exemplified by the Prophet Muhammad (PBUH). It encourages Muslims to cultivate virtues such as kindness, honesty, humility, and generosity in their interactions, reflecting the beauty of their faith."
     },
     {
-      "date": "2025-02-21",
+      "date": "2025-02-14",
       "mosque": "makkah",
-      "imam_key": "humaid",
-      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
-      "audio_url": "http://archive.org/download/February2025MakkahJumuah/21stFeb2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/02/makkah-jumuah-21st-february-2025.html",
-      "topic": "The Transient World: Preparing for the Eternal Abode",
-      "summary": "This sermon serves as a powerful reminder of the temporary nature of this worldly life and the inevitability of death, urging believers to reflect on their ultimate destination. It emphasizes the importance of utilizing one's time wisely, performing good deeds, and seeking Allah's forgiveness to prepare for the eternal Hereafter."
+      "imam_key": "muaiqly",
+      "imam_name": "Sheikh Maher al-Mu'aiqly",
+      "audio_url": "http://archive.org/download/February2025MakkahJumuah/14thFeb2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/02/makkah-jumuah-14th-february-2025.html",
+      "topic": "Muslim Unity: Preserving the Ummah's Strength and Cohesion",
+      "summary": "This sermon calls upon the Muslim Ummah to uphold unity and brotherhood, warning against the dangers of division, sectarianism, and discord. It emphasizes that strength lies in adherence to the Quran and Sunnah, fostering mutual respect, and working together for the common good."
     },
     {
       "date": "2025-02-21",
@@ -161,14 +151,14 @@
       "summary": "The sermon highlights the great virtues and rewards associated with seeking beneficial knowledge in Islam, both religious and worldly, as a means to understand Allah's creation and serve humanity. It encourages Muslims to continuously pursue learning and apply their knowledge for personal growth and societal betterment."
     },
     {
-      "date": "2025-02-28",
+      "date": "2025-02-21",
       "mosque": "makkah",
-      "imam_key": "khayyat",
-      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
-      "audio_url": "http://archive.org/download/February2025MakkahJumuah/28thFeb2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/03/makkah-jumuah-28th-february-2025.html",
-      "topic": "Welcoming Ramadan: Preparing for the Blessed Month",
-      "summary": "The sermon emphasizes the immense blessings and spiritual opportunities of the approaching month of Ramadan. It urges Muslims to prepare themselves physically and spiritually, purifying their intentions and setting goals for worship, devotion, and good deeds to make the most of this sacred time."
+      "imam_key": "humaid",
+      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
+      "audio_url": "http://archive.org/download/February2025MakkahJumuah/21stFeb2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/02/makkah-jumuah-21st-february-2025.html",
+      "topic": "The Transient World: Preparing for the Eternal Abode",
+      "summary": "This sermon serves as a powerful reminder of the temporary nature of this worldly life and the inevitability of death, urging believers to reflect on their ultimate destination. It emphasizes the importance of utilizing one's time wisely, performing good deeds, and seeking Allah's forgiveness to prepare for the eternal Hereafter."
     },
     {
       "date": "2025-02-28",
@@ -181,14 +171,34 @@
       "summary": "This khutbah highlights the profound virtues of Ramadan as a month of mercy, forgiveness, and liberation from Hellfire. It calls upon believers to cultivate true spiritual readiness, repenting from sins, strengthening their connection with the Quran, and embracing acts of charity and kindness in anticipation of the holy month."
     },
     {
-      "date": "2025-04-04",
+      "date": "2025-02-28",
       "mosque": "makkah",
-      "imam_key": "baleelah",
-      "imam_name": "Sheikh Bandar Baleelah",
-      "audio_url": "http://archive.org/download/April2025MakkahJumuah/4thApr2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/04/makkah-jumuah-4th-april-2025.html",
-      "topic": "Sincerity in Fasting and Quranic Reflection",
-      "summary": "The sermon reminds worshipers of the importance of sincerity (Ikhlas) in their fasting and all acts of devotion during Ramadan. It encourages deep reflection on the Quran, understanding its verses, and striving to implement its teachings in daily life, transforming hearts and actions."
+      "imam_key": "khayyat",
+      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
+      "audio_url": "http://archive.org/download/February2025MakkahJumuah/28thFeb2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/03/makkah-jumuah-28th-february-2025.html",
+      "topic": "Welcoming Ramadan: Preparing for the Blessed Month",
+      "summary": "The sermon emphasizes the immense blessings and spiritual opportunities of the approaching month of Ramadan. It urges Muslims to prepare themselves physically and spiritually, purifying their intentions and setting goals for worship, devotion, and good deeds to make the most of this sacred time."
+    },
+    {
+      "date": "2025-03-21",
+      "mosque": "madinah",
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "topic": "Intensifying Worship: Seizing the Final Moments of Ramadan",
+      "summary": "Motivating Muslims to maximize their worship in the remaining precious days of Ramadan, this sermon focuses on acts like extra prayers, dhikr, and dedicated Quran recitation. It highlights the spiritual benefits of I'tikaf and making the most of these final opportunities for immense reward and spiritual purification.",
+      "audio_url": "http://archive.org/download/February2025MadeenahJumuah/28tFeb2025MadeenahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/03/madeenah-jumuah-21st-ramadan-1446.html"
+    },
+    {
+      "date": "2025-03-21",
+      "mosque": "makkah",
+      "imam_key": "ghazzawi",
+      "imam_name": "Sheikh Faisal Ghazzawi",
+      "topic": "The Last Ten Nights: Seeking Laylat al-Qadr",
+      "summary": "This sermon prepares the congregation for the immensely virtuous last ten nights of Ramadan, emphasizing their unparalleled rewards and the pursuit of Laylat al-Qadr (the Night of Decree). It encourages intensified worship, fervent supplication, and seeking forgiveness during this peak spiritual period for maximum benefit.",
+      "audio_url": "http://archive.org/download/February2025MakkahJumuah/28hFeb2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/03/makkah-jumuah-21st-ramadan-1446.html"
     },
     {
       "date": "2025-04-04",
@@ -201,14 +211,14 @@
       "summary": "This khutbah addresses the challenge of sustaining spiritual enthusiasm beyond the initial days of Ramadan. It stresses the virtues of patience and perseverance in worship, encouraging believers to maintain their focus on piety, remembrance of Allah, and avoiding distractions that diminish the reward of their fast."
     },
     {
-      "date": "2025-04-11",
+      "date": "2025-04-04",
       "mosque": "makkah",
-      "imam_key": "muaiqly",
-      "imam_name": "Sheikh Maher al-Mu'aiqly",
-      "audio_url": "http://archive.org/download/April2025MakkahJumuah/11thApr2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/04/makkah-jumuah-11th-april-2025.html",
-      "topic": "Seeking Forgiveness and Allah's Boundless Mercy",
-      "summary": "The sermon focuses on the immense opportunity for seeking forgiveness during Ramadan, emphasizing Allah's boundless mercy towards His creation. It encourages sincere repentance, increasing supplications, and reflecting on one's shortcomings to purify the soul and draw closer to the Most Merciful."
+      "imam_key": "baleelah",
+      "imam_name": "Sheikh Bandar Baleelah",
+      "audio_url": "http://archive.org/download/April2025MakkahJumuah/4thApr2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/04/makkah-jumuah-4th-april-2025.html",
+      "topic": "Sincerity in Fasting and Quranic Reflection",
+      "summary": "The sermon reminds worshipers of the importance of sincerity (Ikhlas) in their fasting and all acts of devotion during Ramadan. It encourages deep reflection on the Quran, understanding its verses, and striving to implement its teachings in daily life, transforming hearts and actions."
     },
     {
       "date": "2025-04-11",
@@ -221,14 +231,14 @@
       "summary": "This khutbah urges Muslims to remain steadfast in their acts of worship as Ramadan progresses, guarding against the spiritual fatigue that can set in. It advises on avoiding heedlessness and worldly distractions, encouraging continued devotion, charity, and acts of kindness to maximize the spiritual benefits of the blessed month."
     },
     {
-      "date": "2025-04-18",
+      "date": "2025-04-11",
       "mosque": "makkah",
-      "imam_key": "juhany",
-      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
-      "audio_url": "http://archive.org/download/April2025MakkahJumuah/18thApr2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/04/makkah-jumuah-18th-april-2025.html",
-      "topic": "The Last Ten Nights: Seeking Laylat al-Qadr",
-      "summary": "The sermon highlights the unparalleled significance of the last ten nights of Ramadan, urging believers to exert maximum effort in worship, prayer, and recitation of the Quran. It emphasizes the quest for Laylat al-Qadr (The Night of Decree), a night better than a thousand months, and the immense rewards for devotion during this blessed period."
+      "imam_key": "muaiqly",
+      "imam_name": "Sheikh Maher al-Mu'aiqly",
+      "audio_url": "http://archive.org/download/April2025MakkahJumuah/11thApr2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/04/makkah-jumuah-11th-april-2025.html",
+      "topic": "Seeking Forgiveness and Allah's Boundless Mercy",
+      "summary": "The sermon focuses on the immense opportunity for seeking forgiveness during Ramadan, emphasizing Allah's boundless mercy towards His creation. It encourages sincere repentance, increasing supplications, and reflecting on one's shortcomings to purify the soul and draw closer to the Most Merciful."
     },
     {
       "date": "2025-04-18",
@@ -241,14 +251,14 @@
       "summary": "This khutbah encourages Muslims to intensify their good deeds, supplications, and remembrance of Allah during the concluding days of Ramadan. It stresses the importance of I'tikaf (seclusion in the mosque), increasing charity, and seeking forgiveness with sincere hearts to attain complete purification and salvation before the month ends."
     },
     {
-      "date": "2025-04-25",
+      "date": "2025-04-18",
       "mosque": "makkah",
-      "imam_key": "humaid",
-      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
-      "audio_url": "http://archive.org/download/April2025MakkahJumuah/25thApr2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/04/makkah-jumuah-25th-april-2025.html",
-      "topic": "The Oneness of Allah and Steadfastness in Worship",
-      "summary": "The sermon will remind believers of the foundational principle of Tawhid, emphasizing Allah's unique sovereignty and the importance of unwavering devotion. It will encourage steadfastness in all acts of worship, seeking Allah's pleasure alone."
+      "imam_key": "juhany",
+      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
+      "audio_url": "http://archive.org/download/April2025MakkahJumuah/18thApr2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/04/makkah-jumuah-18th-april-2025.html",
+      "topic": "The Last Ten Nights: Seeking Laylat al-Qadr",
+      "summary": "The sermon highlights the unparalleled significance of the last ten nights of Ramadan, urging believers to exert maximum effort in worship, prayer, and recitation of the Quran. It emphasizes the quest for Laylat al-Qadr (The Night of Decree), a night better than a thousand months, and the immense rewards for devotion during this blessed period."
     },
     {
       "date": "2025-04-25",
@@ -261,14 +271,14 @@
       "summary": "This khutbah will highlight the immense blessings of following the Prophet Muhammad's Sunnah as a complete way of life. It will guide Muslims on embodying his noble character and teachings for success in this world and the Hereafter."
     },
     {
-      "date": "2025-05-02",
+      "date": "2025-04-25",
       "mosque": "makkah",
-      "imam_key": "khayyat",
-      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
-      "audio_url": "http://archive.org/download/May2025MakkahJumuah/2ndMay2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-2nd-may-2025.html",
-      "topic": "The Power of Sincerity and Trust in Allah",
-      "summary": "The sermon will delve into the profound significance of ikhlas (sincerity) in all deeds and tawakkul (trust) in Allah's divine plan. It will emphasize how these virtues purify intentions and bring tranquility to the heart, strengthening one's relationship with the Creator."
+      "imam_key": "humaid",
+      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
+      "audio_url": "http://archive.org/download/April2025MakkahJumuah/25thApr2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/04/makkah-jumuah-25th-april-2025.html",
+      "topic": "The Oneness of Allah and Steadfastness in Worship",
+      "summary": "The sermon will remind believers of the foundational principle of Tawhid, emphasizing Allah's unique sovereignty and the importance of unwavering devotion. It will encourage steadfastness in all acts of worship, seeking Allah's pleasure alone."
     },
     {
       "date": "2025-05-02",
@@ -281,14 +291,14 @@
       "summary": "This khutbah will underscore the high status of seeking beneficial knowledge in Islam and the responsibility that comes with it. It will urge the congregation to apply this knowledge in their daily lives, benefiting themselves and their communities."
     },
     {
-      "date": "2025-05-09",
+      "date": "2025-05-02",
       "mosque": "makkah",
-      "imam_key": "sudais",
-      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
-      "audio_url": "http://archive.org/download/May2025MakkahJumuah/9thMay2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-9th-may-2025.html",
-      "topic": "Reflecting on Allah's Signs and Cultivating Gratitude",
-      "summary": "The sermon will invite reflection upon the magnificent signs of Allah evident in the universe and within ourselves, inspiring a deeper sense of awe and submission. It will emphasize the continuous need to express gratitude for Allah's countless blessings, both apparent and hidden."
+      "imam_key": "khayyat",
+      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
+      "audio_url": "http://archive.org/download/May2025MakkahJumuah/2ndMay2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-2nd-may-2025.html",
+      "topic": "The Power of Sincerity and Trust in Allah",
+      "summary": "The sermon will delve into the profound significance of ikhlas (sincerity) in all deeds and tawakkul (trust) in Allah's divine plan. It will emphasize how these virtues purify intentions and bring tranquility to the heart, strengthening one's relationship with the Creator."
     },
     {
       "date": "2025-05-09",
@@ -301,14 +311,14 @@
       "summary": "This khutbah will focus on the various rights enshrined in Islam, including the rights of parents, children, spouses, neighbors, and the wider community. It will call for Muslims to actively fulfill these rights to foster a just, compassionate, and harmonious society."
     },
     {
-      "date": "2025-05-16",
+      "date": "2025-05-09",
       "mosque": "makkah",
-      "imam_key": "dawsari",
-      "imam_name": "Sheikh Yasir al-Dawsari",
-      "audio_url": "http://archive.org/download/May2025MakkahJumuah/16thMay2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-16th-may-2025.html",
-      "topic": "Preparing for the Hereafter: Investing in Good Deeds",
-      "summary": "The sermon will serve as a poignant reminder of the transient nature of this worldly life and the ultimate return to Allah. It will encourage believers to actively prepare for the Hereafter by accumulating good deeds, seeking forgiveness, and living a purposeful life."
+      "imam_key": "sudais",
+      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
+      "audio_url": "http://archive.org/download/May2025MakkahJumuah/9thMay2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-9th-may-2025.html",
+      "topic": "Reflecting on Allah's Signs and Cultivating Gratitude",
+      "summary": "The sermon will invite reflection upon the magnificent signs of Allah evident in the universe and within ourselves, inspiring a deeper sense of awe and submission. It will emphasize the continuous need to express gratitude for Allah's countless blessings, both apparent and hidden."
     },
     {
       "date": "2025-05-16",
@@ -321,14 +331,14 @@
       "summary": "This khutbah will address the critical Islamic principle of unity (wahdah) among Muslims and warn against the dangers of discord and sectarianism. It will call for strengthening brotherhood, resolving differences with wisdom, and focusing on shared Islamic values for the strength of the Ummah."
     },
     {
-      "date": "2025-05-23",
+      "date": "2025-05-16",
       "mosque": "makkah",
-      "imam_key": "baleelah",
-      "imam_name": "Sheikh Bandar Baleelah",
-      "audio_url": "http://archive.org/download/May2025MakkahJumuah/23rdMay2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-23rd-may-2025.html",
-      "topic": "The Path of Steadfastness After Ramadan's Blessings",
-      "summary": "Urges Muslims to maintain the spiritual momentum gained during Ramadan by consistently performing good deeds and acts of worship. It emphasizes that true devotion is continuous, not confined to specific seasons, strengthening one's connection with Allah throughout the year."
+      "imam_key": "dawsari",
+      "imam_name": "Sheikh Yasir al-Dawsari",
+      "audio_url": "http://archive.org/download/May2025MakkahJumuah/16thMay2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-16th-may-2025.html",
+      "topic": "Preparing for the Hereafter: Investing in Good Deeds",
+      "summary": "The sermon will serve as a poignant reminder of the transient nature of this worldly life and the ultimate return to Allah. It will encourage believers to actively prepare for the Hereafter by accumulating good deeds, seeking forgiveness, and living a purposeful life."
     },
     {
       "date": "2025-05-23",
@@ -341,14 +351,14 @@
       "summary": "Explores the profound meaning of Tawakkul, relying entirely on Allah while exerting one's best efforts in all matters. It highlights how genuine trust in divine wisdom brings inner peace, resilience in challenges, and a deeper understanding of Allah's perfect plan."
     },
     {
-      "date": "2025-05-30",
+      "date": "2025-05-23",
       "mosque": "makkah",
-      "imam_key": "muaiqly",
-      "imam_name": "Sheikh Maher al-Mu'aiqly",
-      "audio_url": "http://archive.org/download/May2025MakkahJumuah/30thMay2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-30th-may-2025.html",
-      "topic": "Hajj: A Journey of Purity and Devotion",
-      "summary": "Reminds pilgrims and Muslims worldwide of the immense spiritual significance of Hajj, calling for sincere intentions and thorough preparation for this pillar of Islam. It emphasizes the journey as an opportunity for spiritual purification, seeking forgiveness, and strengthening one's bond with Allah."
+      "imam_key": "baleelah",
+      "imam_name": "Sheikh Bandar Baleelah",
+      "audio_url": "http://archive.org/download/May2025MakkahJumuah/23rdMay2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-23rd-may-2025.html",
+      "topic": "The Path of Steadfastness After Ramadan's Blessings",
+      "summary": "Urges Muslims to maintain the spiritual momentum gained during Ramadan by consistently performing good deeds and acts of worship. It emphasizes that true devotion is continuous, not confined to specific seasons, strengthening one's connection with Allah throughout the year."
     },
     {
       "date": "2025-05-30",
@@ -361,14 +371,14 @@
       "summary": "Discusses the special status of the four Sacred Months in Islam, particularly Dhul Qa'dah, urging Muslims to magnify their reverence for Allah and increase good deeds during this blessed time. It highlights how righteous actions performed in these months carry greater reward and help prepare the heart for the upcoming Hajj season."
     },
     {
-      "date": "2025-06-06",
+      "date": "2025-05-30",
       "mosque": "makkah",
-      "imam_key": "juhany",
-      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
-      "audio_url": "",
-      "page_url": "http://www.haramain.info/2025/06/makkah-jumuah-6th-june-2025.html",
-      "topic": "The Blessed First Ten Days of Dhul Hijjah",
-      "summary": "Exhorts the congregation to maximize good deeds during the most virtuous ten days of Dhul Hijjah, which are superior to all other days of the year. It encourages fasting, prayer, remembrance of Allah, charity, and preparing for the ultimate acts of worship during Hajj and Eid al-Adha."
+      "imam_key": "muaiqly",
+      "imam_name": "Sheikh Maher al-Mu'aiqly",
+      "audio_url": "http://archive.org/download/May2025MakkahJumuah/30thMay2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/05/makkah-jumuah-30th-may-2025.html",
+      "topic": "Hajj: A Journey of Purity and Devotion",
+      "summary": "Reminds pilgrims and Muslims worldwide of the immense spiritual significance of Hajj, calling for sincere intentions and thorough preparation for this pillar of Islam. It emphasizes the journey as an opportunity for spiritual purification, seeking forgiveness, and strengthening one's bond with Allah."
     },
     {
       "date": "2025-06-06",
@@ -381,14 +391,14 @@
       "summary": "Reflects on the profound lessons of sacrifice and unwavering submission to Allah exemplified by Prophet Ibrahim (AS) during Dhul Hijjah. It calls believers to emulate his devotion, trust in divine commands, and be prepared to sacrifice personal desires for the sake of Allah."
     },
     {
-      "date": "2025-06-13",
+      "date": "2025-06-06",
       "mosque": "makkah",
-      "imam_key": "dawsari",
-      "imam_name": "Sheikh Yasir al-Dawsari",
-      "audio_url": "http://archive.org/download/June2025MakkahJumuah/13thJune2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/06/makkah-jumuah-13th-june-2025.html",
-      "topic": "Arafah and Eid al-Adha: A Celebration of Faith",
-      "summary": "Focuses on the immense spiritual significance of the Day of Arafah, where pilgrims gather to seek forgiveness and mercy, and the joyous occasion of Eid al-Adha. It encourages Muslims to utilize these blessed days for intense worship, sincere repentance, and sharing happiness with family and the needy."
+      "imam_key": "juhany",
+      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
+      "audio_url": "",
+      "page_url": "http://www.haramain.info/2025/06/makkah-jumuah-6th-june-2025.html",
+      "topic": "The Blessed First Ten Days of Dhul Hijjah",
+      "summary": "Exhorts the congregation to maximize good deeds during the most virtuous ten days of Dhul Hijjah, which are superior to all other days of the year. It encourages fasting, prayer, remembrance of Allah, charity, and preparing for the ultimate acts of worship during Hajj and Eid al-Adha."
     },
     {
       "date": "2025-06-13",
@@ -401,14 +411,14 @@
       "summary": "Highlights Hajj as a magnificent display of Islamic unity, where millions from diverse backgrounds gather as one, transcending race and status. The sermon emphasizes the importance of fostering brotherhood, compassion, and mutual support among Muslims, drawing inspiration from the collective spirit of the pilgrimage."
     },
     {
-      "date": "2025-06-20",
+      "date": "2025-06-13",
       "mosque": "makkah",
-      "imam_key": "khayyat",
-      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
-      "audio_url": "http://archive.org/download/June2025MakkahJumuah/20thJune2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/06/makkah-jumuah-20th-june-2025.html",
-      "topic": "Lessons from Hajj: Sustaining Piety Post-Pilgrimage.",
-      "summary": "This sermon emphasizes the importance of maintaining the spiritual gains and good deeds cultivated during Hajj. It urges pilgrims and residents alike to embody the spirit of sacrifice, devotion, and unity in their everyday lives, ensuring the pilgrimage's impact endures beyond its physical rites."
+      "imam_key": "dawsari",
+      "imam_name": "Sheikh Yasir al-Dawsari",
+      "audio_url": "http://archive.org/download/June2025MakkahJumuah/13thJune2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/06/makkah-jumuah-13th-june-2025.html",
+      "topic": "Arafah and Eid al-Adha: A Celebration of Faith",
+      "summary": "Focuses on the immense spiritual significance of the Day of Arafah, where pilgrims gather to seek forgiveness and mercy, and the joyous occasion of Eid al-Adha. It encourages Muslims to utilize these blessed days for intense worship, sincere repentance, and sharing happiness with family and the needy."
     },
     {
       "date": "2025-06-20",
@@ -421,14 +431,14 @@
       "summary": "This sermon highlights the immense blessings bestowed by Allah, particularly the opportunities for worship in Dhu al-Hijjah and the Hajj. It calls upon believers to express gratitude through obedience, steadfast adherence to the Prophet's Sunnah, and embodying his noble character in all aspects of life."
     },
     {
-      "date": "2025-06-27",
+      "date": "2025-06-20",
       "mosque": "makkah",
-      "imam_key": "humaid",
-      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
-      "audio_url": "http://archive.org/download/June2025MakkahJumuah/27thJune2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/06/makkah-jumuah-27th-june-2025.html",
-      "topic": "The Sanctity of Dhu al-Hijjah and Deeds.",
-      "summary": "This sermon explores the profound virtues and sanctity of Dhu al-Hijjah, one of the sacred months. It encourages Muslims to seize the remaining days for increased worship, sincere repentance, and good deeds, reflecting on the lessons of Ibrahim (AS) and the importance of submission to Allah."
+      "imam_key": "khayyat",
+      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
+      "audio_url": "http://archive.org/download/June2025MakkahJumuah/20thJune2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/06/makkah-jumuah-20th-june-2025.html",
+      "topic": "Lessons from Hajj: Sustaining Piety Post-Pilgrimage.",
+      "summary": "This sermon emphasizes the importance of maintaining the spiritual gains and good deeds cultivated during Hajj. It urges pilgrims and residents alike to embody the spirit of sacrifice, devotion, and unity in their everyday lives, ensuring the pilgrimage's impact endures beyond its physical rites."
     },
     {
       "date": "2025-06-27",
@@ -441,14 +451,14 @@
       "summary": "This sermon urges believers to engage in deep self-reflection, evaluating their actions and intentions as the sacred month progresses. It emphasizes the pursuit of Ihsan (excellence in worship and character) as a continuous journey, encouraging a renewed commitment to spiritual growth and accountability."
     },
     {
-      "date": "2025-07-04",
+      "date": "2025-06-27",
       "mosque": "makkah",
-      "imam_key": "sudais",
-      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
-      "audio_url": "http://archive.org/download/July2025MakkahJumuah/4thJuly2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-4th-july-2025.html",
-      "topic": "The Value of Time and New Beginnings.",
-      "summary": "This sermon reflects on the fleeting nature of time, urging Muslims to make the most of every moment as the Islamic year concludes and a new one begins. It calls for a renewed sense of purpose, setting righteous goals, and learning from the Hijra's spirit of perseverance and reliance on Allah."
+      "imam_key": "humaid",
+      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
+      "audio_url": "http://archive.org/download/June2025MakkahJumuah/27thJune2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/06/makkah-jumuah-27th-june-2025.html",
+      "topic": "The Sanctity of Dhu al-Hijjah and Deeds.",
+      "summary": "This sermon explores the profound virtues and sanctity of Dhu al-Hijjah, one of the sacred months. It encourages Muslims to seize the remaining days for increased worship, sincere repentance, and good deeds, reflecting on the lessons of Ibrahim (AS) and the importance of submission to Allah."
     },
     {
       "date": "2025-07-04",
@@ -461,14 +471,14 @@
       "summary": "This sermon highlights the paramount importance of sincere intentions (Niyyah) in all actions, emphasizing that deeds are judged by their underlying purpose. It encourages believers to cultivate unwavering trust (Tawakkul) in Allah as they embark on a new Islamic year, seeking His guidance and blessings."
     },
     {
-      "date": "2025-07-11",
+      "date": "2025-07-04",
       "mosque": "makkah",
-      "imam_key": "baleelah",
-      "imam_name": "Sheikh Bandar Baleelah",
-      "audio_url": "http://archive.org/download/July2025MakkahJumuah/11thJuly2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-11th-july-2025.html",
-      "topic": "Muharram: A Month of Sacredness and Reflection.",
-      "summary": "This sermon underscores the sanctity and blessings of Muharram, the first month of the Islamic calendar and one of the sacred months. It encourages believers to reflect on the lessons of the Hijra, emphasizing patience, sacrifice, and the importance of seeking Allah's forgiveness and blessings through good deeds."
+      "imam_key": "sudais",
+      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
+      "audio_url": "http://archive.org/download/July2025MakkahJumuah/4thJuly2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-4th-july-2025.html",
+      "topic": "The Value of Time and New Beginnings.",
+      "summary": "This sermon reflects on the fleeting nature of time, urging Muslims to make the most of every moment as the Islamic year concludes and a new one begins. It calls for a renewed sense of purpose, setting righteous goals, and learning from the Hijra's spirit of perseverance and reliance on Allah."
     },
     {
       "date": "2025-07-11",
@@ -481,14 +491,14 @@
       "summary": "This sermon recounts the profound lessons embedded in the Hijra (migration) of the Prophet Muhammad (PBUH) from Makkah to Madinah. It stresses the themes of unwavering faith, perseverance in the face of adversity, and the establishment of a strong, unified Muslim brotherhood, urging its application in contemporary challenges."
     },
     {
-      "date": "2025-07-18",
+      "date": "2025-07-11",
       "mosque": "makkah",
-      "imam_key": "muaiqly",
-      "imam_name": "Sheikh Maher al-Mu'aiqly",
-      "audio_url": "http://archive.org/download/July2025MakkahJumuah/18thJuly2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-19th-july-2025.html",
-      "topic": "Sustaining Righteousness: Lessons from the Sacred Months",
-      "summary": "This sermon emphasizes the importance of carrying over the spiritual gains from Dhul-Hijjah into the rest of the year. It reminds Muslims that piety is a continuous journey, not just seasonal, and encourages steadfastness in good deeds."
+      "imam_key": "baleelah",
+      "imam_name": "Sheikh Bandar Baleelah",
+      "audio_url": "http://archive.org/download/July2025MakkahJumuah/11thJuly2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-11th-july-2025.html",
+      "topic": "Muharram: A Month of Sacredness and Reflection.",
+      "summary": "This sermon underscores the sanctity and blessings of Muharram, the first month of the Islamic calendar and one of the sacred months. It encourages believers to reflect on the lessons of the Hijra, emphasizing patience, sacrifice, and the importance of seeking Allah's forgiveness and blessings through good deeds."
     },
     {
       "date": "2025-07-18",
@@ -501,14 +511,34 @@
       "summary": "Highlighting the enduring relevance of the Prophet's teachings and lifestyle as a complete guide, this sermon urges the congregation to internalize and practice the Sunnah. It emphasizes reflecting its wisdom and mercy in all aspects of life."
     },
     {
-      "date": "2025-07-25",
+      "date": "2025-07-18",
       "mosque": "makkah",
-      "imam_key": "juhany",
-      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
-      "audio_url": "http://archive.org/download/July2025MakkahJumuah/25thJuly2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-25th-july-2025.html",
-      "topic": "Reflecting on the Year: Accountability and Repentance",
-      "summary": "As the Islamic year concludes, this sermon calls for introspection and self-assessment, encouraging sincere repentance for shortcomings. It emphasizes Allah's boundless mercy and the opportunity for a fresh start with renewed commitment to obedience."
+      "imam_key": "muaiqly",
+      "imam_name": "Sheikh Maher al-Mu'aiqly",
+      "audio_url": "http://archive.org/download/July2025MakkahJumuah/18thJuly2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-19th-july-2025.html",
+      "topic": "Sustaining Righteousness: Lessons from the Sacred Months",
+      "summary": "This sermon emphasizes the importance of carrying over the spiritual gains from Dhul-Hijjah into the rest of the year. It reminds Muslims that piety is a continuous journey, not just seasonal, and encourages steadfastness in good deeds."
+    },
+    {
+      "date": "2025-07-19",
+      "mosque": "madinah",
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "audio_url": "http://archive.org/download/July2025MadeenahJumuah/18thJuly2025MadeenahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/07/madeenah-jumuah-19th-july-2025.html",
+      "topic": "The Blessings of Dhul-Hijjah and Preparing for the New Year",
+      "summary": "The sermon emphasizes the residual blessings of the month of Dhul-Hijjah, encouraging believers to reflect on the lessons of Hajj and Eid al-Adha, such as patience, sacrifice, and unity. It also serves as a timely reminder to evaluate one's actions, seek forgiveness, and set intentions for spiritual growth as the new Hijri year draws near."
+    },
+    {
+      "date": "2025-07-19",
+      "mosque": "makkah",
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "audio_url": "http://archive.org/download/July2025MakkahJumuah/18thJuly2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-19th-july-2025.html",
+      "topic": "Reflections on Hajj: Sincerity, Sacrifice, and Time's Value",
+      "summary": "This sermon calls for deep reflection on the spiritual journey of Hajj, even for those who did not perform it, highlighting the themes of sincerity, sacrifice, and devotion to Allah. It reminds the congregation of the fleeting nature of time and the approaching new Hijri year, urging them to make the most of their remaining days in worship and good deeds."
     },
     {
       "date": "2025-07-25",
@@ -521,14 +551,14 @@
       "summary": "Stressing the profound impact of speech in Islam, this sermon reminds believers to use their tongues for good and remembrance of Allah. It warns against backbiting and gossip, highlighting accountability for words in this life and the Hereafter."
     },
     {
-      "date": "2025-08-01",
+      "date": "2025-07-25",
       "mosque": "makkah",
-      "imam_key": "dawsari",
-      "imam_name": "Sheikh Yasir al-Dawsari",
-      "audio_url": "http://archive.org/download/August2025MakkahJumuah/1stAug2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/08/makkah-jumuah-1st-august-2025.html",
-      "topic": "The Hijrah: A New Beginning and Divine Reliance",
-      "summary": "Commemorating the significance of the Prophet's Hijrah, this sermon emphasizes its lessons of sacrifice, reliance on Allah, and starting anew with firm faith. It encourages Muslims to draw inspiration from this pivotal event for their own spiritual journeys."
+      "imam_key": "juhany",
+      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
+      "audio_url": "http://archive.org/download/July2025MakkahJumuah/25thJuly2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/07/makkah-jumuah-25th-july-2025.html",
+      "topic": "Reflecting on the Year: Accountability and Repentance",
+      "summary": "As the Islamic year concludes, this sermon calls for introspection and self-assessment, encouraging sincere repentance for shortcomings. It emphasizes Allah's boundless mercy and the opportunity for a fresh start with renewed commitment to obedience."
     },
     {
       "date": "2025-08-01",
@@ -541,14 +571,14 @@
       "summary": "This sermon explains the sacredness of Muharram as one of the four holy months, urging believers to maximize good deeds and avoid sins during this blessed time. It reminds the congregation of its historical significance and opportunities for spiritual growth."
     },
     {
-      "date": "2025-08-08",
+      "date": "2025-08-01",
       "mosque": "makkah",
-      "imam_key": "khayyat",
-      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
-      "audio_url": "http://archive.org/download/August2025MakkahJumuah/8thAug2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/08/makkah-jumuah-8th-august-2025.html",
-      "topic": "Steadfastness in Faith: Lessons from the Prophets",
-      "summary": "Drawing upon the stories of prophets, particularly those associated with Muharram, this sermon illustrates the importance of patience, perseverance, and unwavering trust in Allah's plan. It urges Muslims to remain firm in their faith amidst life's challenges."
+      "imam_key": "dawsari",
+      "imam_name": "Sheikh Yasir al-Dawsari",
+      "audio_url": "http://archive.org/download/August2025MakkahJumuah/1stAug2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/08/makkah-jumuah-1st-august-2025.html",
+      "topic": "The Hijrah: A New Beginning and Divine Reliance",
+      "summary": "Commemorating the significance of the Prophet's Hijrah, this sermon emphasizes its lessons of sacrifice, reliance on Allah, and starting anew with firm faith. It encourages Muslims to draw inspiration from this pivotal event for their own spiritual journeys."
     },
     {
       "date": "2025-08-08",
@@ -561,14 +591,14 @@
       "summary": "This sermon emphasizes the Islamic imperative of unity among Muslims, highlighting its strength and blessing, and warning against division and discord. It calls upon the community to embody the spirit of brotherhood, mutual respect, and cooperation."
     },
     {
-      "date": "2025-08-15",
+      "date": "2025-08-08",
       "mosque": "makkah",
-      "imam_key": "baleelah",
-      "imam_name": "Sheikh Bandar Baleelah",
-      "audio_url": "http://archive.org/download/August2025MakkahJumuah/15thAug2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/08/makkah-jumuah-15th-august-2025.html",
-      "topic": "The Importance of Honesty and Trustworthiness in Islam",
-      "summary": "This sermon emphasizes the virtues of honesty (Siddiq) and trustworthiness (Amanah) as foundational principles in Islam. It highlights how these qualities are essential for individual integrity and building strong, cohesive communities, drawing lessons from the Quran and the life of the Prophet (PBUH)."
+      "imam_key": "khayyat",
+      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
+      "audio_url": "http://archive.org/download/August2025MakkahJumuah/8thAug2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/08/makkah-jumuah-8th-august-2025.html",
+      "topic": "Steadfastness in Faith: Lessons from the Prophets",
+      "summary": "Drawing upon the stories of prophets, particularly those associated with Muharram, this sermon illustrates the importance of patience, perseverance, and unwavering trust in Allah's plan. It urges Muslims to remain firm in their faith amidst life's challenges."
     },
     {
       "date": "2025-08-15",
@@ -581,14 +611,14 @@
       "summary": "The sermon reminds congregants to reflect upon and express profound gratitude for the innumerable blessings Allah has bestowed upon them. It encourages believers to show thankfulness through worship, good deeds, and recognizing divine favor in all aspects of life, following the Sunnah of the Prophet (PBUH)."
     },
     {
-      "date": "2025-08-22",
+      "date": "2025-08-15",
       "mosque": "makkah",
-      "imam_key": "humaid",
-      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
-      "audio_url": "http://archive.org/download/August2025MakkahJumuah/22ndAug2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/08/makkah-jumuah-22nd-august-2025.html",
-      "topic": "Remembering Death and Preparing for the Hereafter",
-      "summary": "This khutbah focuses on the inevitable reality of death and the paramount importance of preparing for the ultimate journey to the Hereafter. It urges Muslims to engage in sincere repentance, perform righteous deeds, and live a life mindful of accountability, recognizing the transient nature of this worldly existence."
+      "imam_key": "baleelah",
+      "imam_name": "Sheikh Bandar Baleelah",
+      "audio_url": "http://archive.org/download/August2025MakkahJumuah/15thAug2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/08/makkah-jumuah-15th-august-2025.html",
+      "topic": "The Importance of Honesty and Trustworthiness in Islam",
+      "summary": "This sermon emphasizes the virtues of honesty (Siddiq) and trustworthiness (Amanah) as foundational principles in Islam. It highlights how these qualities are essential for individual integrity and building strong, cohesive communities, drawing lessons from the Quran and the life of the Prophet (PBUH)."
     },
     {
       "date": "2025-08-22",
@@ -601,14 +631,14 @@
       "summary": "The sermon illuminates the expansive mercy and compassion of Prophet Muhammad (PBUH), describing him as a mercy to all of creation. It details how his character embodied kindness towards Muslims, non-Muslims, animals, and the environment, encouraging believers to emulate this noble attribute in their daily lives."
     },
     {
-      "date": "2025-08-29",
+      "date": "2025-08-22",
       "mosque": "makkah",
       "imam_key": "humaid",
       "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
-      "audio_url": "http://archive.org/download/August2025MakkahJumuah/29thAug2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-29th-august-2025.html",
-      "topic": "Emulating the Prophet's Character: A Path to Success",
-      "summary": "As Rabi' al-Awwal begins, this sermon highlights the exemplary character of Prophet Muhammad (PBUH) as the perfect role model for humanity. It calls upon Muslims to study his Seerah and strive to adopt his noble virtues such as patience, generosity, justice, and forgiveness, as a means to achieve true success in both worlds."
+      "audio_url": "http://archive.org/download/August2025MakkahJumuah/22ndAug2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/08/makkah-jumuah-22nd-august-2025.html",
+      "topic": "Remembering Death and Preparing for the Hereafter",
+      "summary": "This khutbah focuses on the inevitable reality of death and the paramount importance of preparing for the ultimate journey to the Hereafter. It urges Muslims to engage in sincere repentance, perform righteous deeds, and live a life mindful of accountability, recognizing the transient nature of this worldly existence."
     },
     {
       "date": "2025-08-29",
@@ -619,6 +649,16 @@
       "page_url": "http://www.haramain.info/2025/09/madeenah-jumuah-29th-august-2025.html",
       "topic": "The Prophet's Love and Our Duty Towards Him",
       "summary": "This khutbah emphasizes the profound love Prophet Muhammad (PBUH) had for his Ummah and the reciprocal duty of believers to love and honor him. It explains that this love is best expressed through following his Sunnah, sending abundant salutations upon him, and defending his honor and legacy."
+    },
+    {
+      "date": "2025-08-29",
+      "mosque": "makkah",
+      "imam_key": "humaid",
+      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
+      "audio_url": "http://archive.org/download/August2025MakkahJumuah/29thAug2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-29th-august-2025.html",
+      "topic": "Emulating the Prophet's Character: A Path to Success",
+      "summary": "As Rabi' al-Awwal begins, this sermon highlights the exemplary character of Prophet Muhammad (PBUH) as the perfect role model for humanity. It calls upon Muslims to study his Seerah and strive to adopt his noble virtues such as patience, generosity, justice, and forgiveness, as a means to achieve true success in both worlds."
     },
     {
       "date": "2025-09-05",
@@ -641,14 +681,14 @@
       "summary": "This khutbah underscores the power and significance of Du'a (supplication) as a direct and intimate form of worship and communication with Allah. It encourages believers to consistently turn to Allah with full trust and reliance (Tawakkul) in all circumstances, recognizing Him as the All-Hearing, All-Responsive to their pleas."
     },
     {
-      "date": "2025-09-12",
+      "date": "2025-09-06",
       "mosque": "makkah",
-      "imam_key": "baleelah",
-      "imam_name": "Sheikh Bandar Baleelah",
-      "audio_url": "http://archive.org/download/September2025MakkahJumuah/12thSept2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-12th-september-2025.html",
-      "topic": "Lessons from Hajj: The Path of Sacrifice and Gratitude",
-      "summary": "This sermon reflects on the recently concluded Hajj pilgrimage, emphasizing the profound lessons of sacrifice, devotion, and submission to Allah demonstrated by Prophet Ibrahim. It encourages pilgrims and residents alike to embody the spirit of Hajj in their daily lives, cultivating sincere gratitude for Allah's blessings and striving for taqwa."
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "audio_url": "http://archive.org/download/September2025MakkahJumuah/5thSept2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-6th-september-2025.html",
+      "topic": "Lessons from Hijrah: Reliance, Sacrifice, and New Beginnings",
+      "summary": "This sermon reflects on the profound lessons derived from the Hijrah (migration) of the Prophet Muhammad (PBUH), marking the beginning of the Hijri year. It emphasizes the importance of reliance on Allah, sacrifice for His cause, and taking proactive steps towards spiritual and moral improvement in the new year."
     },
     {
       "date": "2025-09-12",
@@ -661,14 +701,14 @@
       "summary": "The sermon urges believers to maintain the heightened state of worship and good deeds experienced during the blessed days of Dhu al-Hijjah. It highlights the importance of consistent devotion, patience (sabr), and unity within the Muslim community, encouraging adherence to the Sunnah of the Prophet (PBUH) as a continuous path of spiritual growth."
     },
     {
-      "date": "2025-09-19",
+      "date": "2025-09-12",
       "mosque": "makkah",
-      "imam_key": "juhany",
-      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
-      "audio_url": "http://archive.org/download/September2025MakkahJumuah/19thSept2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-19th-september-2025.html",
-      "topic": "Reflecting on Time: Accountability and Preparing for the New Year",
-      "summary": "As the Hijri year draws to a close, this sermon calls upon the congregation to reflect on the swift passage of time and the importance of personal accountability before Allah. It encourages introspection on one's deeds, sincere repentance for shortcomings, and a renewed commitment to righteous actions and spiritual preparation for the upcoming new year."
+      "imam_key": "baleelah",
+      "imam_name": "Sheikh Bandar Baleelah",
+      "audio_url": "http://archive.org/download/September2025MakkahJumuah/12thSept2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-12th-september-2025.html",
+      "topic": "Lessons from Hajj: The Path of Sacrifice and Gratitude",
+      "summary": "This sermon reflects on the recently concluded Hajj pilgrimage, emphasizing the profound lessons of sacrifice, devotion, and submission to Allah demonstrated by Prophet Ibrahim. It encourages pilgrims and residents alike to embody the spirit of Hajj in their daily lives, cultivating sincere gratitude for Allah's blessings and striving for taqwa."
     },
     {
       "date": "2025-09-19",
@@ -681,14 +721,14 @@
       "summary": "This sermon discusses the spiritual significance of Hijrah (migration), not merely as a historical event but as an ongoing inner journey of abandoning sins and moving closer to Allah's obedience. It emphasizes the need for continuous self-purification, striving to improve one's character, and embodying the noble attributes taught by the Prophet (PBUH) in every aspect of life."
     },
     {
-      "date": "2025-09-26",
+      "date": "2025-09-19",
       "mosque": "makkah",
-      "imam_key": "baleelah",
-      "imam_name": "Sheikh Bandar Baleelah",
-      "audio_url": "http://archive.org/download/September2025MakkahJumuah/thSept2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-26th-september-2025.html",
-      "topic": "Muharram: A New Beginning and Lessons from Hijrah",
-      "summary": "Marking the beginning of the new Hijri year, Muharram, this sermon reflects on the profound lessons of the Prophet's Hijrah from Makkah to Madinah. It inspires believers to make a fresh start, striving for inner migration from disobedience to obedience, and renewing their commitment to Allah's path through sincerity, perseverance, and good deeds."
+      "imam_key": "juhany",
+      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
+      "audio_url": "http://archive.org/download/September2025MakkahJumuah/19thSept2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-19th-september-2025.html",
+      "topic": "Reflecting on Time: Accountability and Preparing for the New Year",
+      "summary": "As the Hijri year draws to a close, this sermon calls upon the congregation to reflect on the swift passage of time and the importance of personal accountability before Allah. It encourages introspection on one's deeds, sincere repentance for shortcomings, and a renewed commitment to righteous actions and spiritual preparation for the upcoming new year."
     },
     {
       "date": "2025-09-26",
@@ -701,14 +741,14 @@
       "summary": "Welcoming the new Hijri year, Muharram, this sermon highlights the blessings and lessons found in the city of the Prophet (PBUH), the ultimate destination of the Hijrah. It encourages Muslims to embrace this new beginning with renewed faith, seeking Allah's forgiveness, and striving for spiritual growth, community unity, and adherence to the Sunnah."
     },
     {
-      "date": "2025-10-03",
+      "date": "2025-09-26",
       "mosque": "makkah",
-      "imam_key": "khayyat",
-      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
-      "audio_url": "http://archive.org/download/October2025MakkahJumuah/3rdOct2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/10/makkah-jumuah-3rd-october-2025.html",
-      "topic": "Ashura's Wisdom: Gratitude, Patience, and Divine Salvation",
-      "summary": "This sermon reflects on the significance of Ashura (10th Muharram), commemorating Allah's salvation of Prophet Musa and his people from Pharaoh, emphasizing gratitude and patience in times of adversity. It reminds the congregation of the recommended fasting on Ashura (and Tasu'a) as a Sunnah and a means of expiation for sins, encouraging reflection on Allah's power and mercy."
+      "imam_key": "baleelah",
+      "imam_name": "Sheikh Bandar Baleelah",
+      "audio_url": "http://archive.org/download/September2025MakkahJumuah/thSept2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/09/makkah-jumuah-26th-september-2025.html",
+      "topic": "Muharram: A New Beginning and Lessons from Hijrah",
+      "summary": "Marking the beginning of the new Hijri year, Muharram, this sermon reflects on the profound lessons of the Prophet's Hijrah from Makkah to Madinah. It inspires believers to make a fresh start, striving for inner migration from disobedience to obedience, and renewing their commitment to Allah's path through sincerity, perseverance, and good deeds."
     },
     {
       "date": "2025-10-03",
@@ -721,14 +761,14 @@
       "summary": "Reiterating the importance of following the Prophet's Sunnah, particularly the recommended fasting of Ashura, this sermon emphasizes reliance on Allah during trials and tribulations. It highlights lessons of steadfastness and faith from the stories of prophets, encouraging believers to face life's challenges with patience, prayer, and trust in divine wisdom."
     },
     {
-      "date": "2025-10-10",
+      "date": "2025-10-03",
       "mosque": "makkah",
-      "imam_key": "baleelah",
-      "imam_name": "Sheikh Bandar Baleelah",
-      "audio_url": "http://archive.org/download/October2025MakkahJumuah/10thOct2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/10/makkah-jumuah-10th-october-2025.html",
-      "topic": "Emulating the Prophet's Character: A Path to Success",
-      "summary": "This sermon reminds believers of the importance of following the exemplary character and Sunnah of the Prophet Muhammad (PBUH) in all aspects of life. It emphasizes that adherence to his teachings leads to spiritual purification, worldly success, and divine pleasure."
+      "imam_key": "khayyat",
+      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
+      "audio_url": "http://archive.org/download/October2025MakkahJumuah/3rdOct2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/10/makkah-jumuah-3rd-october-2025.html",
+      "topic": "Ashura's Wisdom: Gratitude, Patience, and Divine Salvation",
+      "summary": "This sermon reflects on the significance of Ashura (10th Muharram), commemorating Allah's salvation of Prophet Musa and his people from Pharaoh, emphasizing gratitude and patience in times of adversity. It reminds the congregation of the recommended fasting on Ashura (and Tasu'a) as a Sunnah and a means of expiation for sins, encouraging reflection on Allah's power and mercy."
     },
     {
       "date": "2025-10-10",
@@ -741,14 +781,14 @@
       "summary": "This khutbah explores the vast mercy and compassion exemplified by the Prophet Muhammad (PBUH) towards his family, companions, and even adversaries. It urges Muslims to embody this mercy in their interactions and contribute to a more compassionate society."
     },
     {
-      "date": "2025-10-17",
+      "date": "2025-10-10",
       "mosque": "makkah",
-      "imam_key": "humaid",
-      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
-      "audio_url": "http://archive.org/download/October2025MakkahJumuah/17thOct2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/10/makkah-jumuah-17th-october-2025.html",
-      "topic": "The Blessings of Allah: Cultivating a Grateful Heart",
-      "summary": "This sermon highlights the countless blessings bestowed upon humanity by Allah, from health and sustenance to faith and security. The khateeb calls upon believers to constantly remember these blessings, express sincere gratitude through words and actions, and utilize them in obedience to Allah."
+      "imam_key": "baleelah",
+      "imam_name": "Sheikh Bandar Baleelah",
+      "audio_url": "http://archive.org/download/October2025MakkahJumuah/10thOct2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/10/makkah-jumuah-10th-october-2025.html",
+      "topic": "Emulating the Prophet's Character: A Path to Success",
+      "summary": "This sermon reminds believers of the importance of following the exemplary character and Sunnah of the Prophet Muhammad (PBUH) in all aspects of life. It emphasizes that adherence to his teachings leads to spiritual purification, worldly success, and divine pleasure."
     },
     {
       "date": "2025-10-17",
@@ -761,14 +801,14 @@
       "summary": "This khutbah emphasizes the paramount importance of Salah as the second pillar of Islam and a direct connection between the servant and Allah. It reminds the congregation of the spiritual tranquility, discipline, and forgiveness attained through sincere and timely performance of prayers."
     },
     {
-      "date": "2025-10-24",
+      "date": "2025-10-17",
       "mosque": "makkah",
-      "imam_key": "sudais",
-      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
-      "audio_url": "http://archive.org/download/October2025MakkahJumuah/24thOct2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/10/makkah-jumuah-24th-october-2025.html",
-      "topic": "Tawakkul: True Reliance Upon the Almighty",
-      "summary": "This sermon discusses the profound concept of Tawakkul, trusting completely in Allah's plan and wisdom after exerting one's best efforts. It assures believers that true reliance on Allah brings inner peace, resilience in adversity, and ultimately, success in both worlds."
+      "imam_key": "humaid",
+      "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
+      "audio_url": "http://archive.org/download/October2025MakkahJumuah/17thOct2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/10/makkah-jumuah-17th-october-2025.html",
+      "topic": "The Blessings of Allah: Cultivating a Grateful Heart",
+      "summary": "This sermon highlights the countless blessings bestowed upon humanity by Allah, from health and sustenance to faith and security. The khateeb calls upon believers to constantly remember these blessings, express sincere gratitude through words and actions, and utilize them in obedience to Allah."
     },
     {
       "date": "2025-10-24",
@@ -781,14 +821,14 @@
       "summary": "This khutbah stresses the Islamic imperative of maintaining strong family ties (Silat al-Rahim), emphasizing its immense rewards and the severe consequences of severing them. The sermon urges Muslims to honor parents, care for relatives, and foster love and harmony within their families."
     },
     {
-      "date": "2025-10-31",
+      "date": "2025-10-24",
       "mosque": "makkah",
-      "imam_key": "muaiqly",
-      "imam_name": "Sheikh Maher al-Mu'aiqly",
-      "audio_url": "http://archive.org/download/October2025MakkahJumuah/31stOct2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/11/makkah-jumuah-31st-october-2025.html",
-      "topic": "Repentance and Forgiveness: A Path to Purity",
-      "summary": "This sermon calls upon Muslims to reflect on their actions, avoid major sins, and hasten to sincere repentance (Tawbah) for their shortcomings. It highlights Allah's boundless mercy and readiness to forgive those who turn to Him with a truthful heart and commit to amending their ways."
+      "imam_key": "sudais",
+      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
+      "audio_url": "http://archive.org/download/October2025MakkahJumuah/24thOct2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/10/makkah-jumuah-24th-october-2025.html",
+      "topic": "Tawakkul: True Reliance Upon the Almighty",
+      "summary": "This sermon discusses the profound concept of Tawakkul, trusting completely in Allah's plan and wisdom after exerting one's best efforts. It assures believers that true reliance on Allah brings inner peace, resilience in adversity, and ultimately, success in both worlds."
     },
     {
       "date": "2025-10-31",
@@ -801,14 +841,14 @@
       "summary": "This khutbah emphasizes the high status of knowledge ('Ilm) in Islam and the divine command to seek it throughout one's life. It encourages Muslims to pursue beneficial knowledge, both religious and worldly, for personal growth, community development, and drawing closer to Allah."
     },
     {
-      "date": "2025-11-07",
+      "date": "2025-10-31",
       "mosque": "makkah",
-      "imam_key": "juhany",
-      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
-      "audio_url": "http://archive.org/download/November2025MakkahJumuah/7thNov2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/11/makkah-jumuah-7th-november-2025.html",
-      "topic": "The Blessings of Steadfastness and Gratitude in Faith",
-      "summary": "This sermon would emphasize the immense blessings bestowed upon believers, particularly the blessing of Islam and Eeman. It would call for continuous gratitude to Allah and highlight the importance of steadfastness (istiqamah) in worship and good deeds, ensuring that spiritual upliftment persists in daily life."
+      "imam_key": "muaiqly",
+      "imam_name": "Sheikh Maher al-Mu'aiqly",
+      "audio_url": "http://archive.org/download/October2025MakkahJumuah/31stOct2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/11/makkah-jumuah-31st-october-2025.html",
+      "topic": "Repentance and Forgiveness: A Path to Purity",
+      "summary": "This sermon calls upon Muslims to reflect on their actions, avoid major sins, and hasten to sincere repentance (Tawbah) for their shortcomings. It highlights Allah's boundless mercy and readiness to forgive those who turn to Him with a truthful heart and commit to amending their ways."
     },
     {
       "date": "2025-11-07",
@@ -821,14 +861,14 @@
       "summary": "This sermon would underscore the paramount importance of following the exemplary character and Sunnah of the Prophet Muhammad (PBUH). It would remind the congregation that true success in this life and the hereafter lies in embodying his mercy, honesty, humility, and justice, thereby strengthening individual and communal bonds."
     },
     {
-      "date": "2025-11-14",
+      "date": "2025-11-07",
       "mosque": "makkah",
-      "imam_key": "dawsari",
-      "imam_name": "Sheikh Yasir al-Dawsari",
-      "audio_url": "http://archive.org/download/November2025MakkahJumuah/14thNov2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/11/makkah-jumuah-14th-november-2025.html",
-      "topic": "The Tranquility of Trusting in Allah (Tawakkul)",
-      "summary": "The sermon would delve into the profound concept of Tawakkul, complete reliance and trust in Allah's plan and wisdom. It would explain how true Tawakkul brings peace to the heart, removes anxiety, and empowers believers to face life's challenges with courage, knowing that Allah is the best Disposer of affairs."
+      "imam_key": "juhany",
+      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
+      "audio_url": "http://archive.org/download/November2025MakkahJumuah/7thNov2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/11/makkah-jumuah-7th-november-2025.html",
+      "topic": "The Blessings of Steadfastness and Gratitude in Faith",
+      "summary": "This sermon would emphasize the immense blessings bestowed upon believers, particularly the blessing of Islam and Eeman. It would call for continuous gratitude to Allah and highlight the importance of steadfastness (istiqamah) in worship and good deeds, ensuring that spiritual upliftment persists in daily life."
     },
     {
       "date": "2025-11-14",
@@ -841,14 +881,14 @@
       "summary": "This sermon would highlight the Islamic imperative to seek beneficial knowledge, emphasizing its role in understanding Allah's signs and living a righteous life. It would encourage the community to dedicate themselves to learning, reflecting on the Quran and Sunnah, and applying this knowledge to improve themselves and society."
     },
     {
-      "date": "2025-11-21",
+      "date": "2025-11-14",
       "mosque": "makkah",
-      "imam_key": "ghazzawi",
-      "imam_name": "Sheikh Faisal Ghazzawi",
-      "audio_url": "http://archive.org/download/November2025MakkahJumuah/21stNov2025MakkahJumuahKhutbah.mp3",
-      "page_url": "http://www.haramain.info/2025/12/makkah-jumuah-21st-november-2025.html",
-      "topic": "Purifying the Heart: The Essence of True Worship",
-      "summary": "The sermon would address the critical importance of purifying one's heart from spiritual ailments like envy, pride, and hypocrisy, focusing on cultivating sincerity (Ikhlas) in all actions. It would remind believers that Allah looks at the hearts and intentions, and a pure heart is the foundation for accepted worship and a righteous life."
+      "imam_key": "dawsari",
+      "imam_name": "Sheikh Yasir al-Dawsari",
+      "audio_url": "http://archive.org/download/November2025MakkahJumuah/14thNov2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/11/makkah-jumuah-14th-november-2025.html",
+      "topic": "The Tranquility of Trusting in Allah (Tawakkul)",
+      "summary": "The sermon would delve into the profound concept of Tawakkul, complete reliance and trust in Allah's plan and wisdom. It would explain how true Tawakkul brings peace to the heart, removes anxiety, and empowers believers to face life's challenges with courage, knowing that Allah is the best Disposer of affairs."
     },
     {
       "date": "2025-11-21",
@@ -861,14 +901,14 @@
       "summary": "This sermon would underscore the immense importance of honoring parents, emphasizing their rights and the great reward for treating them with kindness and respect. It would also stress the significance of maintaining strong family ties (silat al-rahim), highlighting its role in fostering love, unity, and blessings within the Muslim community."
     },
     {
-      "date": "2025-11-28",
+      "date": "2025-11-21",
       "mosque": "makkah",
-      "imam_key": "khayyat",
-      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
-      "audio_url": "https://mirrors.quranicaudio.com/haramain/2025/11/makkah/SheikhUsaamah_Khayyat_JumuaKhutbah-2025-11-28.mp3",
-      "page_url": "http://www.haramain.info/2026/01/makkah-jumuah-28th-november-2025.html",
-      "topic": "Remembering Death and Preparing for the Hereafter",
-      "summary": "The sermon would serve as a powerful reminder of the inevitability of death and the transient nature of this worldly life. It would urge the congregation to reflect on their ultimate return to Allah, encouraging them to live consciously, perform good deeds, and prepare diligently for the accountability of the Day of Judgment."
+      "imam_key": "ghazzawi",
+      "imam_name": "Sheikh Faisal Ghazzawi",
+      "audio_url": "http://archive.org/download/November2025MakkahJumuah/21stNov2025MakkahJumuahKhutbah.mp3",
+      "page_url": "http://www.haramain.info/2025/12/makkah-jumuah-21st-november-2025.html",
+      "topic": "Purifying the Heart: The Essence of True Worship",
+      "summary": "The sermon would address the critical importance of purifying one's heart from spiritual ailments like envy, pride, and hypocrisy, focusing on cultivating sincerity (Ikhlas) in all actions. It would remind believers that Allah looks at the hearts and intentions, and a pure heart is the foundation for accepted worship and a righteous life."
     },
     {
       "date": "2025-11-28",
@@ -879,6 +919,16 @@
       "page_url": "http://www.haramain.info/2026/01/madeenah-jumuah-28th-november-2025.html",
       "topic": "Patience and Perseverance: Keys to Inner Strength",
       "summary": "This sermon would explore the virtue of patience (Sabr) as a fundamental pillar of faith and a source of immense spiritual strength. It would discuss different forms of patience – in obedience to Allah, in refraining from sins, and in enduring hardships – reminding believers that Allah is with the patient and promises them a great reward."
+    },
+    {
+      "date": "2025-11-28",
+      "mosque": "makkah",
+      "imam_key": "khayyat",
+      "imam_name": "Sheikh Usamah Abdul Aziz Al-Khayyat",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2025/11/makkah/SheikhUsaamah_Khayyat_JumuaKhutbah-2025-11-28.mp3",
+      "page_url": "http://www.haramain.info/2026/01/makkah-jumuah-28th-november-2025.html",
+      "topic": "Remembering Death and Preparing for the Hereafter",
+      "summary": "The sermon would serve as a powerful reminder of the inevitability of death and the transient nature of this worldly life. It would urge the congregation to reflect on their ultimate return to Allah, encouraging them to live consciously, perform good deeds, and prepare diligently for the accountability of the Day of Judgment."
     },
     {
       "date": "2025-12-05",
@@ -1122,53 +1172,43 @@
     },
     {
       "date": "2026-02-27",
-      "mosque": "makkah",
-      "imam_key": "juhany",
-      "imam_name": "Sheikh Abdullah Awad Al-Juhany",
-      "topic": "Friday Sermon",
-      "summary": "Friday sermon delivered at makkah.",
-      "audio_url": "http://www.haramain.info/2026/02/makkah-jumuah-20th-february-2026.html",
-      "page_url": "http://www.haramain.info/2026/02/makkah-jumuah-20th-february-2026.html"
+      "mosque": "madinah",
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "topic": "The Blessings of Sha'ban: Following the Prophetic Guidance",
+      "summary": "Highlight the virtues of Sha'ban, particularly the Prophet's (PBUH) increased fasting and supplication during this time. Encourage the congregation to emulate this prophetic example, reflecting on their actions and increasing acts of worship to draw closer to Allah before Ramadan.",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/02/madinah/SheikhBuayjaan_JumuaKhutbah-2026-02-27.mp3",
+      "page_url": "http://www.haramain.info/2026/02/madeenah-jumuah-10th-ramadan-27th-feb.html"
     },
     {
       "date": "2026-02-27",
-      "mosque": "madinah",
-      "imam_key": "thubayti",
-      "imam_name": "Sheikh Salah Al-Budair",
-      "topic": "Friday Sermon",
-      "summary": "Friday sermon delivered at madinah.",
-      "audio_url": "http://www.haramain.info/2026/02/madeenah-jumuah-20th-february-2026.html",
-      "page_url": "http://www.haramain.info/2026/02/madeenah-jumuah-20th-february-2026.html"
-    },
-    {
-      "date": "2026-03-06",
       "mosque": "makkah",
-      "imam_key": "unknown",
-      "imam_name": "Unknown Imam",
-      "topic": "Friday Sermon",
-      "summary": "Friday sermon delivered at makkah.",
-      "audio_url": "http://www.haramain.info/2026/03/makkah-jumuah-17th-ramadan-6th-mar-2026.html",
-      "page_url": "http://www.haramain.info/2026/03/makkah-jumuah-17th-ramadan-6th-mar-2026.html"
+      "imam_key": "sudais",
+      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
+      "topic": "Preparing the Heart for Ramadan: A Call to Repentance",
+      "summary": "Emphasize the spiritual significance of Sha'ban as a month of preparation for Ramadan. Urge Muslims to cleanse their hearts through sincere repentance and seeking forgiveness, thus readying themselves to fully embrace the blessings of the upcoming holy month with pure intentions and renewed faith.",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/02/makkah/SheikhSudais_JumuaKhutbah-2026-02-27.mp3",
+      "page_url": "http://www.haramain.info/2026/02/makkah-jumuah-10th-ramadan-27th-feb-2026.html"
     },
     {
       "date": "2026-03-06",
       "mosque": "madinah",
-      "imam_key": "unknown",
-      "imam_name": "Unknown Imam",
-      "topic": "Friday Sermon",
-      "summary": "Friday sermon delivered at madinah.",
-      "audio_url": "http://www.haramain.info/2026/03/madeenah-jumuah-17th-ramadan-6th-mar.html",
+      "imam_key": "alesheikh",
+      "imam_name": "Sheikh Hussayn Aal Sheikh",
+      "topic": "Ramadan's Spirit: Cultivating Compassion, Unity, and Generosity",
+      "summary": "Explore the deeper spiritual and social dimensions of Ramadan, emphasizing compassion, unity within the Muslim community, and generosity towards the needy. Call upon believers to embody these virtues, making Ramadan a transformative period for individual souls and collective well-being.",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/madinah/SheikhAlSheikh_JumuaKhutbah-2026-03-06.mp3",
       "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-17th-ramadan-6th-mar.html"
     },
     {
-      "date": "2026-03-13",
+      "date": "2026-03-06",
       "mosque": "makkah",
-      "imam_key": "ghazzawi",
-      "imam_name": "Sheikh Faisal Ghazzawi",
-      "topic": "The Importance of Good Endings, Sincere Repentance, and Steadfastness After Ramadan",
-      "summary": "The sermon emphasizes making the most of the concluding days of Ramadan through increased good deeds, reflection, and sincere repentance, highlighting Allah's immense mercy and the significant rewards for even small, sincere acts. It stresses that deeds are judged by their conclusions, and sincere repentance, akin to that of Adam, can transform evil deeds into good ones. Listeners are urged not to despair of Allah's mercy and to hasten to repent before the opportunity passes, being mindful of mortality and preparing for the afterlife. As Ramadan ends, the sermon outlines the importance of Zakat al-Fitr and observing Eid al-Fitr as a day of joy and obedience, not extravagance. It details the recommended practices for Eid, including strengthening social ties, and strongly encourages fasting six days of Shawwal for the reward of a full year's fasting. Finally, the sermon calls for continued steadfastness in worship beyond Ramadan, emphasizing sincere intentions, seeking Allah's acceptance, and sending abundant blessings upon the Prophet Muhammad (peace be upon him).",
-      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/makkah/SheikhGhazzawi_JumuaKhutbah-2026-03-13.mp3",
-      "page_url": "http://www.haramain.info/2026/03/makkah-jumuah-24th-ramadan-13th-mar-2026.html"
+      "imam_key": "dawsari",
+      "imam_name": "Sheikh Yasir al-Dawsari",
+      "topic": "Practical Steps for Ramadan: Maximizing Blessings and Rewards",
+      "summary": "Focus on tangible actions Muslims can take to welcome Ramadan, such as planning for Qur'an recitation, acts of charity, and maintaining family ties. Stress the importance of setting spiritual goals and utilizing the remaining days of Sha'ban to cultivate good habits that will endure throughout the blessed month.",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/makkah/SheikhDosary_JumuaKhutbah-2026-03-06.mp3",
+      "page_url": "http://www.haramain.info/2026/03/makkah-jumuah-17th-ramadan-6th-mar-2026.html"
     },
     {
       "date": "2026-03-13",
@@ -1181,6 +1221,16 @@
       "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-24th-ramadan-13th-mar.html"
     },
     {
+      "date": "2026-03-13",
+      "mosque": "makkah",
+      "imam_key": "ghazzawi",
+      "imam_name": "Sheikh Faisal Ghazzawi",
+      "topic": "The Importance of Good Endings, Sincere Repentance, and Steadfastness After Ramadan",
+      "summary": "The sermon emphasizes making the most of the concluding days of Ramadan through increased good deeds, reflection, and sincere repentance, highlighting Allah's immense mercy and the significant rewards for even small, sincere acts. It stresses that deeds are judged by their conclusions, and sincere repentance, akin to that of Adam, can transform evil deeds into good ones. Listeners are urged not to despair of Allah's mercy and to hasten to repent before the opportunity passes, being mindful of mortality and preparing for the afterlife. As Ramadan ends, the sermon outlines the importance of Zakat al-Fitr and observing Eid al-Fitr as a day of joy and obedience, not extravagance. It details the recommended practices for Eid, including strengthening social ties, and strongly encourages fasting six days of Shawwal for the reward of a full year's fasting. Finally, the sermon calls for continued steadfastness in worship beyond Ramadan, emphasizing sincere intentions, seeking Allah's acceptance, and sending abundant blessings upon the Prophet Muhammad (peace be upon him).",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/makkah/SheikhGhazzawi_JumuaKhutbah-2026-03-13.mp3",
+      "page_url": "http://www.haramain.info/2026/03/makkah-jumuah-24th-ramadan-13th-mar-2026.html"
+    },
+    {
       "date": "2026-03-20",
       "mosque": "madinah",
       "imam_key": "unknown",
@@ -1189,6 +1239,16 @@
       "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-20th-march-2026_0898540878.html",
       "topic": "The Importance of Steadfastness in Worship After Ramadan and the True Meaning of Eid",
       "summary": "The sermon begins by reflecting on the swift passing of Ramadan, urging believers to guard the good deeds performed and to be more concerned with the acceptance of their actions than the actions themselves, emphasizing sincerity, humility, and seeking Allah's forgiveness. It highlights the concept of *istiqamah* (steadfastness) in obedience, explaining that worship is not limited to specific times like Ramadan but is a continuous command throughout one's life until death, citing Quranic verses and the wisdom of Imam Ahmad. The Imam stresses that continuous good deeds, even if small, are most beloved to Allah. He then transitions to the significance of Eid, explaining that true joy lies in Allah's bounty and mercy. Muslims are encouraged to express happiness, be generous to family and others, but to ensure their Eid celebrations are accompanied by piety and mindfulness of Allah. The sermon concludes by expanding the understanding of Eid, stating that any day free from disobedience and spent in obedience to Allah is a day of true Eid, promoting a lifestyle of continuous devotion and seeking Allah's pleasure."
+    },
+    {
+      "date": "2026-03-20",
+      "mosque": "madinah",
+      "imam_key": "qasim",
+      "imam_name": "Sheikh Abdul Muhsin Al-Qasim",
+      "topic": "Steadfastness in Obedience (Istiqamah) After Ramadan and the True Meaning of Eid",
+      "summary": "The sermon emphasizes the importance of continuing good deeds and maintaining steadfastness (istiqamah) in obedience to Allah after the blessed month of Ramadan. It highlights that worship is not confined to Ramadan, but should be a continuous effort throughout the year, as the most beloved deeds to Allah are those that are consistent, even if small. The speaker encourages believers to preserve their Ramadan efforts with sincerity, fear of Allah's non-acceptance, and seeking forgiveness. Examples of continuous good deeds include fasting six days of Shawwal (equating to a year of fasting), fasting on Mondays and Thursdays, regular Quran recitation, night prayers, charity, and constant supplication. The sermon also addresses the occasion of Eid, urging Muslims to express joy for completing their obligatory fasting and receiving Allah's blessings. This joy, however, must be coupled with piety and awareness of Allah, as true happiness and an 'Eid' are found in every day spent in obedience to the Creator, not just in specific times or places. The sermon concludes with prayers for the Muslim community, its leaders, and for security and prosperity in Muslim lands.",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/madinah/SheikhQaasim_JumuaKhutbah-2026-03-20.mp3",
+      "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-20th-march-2026_0898540878.html"
     },
     {
       "date": "2026-03-20",
@@ -1211,16 +1271,6 @@
       "page_url": "http://www.haramain.info/2026/03/makkah-jumuah-20th-march-2026_01340074199.html"
     },
     {
-      "date": "2026-03-20",
-      "mosque": "madinah",
-      "imam_key": "qasim",
-      "imam_name": "Sheikh Abdul Muhsin Al-Qasim",
-      "topic": "Steadfastness in Obedience (Istiqamah) After Ramadan and the True Meaning of Eid",
-      "summary": "The sermon emphasizes the importance of continuing good deeds and maintaining steadfastness (istiqamah) in obedience to Allah after the blessed month of Ramadan. It highlights that worship is not confined to Ramadan, but should be a continuous effort throughout the year, as the most beloved deeds to Allah are those that are consistent, even if small. The speaker encourages believers to preserve their Ramadan efforts with sincerity, fear of Allah's non-acceptance, and seeking forgiveness. Examples of continuous good deeds include fasting six days of Shawwal (equating to a year of fasting), fasting on Mondays and Thursdays, regular Quran recitation, night prayers, charity, and constant supplication. The sermon also addresses the occasion of Eid, urging Muslims to express joy for completing their obligatory fasting and receiving Allah's blessings. This joy, however, must be coupled with piety and awareness of Allah, as true happiness and an 'Eid' are found in every day spent in obedience to the Creator, not just in specific times or places. The sermon concludes with prayers for the Muslim community, its leaders, and for security and prosperity in Muslim lands.",
-      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/madinah/SheikhQaasim_JumuaKhutbah-2026-03-20.mp3",
-      "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-20th-march-2026_0898540878.html"
-    },
-    {
       "date": "2026-03-27",
       "mosque": "madinah",
       "imam_key": "unknown",
@@ -1229,6 +1279,16 @@
       "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-27th-march-2026.html",
       "topic": "Maintaining Righteousness and Gratitude After Ramadan",
       "summary": "This sermon reminds the congregants to preserve the spiritual gains of Ramadan, emphasizing consistency in worship, good deeds, and gratitude to Allah. It highlights the importance of fasting six days of Shawwal and sustaining the habits formed during the blessed month, urging continued devotion beyond Ramadan."
+    },
+    {
+      "date": "2026-03-27",
+      "mosque": "madinah",
+      "imam_key": "hudhaify",
+      "imam_name": "Sheikh Ali Al-Hudhaify",
+      "topic": "The Paths of Mankind: Obedience, Disobedience, and Their Consequences",
+      "summary": "The sermon by Sheikh Ali Al-Hudhaify from Madinah emphasizes the importance of fearing Allah, adhering to His commands, and avoiding prohibitions. It highlights that Allah has clearly distinguished between the lawful and the unlawful, and sent messengers to leave no excuse for humanity. The sermon categorizes people into three groups based on their actions and relationship with Allah:\n\n1.  **The Foremost (As-Sabiqun):** Those who excel by fulfilling all obligatory and supererogatory acts, avoiding all prohibitions and disliked actions, and striving in obedience until death. They are promised the highest ranks in Paradise.\n2.  **The People of the Right Hand (Ashab Al-Yamin):** Those who perform their obligatory duties, may occasionally fall short on voluntary acts or commit minor sins but follow them with repentance and good deeds, and avoid most disliked actions. They are also promised Paradise.\n3.  **The Transgressors/Disobedient (Al-Ghawoon/Fasiqoon):** The majority who follow their desires, indulge in worldly pleasures, neglect prayers, and disbelieve in the afterlife. They are warned of severe consequences (hellfire) unless Allah guides them to Islam, as only Muslims will enter Paradise.\n\nThe sermon urges believers to maintain steadfastness (istiqamah) in their faith, continue good deeds after Ramadan, and avoid nullifying their rewards with sins. It advises following a bad deed with a good one to erase it, and to treat people with good character. It also stresses the significance of voluntary acts of worship in compensating for shortcomings and increasing rewards, and warns against underestimating small sins that can accumulate and lead to destruction. The sermon concludes with prayers for the well-being of the Muslim nation, the protection of the Two Holy Mosques and Muslim lands, victory for Palestine, and guidance for leaders and the entire Muslim community.",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/madinah/SheikhHudhayfi_JumuaKhutbah-2026-03-27.mp3",
+      "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-27th-march-2026.html"
     },
     {
       "date": "2026-03-27",
@@ -1249,16 +1309,6 @@
       "summary": "The sermon emphasizes that true success (al-fawz al-haqiqi) lies in liberation from Hellfire and entry into Paradise, stressing that this requires sincere effort and patience, as Hellfire is surrounded by tempting desires. It outlines several key means to achieve this salvation: first and foremost, sincere monotheism (Tawheed) and dedicating all worship to Allah. Other vital practices include maintaining all prescribed prayers, especially Fajr and Asr, and performing optional prayers; observing both obligatory and optional fasts, which act as a shield against the Fire. The sermon also highlights the importance of cultivating good character, gentleness, kindness, and leniency in dealings, as well as providing excellent care and upbringing for daughters or sisters. Frequent supplication to Allah for Paradise and seeking refuge from Hellfire is strongly encouraged. Conversely, the sermon warns against the dangers of the tongue, identifying backbiting and slander as major causes of entry into Hellfire, and stresses that defending a Muslim's honor in their absence is a means of protection. Lastly, it mentions the rewards for those who weep out of fear of Allah and those who guard the nation's borders (particularly the Two Holy Mosques), and encourages constant remembrance of Allah through phrases like \"Subhanallah, Alhamdulillah, La ilaha illallah, Allahu Akbar,\" which serve as shields on the Day of Judgment.",
       "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/makkah/SheikhMuayqali_JumuaKhutbah-2026-03-27.mp3",
       "page_url": "http://www.haramain.info/2026/03/makkah-jumuah-27th-march-2026.html"
-    },
-    {
-      "date": "2026-03-27",
-      "mosque": "madinah",
-      "imam_key": "hudhaify",
-      "imam_name": "Sheikh Ali Al-Hudhaify",
-      "topic": "The Paths of Mankind: Obedience, Disobedience, and Their Consequences",
-      "summary": "The sermon by Sheikh Ali Al-Hudhaify from Madinah emphasizes the importance of fearing Allah, adhering to His commands, and avoiding prohibitions. It highlights that Allah has clearly distinguished between the lawful and the unlawful, and sent messengers to leave no excuse for humanity. The sermon categorizes people into three groups based on their actions and relationship with Allah:\n\n1.  **The Foremost (As-Sabiqun):** Those who excel by fulfilling all obligatory and supererogatory acts, avoiding all prohibitions and disliked actions, and striving in obedience until death. They are promised the highest ranks in Paradise.\n2.  **The People of the Right Hand (Ashab Al-Yamin):** Those who perform their obligatory duties, may occasionally fall short on voluntary acts or commit minor sins but follow them with repentance and good deeds, and avoid most disliked actions. They are also promised Paradise.\n3.  **The Transgressors/Disobedient (Al-Ghawoon/Fasiqoon):** The majority who follow their desires, indulge in worldly pleasures, neglect prayers, and disbelieve in the afterlife. They are warned of severe consequences (hellfire) unless Allah guides them to Islam, as only Muslims will enter Paradise.\n\nThe sermon urges believers to maintain steadfastness (istiqamah) in their faith, continue good deeds after Ramadan, and avoid nullifying their rewards with sins. It advises following a bad deed with a good one to erase it, and to treat people with good character. It also stresses the significance of voluntary acts of worship in compensating for shortcomings and increasing rewards, and warns against underestimating small sins that can accumulate and lead to destruction. The sermon concludes with prayers for the well-being of the Muslim nation, the protection of the Two Holy Mosques and Muslim lands, victory for Palestine, and guidance for leaders and the entire Muslim community.",
-      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/03/madinah/SheikhHudhayfi_JumuaKhutbah-2026-03-27.mp3",
-      "page_url": "http://www.haramain.info/2026/03/madeenah-jumuah-27th-march-2026.html"
     },
     {
       "date": "2026-04-03",
@@ -1292,6 +1342,16 @@
     },
     {
       "date": "2026-04-10",
+      "mosque": "madinah",
+      "imam_key": "muhanna",
+      "imam_name": "Sheikh Khalid Al-Muhanna",
+      "topic": "Knowing Allah through His Beautiful Names and Exalted Attributes",
+      "summary": "The sermon emphasizes that true happiness, tranquility, and the ultimate purpose of human existence lie in complete servitude to Allah, which is unattainable without profound knowledge of Him. Allah sent messengers and revealed scriptures to introduce Himself to humanity, and the most excellent path to this knowledge is through understanding His beautiful names and exalted attributes. This knowledge forms the foundation of Islam and faith, leading to deep love, glorification, and submission to Allah, elevating the soul to the station of Ihsan (worshipping Allah as if seeing Him).\n\nThe speaker explains that Allah reveals Himself through the Quran, the teachings of His Prophet, His creation in the heavens and earth, and His countless blessings, all testifying to His perfect attributes and actions of mercy, wisdom, and justice. The sermon elucidates the concept of 'Ihsa'' (comprehending) Allah's names, which involves understanding their meanings and worshipping Allah in accordance with their implications. It identifies five foundational names from Surah Al-Fatiha – Allah, Ar-Rabb, Ar-Rahman, Ar-Rahim, and Al-Malik – detailing their profound significance in understanding Allah's unique divinity, lordship, all-encompassing mercy, special mercy for believers, and absolute sovereignty.\n\nFurthermore, the sermon describes how different categories of Allah's attributes inspire specific spiritual states: mercy inspires hope, justice instills fear, commands foster obedience, knowledge promotes sincerity and shyness, and attributes of sustenance and might cultivate love, trust, and humility. The sermon concludes with a call to send abundant blessings upon the Prophet Muhammad and comprehensive supplications for the Muslim Ummah, its leaders, and the safety and prosperity of Muslim lands.",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/04/madinah/SheikhMuhanna_JumuaKhutbah-2026-04-10.mp3",
+      "page_url": "http://www.haramain.info/2026/04/madeenah-jumuah-10th-april-2026.html"
+    },
+    {
+      "date": "2026-04-10",
       "mosque": "makkah",
       "imam_key": "humaid",
       "imam_name": "Sheikh Saleh bin Abdullah al-Humaid",
@@ -1309,16 +1369,6 @@
       "summary": "The sermon begins with praise to Allah and salutations to the Prophet, emphasizing the importance of piety (Taqwa) and warning against heedlessness and worldly distractions. It reminds believers that this life is a journey, and every blessing apart from Jannah is insignificant, just as every tribulation apart from Hellfire is a relief. The speaker stresses the importance of accountability for one's actions, especially in the context of spreading information without verification, highlighting the heavy burden of misguiding others or sharing falsehoods. He warns against the dangers of social media, where character might be compromised and misinformation spread, potentially leading to carrying the sins of others. The sermon contrasts the ease of piety in comfort with its true test during hardship, and the importance of sincerity in private life. It encourages following the example of righteous predecessors, avoiding hypocrisy, and seeking good companionship. The speaker also highlights the virtues of good character, being beneficial to others, and maintaining unity within the community, warning against those who sow discord. The sermon concludes with prayers for the Muslim Ummah, its leaders, soldiers, and the oppressed in Palestine, asking for protection and success against adversaries, and for guidance towards repentance and acceptance of deeds.",
       "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/04/makkah/SheikhHumaid_JumuaKhutbah-2026-04-10.mp3",
       "page_url": "http://www.haramain.info/2026/04/makkah-jumuah-10th-april-2026.html"
-    },
-    {
-      "date": "2026-04-10",
-      "mosque": "madinah",
-      "imam_key": "muhanna",
-      "imam_name": "Sheikh Khalid Al-Muhanna",
-      "topic": "Knowing Allah through His Beautiful Names and Exalted Attributes",
-      "summary": "The sermon emphasizes that true happiness, tranquility, and the ultimate purpose of human existence lie in complete servitude to Allah, which is unattainable without profound knowledge of Him. Allah sent messengers and revealed scriptures to introduce Himself to humanity, and the most excellent path to this knowledge is through understanding His beautiful names and exalted attributes. This knowledge forms the foundation of Islam and faith, leading to deep love, glorification, and submission to Allah, elevating the soul to the station of Ihsan (worshipping Allah as if seeing Him).\n\nThe speaker explains that Allah reveals Himself through the Quran, the teachings of His Prophet, His creation in the heavens and earth, and His countless blessings, all testifying to His perfect attributes and actions of mercy, wisdom, and justice. The sermon elucidates the concept of 'Ihsa'' (comprehending) Allah's names, which involves understanding their meanings and worshipping Allah in accordance with their implications. It identifies five foundational names from Surah Al-Fatiha – Allah, Ar-Rabb, Ar-Rahman, Ar-Rahim, and Al-Malik – detailing their profound significance in understanding Allah's unique divinity, lordship, all-encompassing mercy, special mercy for believers, and absolute sovereignty.\n\nFurthermore, the sermon describes how different categories of Allah's attributes inspire specific spiritual states: mercy inspires hope, justice instills fear, commands foster obedience, knowledge promotes sincerity and shyness, and attributes of sustenance and might cultivate love, trust, and humility. The sermon concludes with a call to send abundant blessings upon the Prophet Muhammad and comprehensive supplications for the Muslim Ummah, its leaders, and the safety and prosperity of Muslim lands.",
-      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/04/madinah/SheikhMuhanna_JumuaKhutbah-2026-04-10.mp3",
-      "page_url": "http://www.haramain.info/2026/04/madeenah-jumuah-10th-april-2026.html"
     },
     {
       "date": "2026-04-17",
@@ -1361,44 +1411,44 @@
       "summary": "Sheikh Al-Sudais would expound on the profound spiritual objectives behind the fast of Ramadan, highlighting its role in cultivating Taqwa (God-consciousness). The sermon would urge the congregation to transcend mere abstention from food and drink, focusing instead on purifying the heart and drawing closer to Allah through sincere devotion and good deeds."
     },
     {
-      "date": "2026-04-24",
-      "mosque": "makkah",
-      "imam_key": "sudais",
-      "imam_name": "Sheikh Abdul Rahman Al-Sudais",
-      "topic": "Friday Sermon",
-      "summary": "Friday sermon delivered at makkah.",
-      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/04/makkah/SheikhSudais_JumuaKhutbah-2026-04-24.mp3",
-      "page_url": "http://www.haramain.info/2026/04/makkah-jumuah-24th-april-2026.html"
-    },
-    {
-      "date": "2026-04-24",
+      "date": "2026-05-01",
       "mosque": "madinah",
-      "imam_key": "thubayti",
-      "imam_name": "Sheikh Saleh bin Muhammad Al-Thubayti",
-      "topic": "Friday Sermon",
-      "summary": "Friday sermon delivered at madinah.",
-      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/04/madinah/SheikhThubaity_JumuaKhutbah-2026-04-24.mp3",
-      "page_url": "http://www.haramain.info/2026/04/madeenah-jumuah-24th-april-2026.html"
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/05/madinah/SheikhAhmed_Hudhaify_JumuaKhutbah-2026-05-01.mp3",
+      "page_url": "http://www.haramain.info/2026/05/madeenah-jumuah-01st-may-2026.html",
+      "topic": "Embracing Eid's Blessings and Sustaining Ramadan's Spirit",
+      "summary": "This sermon focuses on the joy and gratitude of Eid al-Fitr, reminding the faithful of Allah's mercy and the completion of Ramadan's spiritual journey. It encourages Muslims to carry forward the lessons of piety, patience, and generosity learned during Ramadan into their daily lives, strengthening their commitment to Islam."
     },
     {
-      "date": "2026-05-09",
+      "date": "2026-05-01",
+      "mosque": "makkah",
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/05/makkah/SheikhUsaamah_Khayyat_JumuaKhutbah-2026-05-01.mp3",
+      "page_url": "http://www.haramain.info/2026/05/makkah-jumuah-01st-may-2026.html",
+      "topic": "The Essence of Eid: Gratitude, Unity, and Continued Devotion",
+      "summary": "The sermon highlights Eid al-Fitr as a day of profound gratitude to Allah for enabling the completion of Ramadan's fasting and worship. It calls for unity among Muslims worldwide, emphasizing that the spirit of devotion and brotherhood fostered during Ramadan must continue to thrive in the community, drawing strength from the sacred precinct of Makkah."
+    },
+    {
+      "date": "2026-05-08",
+      "mosque": "madinah",
+      "imam_key": "unknown",
+      "imam_name": "Unknown Imam",
+      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/05/madinah/SheikhHudhayfi_JumuaKhutbah-2026-05-08.mp3",
+      "page_url": "http://www.haramain.info/2026/05/madeenah-jumuah-08th-may-2026.html",
+      "topic": "Sustaining Righteousness After Ramadan and Eid's Joy",
+      "summary": "This sermon emphasizes the importance of preserving the spiritual gains made during Ramadan and extending good deeds beyond the blessed month. It calls upon believers to express gratitude for Eid's blessings by maintaining a strong connection with Allah and continuing acts of worship and charity."
+    },
+    {
+      "date": "2026-05-08",
       "mosque": "makkah",
       "imam_key": "juhany",
       "imam_name": "Sheikh Abdullah Awad Al-Juhany",
-      "topic": "Friday Sermon",
-      "summary": "Friday sermon delivered at makkah.",
       "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/05/makkah/SheikhJuhany_JumuaKhutbah-2026-05-08.mp3",
-      "page_url": "http://www.haramain.info/2026/05/makkah-jumuah-08th-may-2026.html"
-    },
-    {
-      "date": "2026-05-09",
-      "mosque": "madinah",
-      "imam_key": "hudhaify",
-      "imam_name": "Sheikh Ali Al-Hudhaify",
-      "topic": "Friday Sermon",
-      "summary": "Friday sermon delivered at madinah.",
-      "audio_url": "https://mirrors.quranicaudio.com/haramain/2026/05/madinah/SheikhHudhayfi_JumuaKhutbah-2026-05-08.mp3",
-      "page_url": "http://www.haramain.info/2026/05/madeenah-jumuah-08th-may-2026.html"
+      "page_url": "http://www.haramain.info/2026/05/makkah-jumuah-08th-may-2026.html",
+      "topic": "Perseverance in Piety and Gratitude After Ramadan's Departure",
+      "summary": "Sheikh Al-Juhany reminds the congregation of the necessity to continue striving for Allah's pleasure after the departure of Ramadan, emphasizing gratitude for His immense blessings. The sermon urges believers to maintain their connection with the Quran, prayer, and good deeds, ensuring their hearts remain purified and steadfast."
     }
   ],
   "imams": {
@@ -1473,5 +1523,5 @@
       "bio": "Sheikh Khalid bin Sulaiman Al-Muhanna is an Imam of Masjid an-Nabawi, appointed in 1441 AH (2019). He is a respected scholar and faculty member at the Islamic University of Madinah. Known for his clear and precise recitation, he brings a deep scholarly background to his position at the Prophet's Mosque."
     }
   },
-  "last_updated": "2026-05-09T21:26:06.642696"
+  "last_updated": "2026-05-09T22:50:45.862710"
 }
