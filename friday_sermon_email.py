@@ -850,7 +850,12 @@ def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: st
 
 
 def save_to_archive(sermon_data: dict, ai_content: dict, target_date_str: str = None):
-    """Save this week's sermon data to the static archive JSON.
+    """Save this week's sermon data to the archive.
+
+    Source of truth is the Firestore `archive/all` document — that's what
+    the live website reads, so writes show up instantly without a Vercel
+    redeploy. The local website/sermons_archive.json file is updated in
+    parallel as a backup / fallback for offline server runs.
 
     `target_date_str` ("YYYY-MM-DD") should be the Friday the sermon was
     delivered. If omitted, falls back to today's date for backwards
@@ -859,76 +864,98 @@ def save_to_archive(sermon_data: dict, ai_content: dict, target_date_str: str = 
     entry to the run date.
     """
     archive_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "website", "sermons_archive.json")
+    date_str = target_date_str or datetime.now().strftime("%Y-%m-%d")
 
-    try:
-        # Load existing archive
+    # ---- Load current archive (Firestore preferred, file fallback) ----
+    archive = None
+    if db is not None:
+        try:
+            snap = db.collection('archive').document('all').get()
+            if snap.exists:
+                d = snap.to_dict() or {}
+                archive = {
+                    "sermons": d.get("sermons", []),
+                    "imams": d.get("imams", {}),
+                    "last_updated": d.get("last_updated", ""),
+                }
+        except Exception as e:
+            print(f"  ⚠️ Firestore archive read failed: {e}")
+
+    if archive is None:
         if os.path.exists(archive_path):
             with open(archive_path, 'r', encoding='utf-8') as f:
                 archive = json.load(f)
         else:
             archive = {"sermons": [], "imams": {}, "last_updated": ""}
 
-        date_str = target_date_str or datetime.now().strftime("%Y-%m-%d")
-        # Per-(date, mosque) dedup, not per-date — a Madinah entry shouldn't
-        # block a Makkah entry for the same Friday, and vice versa.
-        existing_keys = {(s["date"], s["mosque"]) for s in archive["sermons"]}
+    # ---- Build new entries (per-(date, mosque) dedup) ----
+    existing_keys = {(s["date"], s["mosque"]) for s in archive["sermons"]}
+    added = 0
+    for mosque_key in ["makkah", "madinah"]:
+        if (date_str, mosque_key) in existing_keys:
+            continue
 
-        added = 0
-        for mosque_key in ["makkah", "madinah"]:
-            if (date_str, mosque_key) in existing_keys:
-                continue
+        data = sermon_data.get(mosque_key, {})
+        if not data:
+            continue
 
-            data = sermon_data.get(mosque_key, {})
-            if not data:
-                continue
+        imam_name = data.get("imam", "Unknown Imam")
+        imam_key = get_imam_key(imam_name) or "unknown"
 
-            imam_name = data.get("imam", "Unknown Imam")
-            imam_key = get_imam_key(imam_name) or "unknown"
+        # generate_ai_content returns flat keys; build_archive.py uses nested.
+        # Accept both so this is the one place that knows about the format.
+        nested = ai_content.get(mosque_key) or {}
+        topic = (
+            ai_content.get(f"{mosque_key}_topic")
+            or nested.get("topic")
+            or "Friday Sermon"
+        )
+        summary = (
+            ai_content.get(f"{mosque_key}_summary")
+            or nested.get("summary")
+            or f"Friday sermon delivered at {mosque_key}."
+        )
 
-            # generate_ai_content returns flat keys (makkah_topic /
-            # makkah_summary / madinah_topic / madinah_summary), not nested.
-            # Read both shapes so this works whether ai_content came from
-            # the live --auto path or build_archive.py.
-            nested = ai_content.get(mosque_key) or {}
-            topic = (
-                ai_content.get(f"{mosque_key}_topic")
-                or nested.get("topic")
-                or "Friday Sermon"
-            )
-            summary = (
-                ai_content.get(f"{mosque_key}_summary")
-                or nested.get("summary")
-                or f"Friday sermon delivered at {mosque_key}."
-            )
+        sermon_entry = {
+            "date": date_str,
+            "mosque": mosque_key,
+            "imam_key": imam_key,
+            "imam_name": IMAM_BIOS.get(imam_key, {}).get("name", imam_name),
+            "topic": topic,
+            "summary": summary,
+            "audio_url": data.get("audio_url", data.get("link", "")),
+            "page_url": data.get("page_url", data.get("link", ""))
+        }
+        archive["sermons"].append(sermon_entry)
+        added += 1
 
-            sermon_entry = {
-                "date": date_str,
-                "mosque": mosque_key,
-                "imam_key": imam_key,
-                "imam_name": IMAM_BIOS.get(imam_key, {}).get("name", imam_name),
-                "topic": topic,
-                "summary": summary,
-                "audio_url": data.get("audio_url", data.get("link", "")),
-                "page_url": data.get("page_url", data.get("link", ""))
-            }
-            archive["sermons"].append(sermon_entry)
-            added += 1
+    if added == 0:
+        print(f"  ⚠️ Archive already has entries for {date_str} (both mosques), skipping.")
+        return
 
-        if added == 0:
-            print(f"  ⚠️ Archive already has entries for {date_str} (both mosques), skipping.")
-            return
+    archive["last_updated"] = datetime.now().isoformat()
+    archive["sermons"].sort(key=lambda x: (x["date"], x["mosque"]))
 
-        archive["last_updated"] = datetime.now().isoformat()
+    # ---- Write to Firestore (canonical) ----
+    if db is not None:
+        try:
+            db.collection('archive').document('all').set({
+                "sermons": archive["sermons"],
+                "imams": archive["imams"],
+                "last_updated": archive["last_updated"],
+            })
+            print(f"  ✓ Wrote {added} entry/entries for {date_str} to Firestore archive/all "
+                  f"({len(archive['sermons'])} total)")
+        except Exception as e:
+            print(f"  ⚠️ Firestore archive write failed: {e}")
 
-        # Sort by date
-        archive["sermons"].sort(key=lambda x: x["date"])
-
+    # ---- Mirror to JSON file (backup) ----
+    try:
         with open(archive_path, 'w', encoding='utf-8') as f:
             json.dump(archive, f, indent=2, ensure_ascii=False)
-
-        print(f"  ✓ Saved {added} entry/entries for {date_str} to archive ({len(archive['sermons'])} total)")
+        print(f"  ✓ Mirrored archive to {archive_path}")
     except Exception as e:
-        print(f"  ⚠️ Failed to save to archive: {e}")
+        print(f"  ⚠️ Failed to mirror archive to JSON file: {e}")
 
 
 def save_draft(sermon_data: dict, ai_content: dict) -> str:

@@ -10,7 +10,7 @@ import json
 import uuid
 import hashlib
 from datetime import datetime
-from flask import Flask, request, jsonify, send_from_directory, render_template_string, abort
+from flask import Flask, request, jsonify, send_from_directory, render_template_string, abort, make_response
 import firebase_admin
 from firebase_admin import credentials, firestore
 
@@ -146,15 +146,47 @@ def archive():
     return send_from_directory('.', 'archive.html')
 
 
-@app.route('/api/archive')
-def archive_data():
-    """Serve the sermon archive JSON."""
+def _load_archive() -> dict:
+    """Load the sermon archive.
+
+    Source of truth is Firestore (`archive/all` doc) — written to by
+    save_to_archive() in the email script. The local JSON file is kept
+    as a last-resort fallback for cold-deploy / Firestore-down cases.
+    Single-doc reads keep us within the Firestore free-tier read budget;
+    edge caching on the routes that call this drops it further.
+    """
+    if db:
+        try:
+            snap = db.collection('archive').document('all').get()
+            if snap.exists:
+                d = snap.to_dict() or {}
+                return {
+                    'sermons': d.get('sermons', []),
+                    'imams': d.get('imams', {}),
+                    'last_updated': d.get('last_updated', ''),
+                }
+        except Exception as e:
+            print(f"⚠️ Firestore archive read failed, falling back to JSON: {e}")
+
     archive_path = os.path.join(os.path.dirname(__file__), 'sermons_archive.json')
     if os.path.exists(archive_path):
         with open(archive_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return jsonify(data)
-    return jsonify({'sermons': [], 'imams': {}}), 404
+            return json.load(f)
+    return {'sermons': [], 'imams': {}, 'last_updated': ''}
+
+
+@app.route('/api/archive')
+def archive_data():
+    """Serve the sermon archive JSON."""
+    data = _load_archive()
+    if not data.get('sermons'):
+        return jsonify(data), 404
+    resp = jsonify(data)
+    # Edge-cache on Vercel (s-maxage=3600) so a wave of visitors only
+    # triggers ~1 Firestore read per region per hour. Browser cache short
+    # so updates appear quickly when subscribers click in.
+    resp.headers['Cache-Control'] = 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400'
+    return resp
 
 
 @app.route('/subscribe', methods=['POST'])
@@ -336,15 +368,11 @@ def sermon_page(slug):
     if not re.match(r'^\d{4}-\d{2}-\d{2}$', date):
         return abort(404)
         
-    archive_path = os.path.join(os.path.dirname(__file__), 'sermons_archive.json')
-    if not os.path.exists(archive_path):
-        return abort(404)
-        
-    with open(archive_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        
+    data = _load_archive()
     sermons = data.get('sermons', [])
     imams = data.get('imams', {})
+    if not sermons:
+        return abort(404)
     
     sermon = next((s for s in sermons if s['date'] == date and s['mosque'] == mosque), None)
     if not sermon:
@@ -489,13 +517,17 @@ def sermon_page(slug):
     </html>
     """
     
-    return render_template_string(html_template, 
-                                sermon=sermon, 
-                                imam_name=imam_name, 
+    rendered = render_template_string(html_template,
+                                sermon=sermon,
+                                imam_name=imam_name,
                                 imam_bio=imam_bio,
                                 mosque_name=mosque_name,
                                 mosque_icon=mosque_icon,
                                 date_formatted=date_formatted)
+    resp = make_response(rendered)
+    # Per-sermon pages are immutable once published; cache aggressively.
+    resp.headers['Cache-Control'] = 'public, max-age=600, s-maxage=86400, stale-while-revalidate=604800'
+    return resp
 
 
 if __name__ == '__main__':

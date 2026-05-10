@@ -138,7 +138,11 @@
         // ==== Load Archive Data ====
         async function loadArchiveData() {
             try {
-                const resp = await fetch('/api/archive?t=' + Date.now());
+                // Hit the cached endpoint — Cache-Control on the server
+                // already keeps this fresh enough (5 min browser, 1h edge).
+                // The previous ?t= cache-buster bypassed the edge cache and
+                // forced a Firestore read on every visit.
+                const resp = await fetch('/api/archive');
                 archiveData = await resp.json();
                 initCalendar();
                 initImamDropdown();

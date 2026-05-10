@@ -138,8 +138,36 @@ All configuration is via the `.env` file:
 ## Data Sources
 
 - **Sermon recordings**: [haramain.info](http://www.haramain.info)
-- **Subscribers, drafts, approval state**: Firestore (`subscribers`, `drafts` collections)
+- **Subscribers, drafts, approval state, archive**: Firestore (`subscribers`, `drafts`, `archive` collections)
 - **Imam biographies**: built-in database in `friday_sermon_email.py`
+
+### Archive storage model
+
+The website archive (`/api/archive`, `/sermons/<slug>`) reads from a single
+Firestore document at `archive/all` containing `{sermons:[...], imams:{...}}`.
+`save_to_archive()` updates this doc on every successful auto-send, so the
+website reflects new sermons within ~1 hour (edge-cache TTL) without any
+redeploy. The `website/sermons_archive.json` file is kept as a backup
+mirror and as a last-resort fallback when Firestore is unreachable.
+
+To stay within the Firestore free tier (50K reads/day), the archive is
+stored as one document (1 read/page-load instead of 1 per sermon) and the
+Flask routes set `Cache-Control: public, s-maxage=3600` so Vercel's edge
+absorbs most traffic. Doc size is ~125 KiB at 145 entries; the Firestore
+1 MiB single-doc cap gives us headroom for ~1000 entries (~10 years).
+
+### Vercel deployment
+
+The Flask app supports two ways to authenticate with Firebase:
+
+1. **`harmainfridays-firebase-adminsdk-fbsvc-*.json`** at the repo root
+   (used locally; not committed — in `.gitignore`)
+2. **`FIREBASE_SERVICE_ACCOUNT_JSON`** environment variable containing the
+   raw JSON contents of the service account key (used on Vercel)
+
+To deploy archive-write-through on Vercel, set
+`FIREBASE_SERVICE_ACCOUNT_JSON` in the project's Environment Variables
+(Production scope) to the *contents* of your service account JSON.
 
 ## Files
 
