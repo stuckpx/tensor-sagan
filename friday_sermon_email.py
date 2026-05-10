@@ -183,8 +183,14 @@ def get_imam_key(imam_name: str) -> str:
     return None
 
 
-def fetch_khutbah_data() -> dict:
-    """Fetch the latest Friday khutbah information from haramain.info."""
+def fetch_khutbah_data(target_friday=None) -> dict:
+    """Fetch Friday khutbah information from haramain.info.
+
+    If target_friday (a date) is provided, only return links whose URL slug
+    parses to that exact (year, month, day). This is the "is this week's
+    sermon actually posted yet?" guard used by --auto mode. Without it,
+    the function falls back to "most recent" sorting (legacy behavior).
+    """
     try:
         response = requests.get(KHUTBAH_URL, timeout=30, headers={"User-Agent": "Mozilla/5.0"})
         response.raise_for_status()
@@ -257,13 +263,21 @@ def fetch_khutbah_data() -> dict:
                 elif 'madeenah' in href.lower() or 'madinah' in href.lower() or 'madinah' in text:
                     madinah_candidates.append({'href': href, 'date': sort_key})
 
+        # If a target Friday is given, filter strictly to that date.
+        # This prevents silently picking up last week's post when this
+        # week's hasn't been published yet.
+        if target_friday is not None:
+            tf_key = (target_friday.year, target_friday.month, target_friday.day)
+            makkah_candidates = [c for c in makkah_candidates if c['date'] == tf_key]
+            madinah_candidates = [c for c in madinah_candidates if c['date'] == tf_key]
+
         # Sort descending by date (YYYY, MM, DD)
         makkah_candidates.sort(key=lambda x: x['date'], reverse=True)
         madinah_candidates.sort(key=lambda x: x['date'], reverse=True)
-        
+
         if makkah_candidates:
             makkah_link = makkah_candidates[0]['href']
-        
+
         if madinah_candidates:
             madinah_link = madinah_candidates[0]['href']
         
@@ -780,14 +794,18 @@ def create_email_html(sermon_data: dict, ai_content: dict, unsubscribe_token: st
     return html
 
 
-def send_email_to_subscriber(html_content: str, email: str, token: str = None) -> bool:
-    """Send the email to a single subscriber."""
+def send_email_to_subscriber(html_content: str, email: str, token: str = None, subject: str = None) -> bool:
+    """Send the email to a single subscriber.
+
+    If `subject` is provided, it overrides the default. --auto mode uses this
+    so the subject reflects the target Friday rather than the run date.
+    """
     if not all([SMTP_EMAIL, SMTP_PASSWORD]):
         return False
-    
+
     try:
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = f"🕌 Friday Sermon Summary - {datetime.now().strftime('%B %d, %Y')}"
+        msg['Subject'] = subject or f"🕌 Friday Sermon Summary - {datetime.now().strftime('%B %d, %Y')}"
         msg['From'] = SMTP_EMAIL
         msg['To'] = email
         
@@ -937,16 +955,320 @@ def update_draft_status(date_str: str, status: str):
     except Exception as e:
         print(f"  ⚠️ Failed to update draft status: {e}")
 
+
+# ---------------------------------------------------------------------------
+# --auto mode: state-machine driven, idempotent, hourly retry
+# ---------------------------------------------------------------------------
+
+# Tunables for --auto
+AUTO_REVIEWER_EMAIL = "mjeelani@gmail.com"
+AUTO_MAX_REMINDERS = 5            # max reminder emails after the initial draft email
+AUTO_REMINDER_INTERVAL_HOURS = 2  # hours between reminders
+
+
+def _target_friday(now: datetime = None):
+    """Return the date of the most recent Friday (today if today is Friday).
+
+    All --auto reads/writes key by this date in YYYY-MM-DD form so a
+    Saturday-morning catch-up tick still operates on Friday's sermon.
+    """
+    from datetime import date as _date_type
+    if now is None:
+        now = datetime.now()
+    # Python: Monday=0 ... Friday=4 ... Sunday=6
+    days_back = (now.weekday() - 4) % 7
+    return (now - timedelta(days=days_back)).date()
+
+
+def save_draft_atomic(date_str: str, sermon_data: dict, ai_content: dict) -> str:
+    """Idempotent draft save using a Firestore transaction.
+
+    - If no doc exists at drafts/<date_str>, create it (status=pending) and
+      return the new token.
+    - If a doc already exists, NEVER overwrite it. If status is `pending`,
+      return the existing token (so retries email the same approval link).
+      If status is in {approved, sending, sent}, return None (caller should
+      treat as "another tick handled this; do nothing").
+
+    This is what stops a stray --draft / --auto run from clobbering a
+    `sent` doc the way our test did to 2026-05-09 earlier today.
+    """
+    import uuid
+    if not db:
+        print("Error: Database connection not established for saving draft.")
+        return None
+
+    ref = db.collection('drafts').document(date_str)
+    transaction = db.transaction()
+
+    @firestore.transactional
+    def _run(tx):
+        snap = ref.get(transaction=tx)
+        if snap.exists:
+            existing = snap.to_dict() or {}
+            status = existing.get('status')
+            if status == 'pending':
+                return existing.get('token')  # reuse so links keep working
+            return None  # approved/sending/sent — leave untouched
+        # Create fresh
+        token = str(uuid.uuid4())
+        tx.set(ref, {
+            'id': date_str,
+            'sermon_data': sermon_data,
+            'ai_content': ai_content,
+            'status': 'pending',
+            'token': token,
+            'created_at': datetime.now().isoformat(),
+            'reminder_count': 0,
+            'last_reminder_at': None,
+        })
+        return token
+
+    try:
+        return _run(transaction)
+    except Exception as e:
+        print(f"  ⚠️ save_draft_atomic failed: {e}")
+        return None
+
+
+def claim_send_lock(date_str: str) -> bool:
+    """Atomically transition status `approved` → `sending`.
+
+    Returns True only if THIS process won the race. Concurrent ticks (or a
+    future Vercel-cron runner) will see `sending`/`sent` and bail out, so
+    subscribers never get duplicate emails.
+    """
+    if not db:
+        return False
+    ref = db.collection('drafts').document(date_str)
+    transaction = db.transaction()
+
+    @firestore.transactional
+    def _run(tx):
+        snap = ref.get(transaction=tx)
+        if not snap.exists:
+            return False
+        if (snap.to_dict() or {}).get('status') != 'approved':
+            return False
+        tx.update(ref, {
+            'status': 'sending',
+            'sending_started_at': datetime.now().isoformat(),
+        })
+        return True
+
+    try:
+        return _run(transaction)
+    except Exception as e:
+        print(f"  ⚠️ claim_send_lock failed: {e}")
+        return False
+
+
+def _build_reviewer_email(target_date_str: str, sermon_data: dict, ai_content: dict, token: str) -> str:
+    """Build the draft-review HTML (same as legacy --draft path)."""
+    approval_link = f"https://www.haramainfridays.com/api/approve_draft?date={target_date_str}&token={token}"
+    html_content = create_email_html(sermon_data, ai_content, None)
+    draft_notice = f"""
+    <div style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center;">
+        <h3 style="margin-top: 0;">📝 Draft Review</h3>
+        <p>Please review the summary below. If everything looks good, approve it so it can be sent to all subscribers.</p>
+        <a href="{approval_link}" style="display: inline-block; background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 10px;">Approve Draft</a>
+    </div>
+    """
+    return html_content.replace('<body>', f'<body>\n{draft_notice}')
+
+
+def _send_admin_alert(subject: str, body_text: str):
+    """Plain-text alert to the reviewer (used for 'no publish' notice)."""
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = SMTP_EMAIL
+        msg['To'] = AUTO_REVIEWER_EMAIL
+        msg.attach(MIMEText(body_text, 'plain'))
+        context = ssl.create_default_context()
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls(context=context)
+            server.login(SMTP_EMAIL, SMTP_PASSWORD)
+            server.sendmail(SMTP_EMAIL, AUTO_REVIEWER_EMAIL, msg.as_string())
+    except Exception as e:
+        print(f"  ⚠️ Failed to send admin alert: {e}")
+
+
+def run_auto_tick():
+    """One iteration of the Friday email state machine. Idempotent.
+
+    Cron this hourly; whatever state we're in, the right thing happens
+    (or nothing happens) and the script exits.
+    """
+    now = datetime.now()
+    tf = _target_friday(now)
+    tf_str = tf.strftime("%Y-%m-%d")
+    print(f"[auto-tick {now.strftime('%Y-%m-%d %H:%M')}] target_friday={tf_str}")
+
+    if not db:
+        print("  ⚠️ No Firestore connection — bailing.")
+        return
+
+    draft = get_draft(tf_str)
+    status = (draft or {}).get('status')
+
+    # ---- Terminal states: nothing to do ----
+    if status == 'sent':
+        print(f"  status=sent → noop")
+        return
+    if status == 'sending':
+        print(f"  status=sending (another tick is mid-send) → noop")
+        return
+
+    # ---- Approved: send to all subscribers under an atomic lock ----
+    if status == 'approved':
+        if not claim_send_lock(tf_str):
+            print(f"  could not claim send lock (race) → noop")
+            return
+        sermon_data = draft.get('sermon_data', {}) or {}
+        ai_content = draft.get('ai_content', {}) or {}
+
+        subscribers = load_subscribers()
+        if not subscribers:
+            print(f"  ⚠️ No subscribers found. Reverting status to approved.")
+            update_draft_status(tf_str, 'approved')
+            return
+
+        nice_date = tf.strftime('%B %d, %Y')
+        subject = f"🕌 Friday Sermon Summary - {nice_date}"
+        sent_count = 0
+        print(f"  sending to {len(subscribers)} subscriber(s) for {tf_str}...")
+        for sub in subscribers:
+            email = sub.get('email')
+            sub_token = sub.get('token', '')
+            html = create_email_with_unsubscribe(sermon_data, ai_content, sub_token)
+            if send_email_to_subscriber(html, email, sub_token, subject=subject):
+                sent_count += 1
+
+        update_draft_status(tf_str, 'sent')
+        try:
+            db.collection('drafts').document(tf_str).update({
+                'sent_at': datetime.now().isoformat(),
+                'sent_count': sent_count,
+            })
+        except Exception:
+            pass
+        try:
+            save_to_archive(sermon_data, ai_content)
+        except Exception as e:
+            print(f"  ⚠️ archive save failed: {e}")
+        print(f"  ✓ sent {sent_count}/{len(subscribers)} → status=sent")
+        return
+
+    # ---- Pending: maybe nudge reviewer with a reminder ----
+    if status == 'pending':
+        reminder_count = int(draft.get('reminder_count') or 0)
+        last_at_str = draft.get('last_reminder_at') or draft.get('created_at')
+        try:
+            last_at = datetime.fromisoformat(last_at_str)
+        except Exception:
+            last_at = now  # if unparseable, treat as just-now to defer
+
+        hours_since = (now - last_at).total_seconds() / 3600.0
+        if reminder_count >= AUTO_MAX_REMINDERS:
+            print(f"  status=pending reminder_count={reminder_count} (max reached) → noop")
+            return
+        if hours_since < AUTO_REMINDER_INTERVAL_HOURS:
+            print(f"  status=pending reminder_count={reminder_count} hours_since={hours_since:.1f} → too soon, noop")
+            return
+
+        token = draft.get('token')
+        sermon_data = draft.get('sermon_data', {}) or {}
+        ai_content = draft.get('ai_content', {}) or {}
+        html = _build_reviewer_email(tf_str, sermon_data, ai_content, token)
+        # Prepend a "this is a reminder" banner so the reviewer notices.
+        reminder_banner = (
+            f"<div style=\"background:#f8d7da;border:1px solid #f5c2c7;color:#842029;"
+            f"padding:12px;margin:0 0 10px 0;border-radius:5px;text-align:center;\">"
+            f"⏰ Reminder {reminder_count + 1}/{AUTO_MAX_REMINDERS}: "
+            f"please review &amp; approve so subscribers can receive this week's sermon."
+            f"</div>"
+        )
+        html = html.replace('<body>', f'<body>\n{reminder_banner}')
+        subject = f"⏰ Reminder ({reminder_count + 1}/{AUTO_MAX_REMINDERS}): Approve Friday Sermon Draft - {tf.strftime('%B %d, %Y')}"
+        if send_email_to_subscriber(html, AUTO_REVIEWER_EMAIL, None, subject=subject):
+            try:
+                db.collection('drafts').document(tf_str).update({
+                    'reminder_count': reminder_count + 1,
+                    'last_reminder_at': now.isoformat(),
+                })
+                print(f"  ✓ reminder {reminder_count + 1}/{AUTO_MAX_REMINDERS} sent")
+            except Exception as e:
+                print(f"  ⚠️ reminder bookkeeping failed: {e}")
+        else:
+            print(f"  ⚠️ failed to send reminder")
+        return
+
+    # ---- No draft yet: try to fetch this Friday's sermons ----
+    print(f"  no draft for {tf_str} — checking haramain.info...")
+    sermon_data = fetch_khutbah_data(target_friday=tf)
+    have_makkah = bool(sermon_data.get('makkah'))
+    have_madinah = bool(sermon_data.get('madinah'))
+
+    if not (have_makkah and have_madinah):
+        # Saturday after noon = both sermons should certainly be up by now.
+        # Send a one-time "no email going out" alert.
+        is_saturday_after_noon = now.weekday() == 5 and now.hour >= 12
+        if is_saturday_after_noon:
+            try:
+                # Mark in Firestore so we only alert once per week.
+                alert_ref = db.collection('drafts').document(tf_str + '__no_publish_alert')
+                if not alert_ref.get().exists:
+                    _send_admin_alert(
+                        subject=f"⚠️ Haramain Fridays: no sermon published for {tf_str}",
+                        body_text=(
+                            f"Heads up — by Saturday noon, haramain.info still hasn't posted "
+                            f"both sermons for {tf_str}.\n"
+                            f"  Makkah available: {have_makkah}\n"
+                            f"  Madinah available: {have_madinah}\n\n"
+                            f"No subscriber email will go out this week unless both appear later "
+                            f"and a draft gets approved before subscribers expect it.\n"
+                        ),
+                    )
+                    alert_ref.set({'created_at': now.isoformat()})
+                    print(f"  ⚠️ Saturday noon escalation: alert sent")
+            except Exception as e:
+                print(f"  ⚠️ no-publish alert flow failed: {e}")
+        else:
+            print(f"  not yet available (makkah={have_makkah}, madinah={have_madinah}) → wait")
+        return
+
+    # ---- Both sermons posted: fetch AI, save draft, email reviewer ----
+    print(f"  ✓ both sermons posted, generating AI content...")
+    ai_content = generate_ai_content(sermon_data)
+    token = save_draft_atomic(tf_str, sermon_data, ai_content)
+    if not token:
+        print(f"  another tick beat us to it (or status moved past pending) → noop")
+        return
+
+    html = _build_reviewer_email(tf_str, sermon_data, ai_content, token)
+    subject = f"📝 Draft: Friday Sermon Summary - {tf.strftime('%B %d, %Y')} (review & approve)"
+    if send_email_to_subscriber(html, AUTO_REVIEWER_EMAIL, None, subject=subject):
+        print(f"  ✓ draft saved + review email sent to {AUTO_REVIEWER_EMAIL}")
+    else:
+        print(f"  ⚠️ draft saved but review email failed to send")
+
+
 def main():
     import sys
     
     # Check for Mode
     is_draft_mode = '--draft' in sys.argv
     is_send_mode = '--send' in sys.argv
-    
-    if not is_draft_mode and not is_send_mode:
-        print("Please specify --draft (5 PM run) or --send (6 PM run).")
-        print("Usage: python3 friday_sermon_email.py [--draft | --send]")
+    is_auto_mode = '--auto' in sys.argv
+
+    if not (is_draft_mode or is_send_mode or is_auto_mode):
+        print("Please specify --auto (recommended, hourly cron), --draft, or --send.")
+        print("Usage: python3 friday_sermon_email.py [--auto | --draft | --send]")
+        return
+
+    if is_auto_mode:
+        run_auto_tick()
         return
     
     print("=" * 60)
