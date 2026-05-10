@@ -174,6 +174,12 @@ def get_imam_key(imam_name: str) -> str:
         "muhanna": "muhanna",
         "ale sheikh": "alesheikh",
         "aal sheikh": "alesheikh",
+        # URL filename variants — haramain.info / quranicaudio mirror MP3s use these
+        "alsheikh": "alesheikh",        # e.g. "SheikhAlSheikh_JumuaKhutbah-..."
+        "buayjaan": "buaijan",          # e.g. "SheikhBuayjaan_JumuaKhutbah-..."
+        "buayjan":  "buaijan",
+        "buaijaan": "buaijan",
+        "hudayfi":  "hudhaify",         # alt spelling of Hudhayfi
     }
     
     for keyword, key in keywords.items():
