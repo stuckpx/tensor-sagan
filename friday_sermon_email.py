@@ -123,6 +123,10 @@ IMAM_BIOS = {
         "name": "Sheikh Ahmad bin Taleb Hameed",
         "bio": "Sheikh Ahmad bin Taleb Hameed is an Imam of Masjid an-Nabawi. He is known for his beautiful recitation and thoughtful sermons that address contemporary issues while remaining grounded in classical Islamic scholarship."
     },
+    "buayjan": {
+        "name": "Sheikh Bu'ayjan",
+        "bio": "Sheikh Bu'ayjan is an Imam and Khateeb of Masjid an-Nabawi in Madinah, known for his Friday khutbahs delivered at the Prophet's Mosque."
+    },
     "budair": {
         "name": "Sheikh Salah Al-Budair",
         "bio": "Sheikh Salah bin Muhammad Al-Budair is an Imam of Masjid an-Nabawi in Madinah. He is known for his beautiful voice and emotional delivery. He holds a PhD in Islamic Studies and serves as a judge in the Madinah courts alongside his duties as Imam."
@@ -180,9 +184,12 @@ def get_imam_key(imam_name: str) -> str:
         "aal sheikh": "alesheikh",
         # URL filename variants — haramain.info / quranicaudio mirror MP3s use these
         "alsheikh": "alesheikh",        # e.g. "SheikhAlSheikh_JumuaKhutbah-..."
-        "buayjaan": "buaijan",          # e.g. "SheikhBuayjaan_JumuaKhutbah-..."
-        "buayjan":  "buaijan",
-        "buaijaan": "buaijan",
+        "buayjaan": "buayjan",          # e.g. "SheikhBuayjaan_JumuaKhutbah-..." → Sheikh Bu'ayjan
+        "buayjan":  "buayjan",
+        "bu'ayjan": "buayjan",          # display-name form (with apostrophe)
+        "buaijaan": "buayjan",
+        "hameed":   "buaijan",          # Sheikh Ahmad bin Taleb Hameed (distinct from Bu'ayjan)
+        "ahmad bin taleb": "buaijan",
         "hudayfi":  "hudhaify",         # alt spelling of Hudhayfi
     }
     
@@ -419,7 +426,10 @@ def extract_imam_from_text(text: str) -> str:
         "qasim": "Sheikh Abdul Muhsin Al-Qasim",
         "qaasim": "Sheikh Abdul Muhsin Al-Qasim",
         "budair": "Sheikh Salah Al-Budair",
-        "buayjan": "Sheikh Ahmad bin Taleb Hameed",
+        "buayjan": "Sheikh Bu'ayjan",
+        "buayjaan": "Sheikh Bu'ayjan",
+        "hameed": "Sheikh Ahmad bin Taleb Hameed",
+        "ahmad bin taleb": "Sheikh Ahmad bin Taleb Hameed",
         "thubayti": "Sheikh Saleh bin Muhammad Al-Thubayti",
         "thubaiti": "Sheikh Saleh bin Muhammad Al-Thubayti",
         "thubaity": "Sheikh Saleh bin Muhammad Al-Thubayti",
@@ -580,8 +590,15 @@ FOR EACH MOSQUE, provide:
         response.raise_for_status()
         
         result = response.json()
-        ai_text = result.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-        
+        candidates = result.get("candidates") or []
+        ai_text = ""
+        if candidates:
+            ai_text = (candidates[0].get("content", {}).get("parts", [{}])[0] or {}).get("text", "") or ""
+        if not ai_text:
+            finish = (candidates[0].get("finishReason") if candidates else None)
+            pf = result.get("promptFeedback")
+            print(f"  ⚠️ Gemini returned no text. finishReason={finish} promptFeedback={pf} keys={list(result.keys())}")
+
         sermon_content = parse_sermon_json(ai_text)
         
         return {
@@ -615,8 +632,11 @@ def parse_sermon_json(text: str) -> dict:
     
     try:
         return json.loads(text)
-    except:
-        # If JSON parsing fails, try to extract content manually
+    except Exception as e:
+        # Loud failure so we don't silently ship a draft with empty summaries
+        # (see 2026-05-22 incident).
+        preview = (text or "")[:500]
+        print(f"  ⚠️ parse_sermon_json failed: {e}; raw preview (first 500 chars): {preview!r}")
         return {
             "makkah": {"topic": "Friday Sermon", "summary": ""},
             "madinah": {"topic": "Friday Sermon", "summary": ""},
