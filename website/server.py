@@ -395,22 +395,6 @@ def approve_draft():
         return render_status_page("⚠️ Error", "An error occurred while approving the draft. Please try again later.", 500)
 
 
-@app.route('/api/debug/subscribers')
-def list_subscribers():
-    """Debug endpoint to list subscribers."""
-    # TODO: Remove in production
-    if not db:
-        return jsonify({'error': 'Database not connected'})
-    
-    users = []
-    docs = db.collection('subscribers').where('active', '==', True).stream()
-    for doc in docs:
-        d = doc.to_dict()
-        users.append(d.get('email'))
-        
-    return jsonify({'count': len(users), 'emails': users})
-
-
 @app.route('/sermons/<slug>')
 def sermon_page(slug):
     """Serve a dedicated, server-side rendered SEO page for a single sermon."""

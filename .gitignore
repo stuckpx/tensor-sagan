@@ -5,7 +5,6 @@ __pycache__/
 venv/
 .DS_Store
 *.json
-!subscribers.json
 !vercel.json
 !package.json
 !website/sermons_archive.json
