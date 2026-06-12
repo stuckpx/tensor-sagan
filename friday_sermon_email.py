@@ -25,6 +25,9 @@ load_dotenv()
 
 # Configuration
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# Current GA Flash model (bumped from gemini-2.5-flash, June 2026). Flash tier
+# is the right fit for summarisation; revisit periodically — these go stale.
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 SMTP_EMAIL = os.getenv("SMTP_EMAIL")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
@@ -661,7 +664,7 @@ def generate_ai_content(sermon_data: dict) -> dict:
     makkah_uri = media_uri(sermon_data.get('makkah'))
     madinah_uri = media_uri(sermon_data.get('madinah'))
     
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
     
     last_friday = datetime.now()
     # Adjust to find the most recent Friday
@@ -717,12 +720,33 @@ FOR EACH MOSQUE, provide:
 
     parts.append({"text": prompt})
 
+    # Server-side enforced output shape — the API guarantees valid JSON
+    # matching this schema, so blank-summary drafts from free-form output
+    # (the 2026-05-22 incident) can't recur. parse_sermon_json stays as a
+    # second line of defense.
+    mosque_schema = {
+        "type": "object",
+        "properties": {
+            "topic": {"type": "string"},
+            "summary": {"type": "string"},
+        },
+        "required": ["topic", "summary"],
+    }
     payload = {
         "contents": [{"parts": parts}],
         "generationConfig": {
             "temperature": 0.7,
             "maxOutputTokens": 8192,
-            "responseMimeType": "application/json"
+            "responseMimeType": "application/json",
+            "responseJsonSchema": {
+                "type": "object",
+                "properties": {
+                    "makkah": mosque_schema,
+                    "madinah": mosque_schema,
+                    "introduction": {"type": "string"},
+                },
+                "required": ["makkah", "madinah", "introduction"],
+            },
         }
     }
     
