@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Friday Sermon Email Automation
-Fetches Friday khutbah information from Makkah and Medina grand mosques,
+Fetches Friday khutbah recordings from Makkah and Medina grand mosques
+(YouTube @Haramain_Recordings primary, haramain.info fallback),
 generates AI summaries and imam biographies, and sends a weekly email.
 """
 
@@ -149,7 +150,13 @@ IMAM_BIOS = {
 def get_imam_key(imam_name: str) -> str:
     """Match an imam name to our database key."""
     name_lower = imam_name.lower()
-    
+    # YouTube titles use typographic apostrophes ("Mu'ayqali", "Bu'ayjaan");
+    # normalize them, and also try an apostrophe-stripped copy so those
+    # spellings match the filename-style keywords below.
+    for fancy in ("’", "‘", "`"):
+        name_lower = name_lower.replace(fancy, "'")
+    name_stripped = name_lower.replace("'", "")
+
     # Direct keyword matching
     keywords = {
         "sudais": "sudais",
@@ -194,9 +201,9 @@ def get_imam_key(imam_name: str) -> str:
     }
     
     for keyword, key in keywords.items():
-        if keyword in name_lower:
+        if keyword in name_lower or keyword in name_stripped:
             return key
-    
+
     return None
 
 
@@ -395,6 +402,128 @@ def fetch_sermon_details(url: str, mosque_name: str) -> dict:
         }
 
 
+# ---------------------------------------------------------------------------
+# YouTube source: @Haramain_Recordings channel
+# ---------------------------------------------------------------------------
+
+YOUTUBE_CHANNEL_HANDLE = "Haramain_Recordings"
+
+
+def _youtube_date_str(d) -> str:
+    """Format a date the way Haramain_Recordings titles do: '5th Jun 2026'."""
+    day = d.day
+    if 10 <= day % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+    return f"{day}{suffix} {d.strftime('%b %Y')}"
+
+
+def _normalize_title(t: str) -> str:
+    for fancy in ("’", "‘", "`"):
+        t = t.replace(fancy, "'")
+    return " ".join(t.split())
+
+
+def fetch_khutbah_data_youtube(target_friday) -> dict:
+    """Find this Friday's khutbah videos on the Haramain_Recordings channel.
+
+    Titles follow a rigid pattern, e.g.
+        "5th Jun 2026 Makkah Jumu'ah Khutbah Sheikh Dosary"
+    so we search the channel for the date string and parse the matching
+    titles. The channel posts every salaah/adhaan (~15 videos/day), so the
+    channel RSS feed scrolls too fast to be useful and we hit the search
+    page instead (keyless, no API quota). Returns the same shape as
+    fetch_khutbah_data(); either mosque may be None.
+    """
+    from urllib.parse import quote
+    date_str = _youtube_date_str(target_friday)
+    query = f"{date_str} Jumu'ah Khutbah"
+    url = f"https://www.youtube.com/@{YOUTUBE_CHANNEL_HANDLE}/search?query={quote(query)}"
+    sermons = {"makkah": None, "madinah": None}
+    try:
+        resp = requests.get(url, timeout=30,
+                            headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "en-US,en"})
+        resp.raise_for_status()
+        m = (re.search(r'var ytInitialData = ({.*?});</script>', resp.text)
+             or re.search(r'window\["ytInitialData"\]\s*=\s*({.*?});', resp.text))
+        if not m:
+            print("  ⚠️ YouTube: ytInitialData not found in search page")
+            return sermons
+
+        videos = []
+
+        def walk(o):
+            if isinstance(o, dict):
+                if 'videoRenderer' in o:
+                    v = o['videoRenderer']
+                    title = ''.join(r.get('text', '') for r in v.get('title', {}).get('runs', []))
+                    if v.get('videoId') and title:
+                        videos.append((v['videoId'], title))
+                for vv in o.values():
+                    walk(vv)
+            elif isinstance(o, list):
+                for vv in o:
+                    walk(vv)
+
+        walk(json.loads(m.group(1)))
+
+        date_lower = date_str.lower()
+        for video_id, raw_title in videos:
+            title = _normalize_title(raw_title)
+            t_lower = title.lower()
+            if not t_lower.startswith(date_lower):
+                continue
+            # Exclude sibling uploads: Jumu'ah Salaah, Adhaan, Translation
+            if "khutbah" not in t_lower or "translation" in t_lower:
+                continue
+            if "adhaan" in t_lower or "salaah" in t_lower:
+                continue
+            # 'madeen' catches Madeenah and typo variants like "Madeenaah"
+            if "makkah" in t_lower:
+                mosque_key, mosque_name = "makkah", "Masjid al-Haram, Makkah"
+            elif "madeen" in t_lower or "madinah" in t_lower:
+                mosque_key, mosque_name = "madinah", "Masjid an-Nabawi, Madinah"
+            else:
+                continue
+            if sermons[mosque_key]:
+                continue
+
+            imam = "Unknown Imam"
+            im = re.search(r"sheikh\s+(.*)$", title, re.IGNORECASE)
+            if im:
+                raw_imam = f"Sheikh {im.group(1).strip()}"
+                key = get_imam_key(raw_imam)
+                imam = IMAM_BIOS[key]["name"] if key and key in IMAM_BIOS else raw_imam
+
+            watch_url = f"https://www.youtube.com/watch?v={video_id}"
+            sermons[mosque_key] = {
+                "title": title,
+                "link": watch_url,
+                "imam": imam,
+                "mosque": mosque_name,
+                "audio_url": watch_url,
+                "video_url": watch_url,  # signals Gemini direct-URL ingestion
+            }
+    except Exception as e:
+        print(f"  ⚠️ YouTube fetch failed: {e}")
+    return sermons
+
+
+def fetch_khutbah_data_any(target_friday) -> dict:
+    """YouTube first (haramain.info has been unreliable), haramain.info fills gaps."""
+    sermons = fetch_khutbah_data_youtube(target_friday)
+    if sermons.get("makkah") and sermons.get("madinah"):
+        print("  source: YouTube (both mosques)")
+        return sermons
+    fallback = fetch_khutbah_data(target_friday=target_friday)
+    for k in ("makkah", "madinah"):
+        if not sermons.get(k) and fallback.get(k):
+            sermons[k] = fallback[k]
+            print(f"  source: haramain.info fallback for {k}")
+    return sermons
+
+
 def extract_imam_from_text(text: str) -> str:
     """Extract imam name from text content."""
     # Look for known imam names in the text
@@ -518,13 +647,19 @@ def generate_ai_content(sermon_data: dict) -> dict:
         
     makkah_imam = sermon_data.get('makkah', {}).get('imam', 'the Imam')
     madinah_imam = sermon_data.get('madinah', {}).get('imam', 'the Imam')
-    
-    makkah_audio = sermon_data.get('makkah', {}).get('audio_url')
-    madinah_audio = sermon_data.get('madinah', {}).get('audio_url')
-    
-    # Upload audios first
-    makkah_uri = upload_audio_to_gemini(makkah_audio) if makkah_audio else None
-    madinah_uri = upload_audio_to_gemini(madinah_audio) if madinah_audio else None
+
+    def media_uri(info):
+        """YouTube URLs go to Gemini as-is; MP3s need download + Files upload."""
+        if not info:
+            return None
+        if info.get('video_url'):
+            return info['video_url']
+        if info.get('audio_url'):
+            return upload_audio_to_gemini(info['audio_url'])
+        return None
+
+    makkah_uri = media_uri(sermon_data.get('makkah'))
+    madinah_uri = media_uri(sermon_data.get('madinah'))
     
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
     
@@ -547,13 +682,13 @@ FOR EACH MOSQUE, provide:
 - **summary**: A detailed 4-6 sentence summary of the sermon's key messages, Quranic references, and lessons. """
 
     if makkah_uri or madinah_uri:
-        prompt += "\n\nI have provided audio files for the sermons. Please listen to them to generate accurate summaries from the actual Arabic khutbahs. "
+        prompt += "\n\nI have provided recordings of the sermons. Please listen to them to generate accurate summaries from the actual Arabic khutbahs. "
         if makkah_uri and madinah_uri:
-            prompt += "The FIRST audio file attached is Makkah's khutbah, and the SECOND audio file attached is Madinah's khutbah."
+            prompt += "The FIRST recording attached is Makkah's khutbah, and the SECOND recording attached is Madinah's khutbah."
         elif makkah_uri:
-            prompt += "The attached audio file is Makkah's khutbah. For Madinah, provide a general but realistic summary."
+            prompt += "The attached recording is Makkah's khutbah. For Madinah, provide a general but realistic summary."
         elif madinah_uri:
-            prompt += "The attached audio file is Madinah's khutbah. For Makkah, provide a general but realistic summary."
+            prompt += "The attached recording is Madinah's khutbah. For Makkah, provide a general but realistic summary."
             
     prompt += f"""\n\nFormat your response ONLY as JSON (no markdown):
 {{
@@ -568,12 +703,18 @@ FOR EACH MOSQUE, provide:
   "introduction": "A warm 2-3 sentence welcome for the newsletter."
 }}"""
 
+    def file_part(uri):
+        fd = {"fileUri": uri}
+        if "youtube.com" not in uri:  # uploaded MP3s need an explicit mimeType
+            fd["mimeType"] = "audio/mp3"
+        return {"fileData": fd}
+
     parts = []
     if makkah_uri:
-        parts.append({"fileData": {"mimeType": "audio/mp3", "fileUri": makkah_uri}})
+        parts.append(file_part(makkah_uri))
     if madinah_uri:
-        parts.append({"fileData": {"mimeType": "audio/mp3", "fileUri": madinah_uri}})
-        
+        parts.append(file_part(madinah_uri))
+
     parts.append({"text": prompt})
 
     payload = {
@@ -586,7 +727,9 @@ FOR EACH MOSQUE, provide:
     }
     
     try:
-        response = requests.post(url, json=payload, timeout=120)
+        # YouTube URLs are fetched/processed server-side inside this call,
+        # which can take several minutes — far longer than uploaded audio.
+        response = requests.post(url, json=payload, timeout=600)
         response.raise_for_status()
         
         result = response.json()
@@ -600,8 +743,8 @@ FOR EACH MOSQUE, provide:
             print(f"  ⚠️ Gemini returned no text. finishReason={finish} promptFeedback={pf} keys={list(result.keys())}")
 
         sermon_content = parse_sermon_json(ai_text)
-        
-        return {
+
+        content = {
             "makkah_topic": sermon_content.get("makkah", {}).get("topic", "Friday Sermon"),
             "makkah_summary": sermon_content.get("makkah", {}).get("summary", ""),
             "madinah_topic": sermon_content.get("madinah", {}).get("topic", "Friday Sermon"),
@@ -612,10 +755,17 @@ FOR EACH MOSQUE, provide:
             "makkah_imam": makkah_imam,
             "madinah_imam": madinah_imam
         }
-        
+        if not (content["makkah_summary"] or content["madinah_summary"]):
+            # Parse failure / empty response — let --auto retry next tick
+            # instead of shipping a draft with blank summaries (2026-05-22).
+            content["ai_failed"] = True
+        return content
+
     except Exception as e:
         print(f"Error calling Gemini API: {e}")
-        return generate_fallback_content(sermon_data)
+        fallback = generate_fallback_content(sermon_data)
+        fallback["ai_failed"] = True
+        return fallback
 
 
 def parse_sermon_json(text: str) -> dict:
@@ -1309,8 +1459,8 @@ def run_auto_tick():
         return
 
     # ---- No draft yet: try to fetch this Friday's sermons ----
-    print(f"  no draft for {tf_str} — checking haramain.info...")
-    sermon_data = fetch_khutbah_data(target_friday=tf)
+    print(f"  no draft for {tf_str} — checking YouTube (haramain.info fallback)...")
+    sermon_data = fetch_khutbah_data_any(tf)
     have_makkah = bool(sermon_data.get('makkah'))
     have_madinah = bool(sermon_data.get('madinah'))
 
@@ -1345,6 +1495,13 @@ def run_auto_tick():
     # ---- Both sermons posted: fetch AI, save draft, email reviewer ----
     print(f"  ✓ both sermons posted, generating AI content...")
     ai_content = generate_ai_content(sermon_data)
+    if ai_content.pop('ai_failed', False):
+        # Transient Gemini failure (timeout, parse error, ...). Don't save a
+        # draft with placeholder/blank summaries — the hourly tick retries.
+        # (With no GEMINI_API_KEY at all, the flag is never set and the
+        # plain fallback content still flows through as before.)
+        print(f"  ⚠️ AI summarisation failed — not saving draft, will retry next tick")
+        return
     token = save_draft_atomic(tf_str, sermon_data, ai_content)
     if not token:
         print(f"  another tick beat us to it (or status moved past pending) → noop")
@@ -1384,14 +1541,17 @@ def main():
     today = datetime.now().strftime("%Y-%m-%d")
 
     if is_draft_mode:
-        print("\n[1/4] Fetching sermon data from haramain.info...")
-        sermon_data = fetch_khutbah_data()
+        print("\n[1/4] Fetching sermon data (YouTube, haramain.info fallback)...")
+        sermon_data = fetch_khutbah_data_any(_target_friday(datetime.now()))
         print(f"  Makkah: {sermon_data.get('makkah', {}).get('imam', 'Unknown')} ({sermon_data.get('makkah', {}).get('link', 'No Link')})")
         print(f"  Madinah: {sermon_data.get('madinah', {}).get('imam', 'Unknown')} ({sermon_data.get('madinah', {}).get('link', 'No Link')})")
         
         print("\n[2/4] Generating AI summaries...")
         ai_content = generate_ai_content(sermon_data)
-        print("  ✓ Content generated")
+        if ai_content.pop('ai_failed', False):
+            print("  ⚠️ AI summarisation failed — draft will contain placeholder summaries")
+        else:
+            print("  ✓ Content generated")
         
         print("\n[3/4] Saving Draft...")
         token = save_draft(sermon_data, ai_content)

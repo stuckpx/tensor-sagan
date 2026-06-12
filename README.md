@@ -53,7 +53,7 @@ That's it — see [Scheduling](#scheduling) below for what the job actually does
 
 | Status | Action |
 |---|---|
-| (no doc) | Check haramain.info for **this Friday's** sermons (strict date match — won't grab last week's). If both posted, run AI summarisation, save a draft (status `pending`), email it to the reviewer with an "Approve" link. Otherwise wait. |
+| (no doc) | Check the [@Haramain_Recordings](https://www.youtube.com/@Haramain_Recordings) YouTube channel for **this Friday's** khutbah videos (strict date match — won't grab last week's), falling back to haramain.info per mosque. If both found, run AI summarisation (Gemini ingests the YouTube URLs directly), save a draft (status `pending`), email it to the reviewer with an "Approve" link. Otherwise wait. |
 | `pending` | If 2+ hours since last reminder and fewer than 5 reminders sent, re-send the approval email with a "reminder" banner. Otherwise noop. |
 | `approved` | Atomically transition `approved → sending` (Firestore transaction so concurrent ticks can't both send), email all subscribers, mark `sent`, append to the public archive. |
 | `sending` | Another tick is mid-send — noop. |
@@ -137,7 +137,8 @@ All configuration is via the `.env` file:
 
 ## Data Sources
 
-- **Sermon recordings**: [haramain.info](http://www.haramain.info)
+- **Sermon recordings (primary)**: [@Haramain_Recordings](https://www.youtube.com/@Haramain_Recordings) YouTube channel — khutbah videos are discovered via the channel's search page (titles follow `"5th Jun 2026 Makkah Jumu'ah Khutbah Sheikh Dosary"`), and Gemini summarises the YouTube URLs directly (no audio download/upload)
+- **Sermon recordings (fallback)**: [haramain.info](http://www.haramain.info) — used per mosque when the YouTube lookup comes up empty
 - **Subscribers, drafts, approval state, archive**: Firestore (`subscribers`, `drafts`, `archive` collections)
 - **Imam biographies**: built-in database in `friday_sermon_email.py`
 
@@ -191,14 +192,14 @@ tensor-sagan/
 
 ### Draft email never arrives
 - `tail ~/Library/Logs/haramain-fridays.log` — every tick logs its target Friday + decided action
-- Most common cause on Friday morning: haramain.info hasn't posted yet → the script correctly waits
+- Most common cause on Friday morning: neither YouTube nor haramain.info has the khutbah up yet → the script correctly waits
 
 ### Subscribers never got the email
 - Did you click the "Approve Draft" link? Without that, status stays `pending` and `--auto` won't send. (You'll be reminded up to 5 times.)
 - Check `drafts/<friday-date>` in Firestore — `status` should be `sent` once it's been blasted
 
 ### "No sermon published this week" alert
-- Means by Saturday noon local, at least one mosque still hadn't posted on haramain.info. The script chose not to send a half-complete email rather than guess
+- Means by Saturday noon local, at least one mosque's khutbah was still missing from both YouTube and haramain.info. The script chose not to send a half-complete email rather than guess
 
 ## License
 
