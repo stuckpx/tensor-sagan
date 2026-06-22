@@ -1076,13 +1076,69 @@ def create_email_with_unsubscribe(sermon_data: dict, ai_content: dict, token: st
 
 
 
-def save_to_archive(sermon_data: dict, ai_content: dict, target_date_str: str = None):
+def _git_sync_archive(archive_path: str, date_str: str):
+    """Commit + push the archive JSON mirror so git never drifts from Firestore.
+
+    Firestore is canonical and the live site reads it directly, so this is
+    purely housekeeping for the git backup. It is therefore best-effort:
+    every step is fenced and logged, and nothing here can raise into — or
+    slow down past a hard timeout — the weekly email tick. If the push
+    fails (e.g. launchd can't reach the keychain, or the branch is behind),
+    we log it and move on; the next successful run or a manual push catches
+    up.
+    """
+    import subprocess
+    import shutil
+
+    repo_dir = os.path.dirname(os.path.abspath(__file__))
+    git = shutil.which("git")
+    if not git:
+        print("  ⚠️ git not found on PATH — skipping archive auto-commit")
+        return
+
+    def run(args, **kw):
+        # GIT_TERMINAL_PROMPT=0 so a missing credential never hangs the tick.
+        env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+        return subprocess.run([git, *args], cwd=repo_dir, env=env,
+                              capture_output=True, text=True, timeout=60, **kw)
+
+    rel = os.path.relpath(archive_path, repo_dir)
+    try:
+        # Nothing changed vs HEAD? Then there's nothing to sync.
+        if run(["diff", "--quiet", "HEAD", "--", rel]).returncode == 0:
+            return
+        # Commit only the archive pathspec — never sweep up unrelated edits.
+        msg = f"Auto-sync sermon archive for {date_str}"
+        c = run(["commit", "-m", msg, "--", rel])
+        if c.returncode != 0:
+            print(f"  ⚠️ archive auto-commit failed: {c.stderr.strip() or c.stdout.strip()}")
+            return
+        print(f"  ✓ archive auto-committed ({rel})")
+        p = run(["push", "origin", "HEAD"])
+        if p.returncode == 0:
+            print(f"  ✓ archive pushed to origin")
+        else:
+            print(f"  ⚠️ archive push failed (committed locally): "
+                  f"{p.stderr.strip() or p.stdout.strip()}")
+    except subprocess.TimeoutExpired:
+        print("  ⚠️ git archive sync timed out — skipped")
+    except Exception as e:
+        print(f"  ⚠️ git archive sync error: {e}")
+
+
+def save_to_archive(sermon_data: dict, ai_content: dict, target_date_str: str = None,
+                    auto_commit: bool = False):
     """Save this week's sermon data to the archive.
 
     Source of truth is the Firestore `archive/all` document — that's what
     the live website reads, so writes show up instantly without a Vercel
     redeploy. The local website/sermons_archive.json file is updated in
     parallel as a backup / fallback for offline server runs.
+
+    When `auto_commit` is True (production send paths), the JSON mirror is
+    also committed + pushed to git so the backup never drifts. Best-effort:
+    git failures are logged, never raised. Off by default so tests and
+    manual backfills don't push.
 
     `target_date_str` ("YYYY-MM-DD") should be the Friday the sermon was
     delivered. If omitted, falls back to today's date for backwards
@@ -1177,12 +1233,18 @@ def save_to_archive(sermon_data: dict, ai_content: dict, target_date_str: str = 
             print(f"  ⚠️ Firestore archive write failed: {e}")
 
     # ---- Mirror to JSON file (backup) ----
+    mirror_ok = False
     try:
         with open(archive_path, 'w', encoding='utf-8') as f:
             json.dump(archive, f, indent=2, ensure_ascii=False)
         print(f"  ✓ Mirrored archive to {archive_path}")
+        mirror_ok = True
     except Exception as e:
         print(f"  ⚠️ Failed to mirror archive to JSON file: {e}")
+
+    # ---- Auto-commit the mirror so git never drifts from Firestore ----
+    if auto_commit and mirror_ok:
+        _git_sync_archive(archive_path, date_str)
 
 
 def save_draft(sermon_data: dict, ai_content: dict) -> str:
@@ -1432,7 +1494,7 @@ def run_auto_tick():
         except Exception:
             pass
         try:
-            save_to_archive(sermon_data, ai_content, target_date_str=tf_str)
+            save_to_archive(sermon_data, ai_content, target_date_str=tf_str, auto_commit=True)
         except Exception as e:
             print(f"  ⚠️ archive save failed: {e}")
         print(f"  ✓ sent {sent_count}/{len(subscribers)} → status=sent")
@@ -1665,7 +1727,7 @@ def main():
         update_draft_status(today, 'sent')
         
         print("\n[5/5] Saving to sermon archive...")
-        save_to_archive(sermon_data, ai_content)
+        save_to_archive(sermon_data, ai_content, target_date_str=today, auto_commit=True)
                 
         # Summary
         print("\n" + "=" * 60)
