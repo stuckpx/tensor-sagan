@@ -447,6 +447,9 @@ def sermon_page(slug):
         <meta property="og:url" content="{{ canonical_url }}">
         <meta property="og:site_name" content="Haramain Fridays">
         <meta property="og:locale" content="en_US">
+        <meta property="og:image" content="{{ site_base }}/og-image.png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
         <meta property="article:published_time" content="{{ sermon.date }}T12:00:00+03:00">
         <meta property="article:author" content="{{ imam_name }}">
         <meta property="article:section" content="Friday Sermon">
@@ -455,6 +458,7 @@ def sermon_page(slug):
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ sermon.topic }} — {{ mosque_name }}">
         <meta name="twitter:description" content="{{ sermon.summary }}">
+        <meta name="twitter:image" content="{{ site_base }}/og-image.png">
 
         <!-- Schema.org structured data — helps Google show rich results
              and tags this as an Article authored by the imam, on the
