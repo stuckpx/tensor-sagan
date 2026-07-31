@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.mj.haramain-uptime</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/mj/tensor-sagan/.venv/bin/python3</string>
+        <string>/Users/mj/tensor-sagan/friday_sermon_email.py</string>
+        <string>--healthcheck</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/mj/tensor-sagan</string>
+
+    <!--
+        Probe the public site twice a day. In July 2026 a Vercel routing
+        change made every URL 404 — including the /api/approve_draft endpoint
+        the weekly review email links to — and it went unnoticed for about six
+        days because Vercel still reported every build as "Ready".
+
+        Alerts are de-duplicated to one email per calendar day, so a long
+        outage nags once a day rather than on every run.
+
+        Times are interpreted in the system's local time zone.
+    -->
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict><key>Hour</key><integer>8</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>20</integer><key>Minute</key><integer>0</integer></dict>
+    </array>
+
+    <key>StandardOutPath</key>
+    <string>/Users/mj/Library/Logs/haramain-uptime.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/mj/Library/Logs/haramain-uptime.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/mj/tensor-sagan/.venv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

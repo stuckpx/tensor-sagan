@@ -1515,6 +1515,78 @@ def _send_admin_alert(subject: str, body_text: str):
         print(f"  ⚠️ Failed to send admin alert: {e}")
 
 
+def check_site_health() -> list:
+    """Probe the public site. Returns a list of failure strings ([] == healthy).
+
+    Exists because the site was down for ~6 days in July 2026 and nothing
+    noticed: a Vercel routing change made every URL return 404, including the
+    /api/approve_draft endpoint the weekly review email links to. Builds still
+    reported "Ready", so only an end-to-end request would have caught it.
+
+    /api/approve_draft is checked for 400 rather than 200 — with no token it
+    *should* reject the request. 404 there is the signature of the outage.
+    """
+    checks = [
+        ("/", (200,)),
+        ("/archive", (200,)),
+        ("/api/archive", (200,)),
+        ("/api/approve_draft", (400,)),  # 400 = route alive and validating
+    ]
+    failures = []
+    for path, expected in checks:
+        url = f"{WEBSITE_BASE_URL}{path}"
+        try:
+            code = requests.get(url, timeout=30,
+                                headers={"User-Agent": "haramain-uptime/1.0"}).status_code
+        except Exception as e:
+            failures.append(f"{path}: request failed ({e})")
+            continue
+        if code not in expected:
+            failures.append(f"{path}: got {code}, expected {'/'.join(map(str, expected))}")
+    return failures
+
+
+def run_health_check() -> int:
+    """--healthcheck entry point. Alerts (once a day) and returns an exit code."""
+    now = datetime.now()
+    print(f"[healthcheck {now.strftime('%Y-%m-%d %H:%M')}] {WEBSITE_BASE_URL}")
+    failures = check_site_health()
+    if not failures:
+        print("  ✓ all endpoints healthy")
+        return 0
+
+    for f in failures:
+        print(f"  ✗ {f}")
+
+    # One alert per day, so a multi-day outage doesn't mail hourly.
+    today = now.strftime("%Y-%m-%d")
+    if db is not None:
+        try:
+            alert_ref = db.collection('health_alerts').document(today)
+            if alert_ref.get().exists:
+                print("  (already alerted today — not re-sending)")
+                return 1
+            alert_ref.set({'created_at': now.isoformat(), 'failures': failures})
+        except Exception as e:
+            print(f"  ⚠️ alert bookkeeping failed, sending anyway: {e}")
+
+    _send_admin_alert(
+        subject="🚨 Haramain Fridays: website health check FAILED",
+        body_text=(
+            f"The public site looks broken as of {now.strftime('%Y-%m-%d %H:%M')}.\n\n"
+            + "\n".join(f"  ✗ {f}" for f in failures)
+            + f"\n\nBase URL: {WEBSITE_BASE_URL}\n\n"
+            "If /api/approve_draft is failing, the Approve button in the weekly\n"
+            "draft email will not work and this week's send will stall.\n\n"
+            "First things to check: the latest Vercel deployment, and whether a\n"
+            "platform/router change broke path handling (that was the July 2026\n"
+            "cause — every route 404'd while builds still reported Ready).\n"
+        ),
+    )
+    print("  ✉️ alert sent")
+    return 1
+
+
 def run_auto_tick():
     """One iteration of the Friday email state machine. Idempotent.
 
@@ -1675,6 +1747,15 @@ def run_auto_tick():
         return
 
     html = _build_reviewer_email(tf_str, sermon_data, ai_content, token)
+    # The email we're about to send is useless if its Approve link 404s, so
+    # check the site before sending and say so in the email itself.
+    if run_health_check() != 0:
+        html = html.replace('<body>', '<body>\n' + (
+            '<div style="background:#f8d7da;border:1px solid #f5c2c7;color:#842029;'
+            'padding:12px;margin:0 0 10px 0;border-radius:5px;text-align:center;">'
+            '🚨 The website is not responding normally, so the Approve button below '
+            'may not work. See the separate alert email for details.'
+            '</div>'))
     subject = f"📝 Draft: Friday Sermon Summary - {tf.strftime('%B %d, %Y')} (review & approve)"
     if send_email_to_subscriber(html, AUTO_REVIEWER_EMAIL, None, subject=subject):
         print(f"  ✓ draft saved + review email sent to {AUTO_REVIEWER_EMAIL}")
@@ -1689,11 +1770,17 @@ def main():
     is_draft_mode = '--draft' in sys.argv
     is_send_mode = '--send' in sys.argv
     is_auto_mode = '--auto' in sys.argv
+    is_health_mode = '--healthcheck' in sys.argv
 
-    if not (is_draft_mode or is_send_mode or is_auto_mode):
-        print("Please specify --auto (recommended, hourly cron), --draft, or --send.")
-        print("Usage: python3 friday_sermon_email.py [--auto | --draft | --send]")
+    if not (is_draft_mode or is_send_mode or is_auto_mode or is_health_mode):
+        print("Please specify --auto (recommended, hourly cron), --draft, --send, "
+              "or --healthcheck.")
+        print("Usage: python3 friday_sermon_email.py "
+              "[--auto | --draft | --send | --healthcheck]")
         return
+
+    if is_health_mode:
+        sys.exit(run_health_check())
 
     if is_auto_mode:
         run_auto_tick()

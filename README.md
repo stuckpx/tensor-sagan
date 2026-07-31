@@ -76,6 +76,9 @@ python3 friday_sermon_email.py --draft
 
 # Send to all subscribers if today's draft has been approved (legacy path)
 python3 friday_sermon_email.py --send
+
+# Probe the public site; exits non-zero and emails an alert if it's broken
+python3 friday_sermon_email.py --healthcheck
 ```
 
 ⚠️ The legacy `--draft` path uses `set()` and will overwrite an existing draft (and its `sent` audit trail). Prefer `--auto` for anything you wire to a cron.
@@ -87,6 +90,29 @@ Installed via launchd at `~/Library/LaunchAgents/com.mj.haramain-fridays.plist`.
 - **Saturday 00:00 – 12:00** local
 
 (31 ticks/week. Most are noops.)
+
+A second agent, `~/Library/LaunchAgents/com.mj.haramain-uptime.plist`, runs
+`--healthcheck` at **08:00 and 20:00** daily and logs to
+`~/Library/Logs/haramain-uptime.log`.
+
+### Website uptime check
+
+`--healthcheck` requests `/`, `/archive`, `/api/archive` and
+`/api/approve_draft`, and emails an alert if any of them misbehaves (at most
+one alert per calendar day, tracked in the Firestore `health_alerts`
+collection). `--auto` also runs it just before emailing a draft, and adds a
+warning banner to that email if the site is unhealthy — otherwise the Approve
+button could be dead on arrival.
+
+Note `/api/approve_draft` is expected to return **400**, not 200: with no token
+it should reject the request. A **404** there means routing is broken.
+
+That endpoint matters because it is what the Approve button in the weekly
+review email points at. In July 2026 a Vercel routing change made every URL on
+the site return 404 for roughly six days without anyone noticing — Vercel kept
+reporting builds as "Ready", and nothing here made a real request. The fix was
+removing a `rewrites` rule from `vercel.json` that was overriding Vercel's own
+Flask routing and passing the rewrite destination to Flask as the request path.
 
 ### Useful commands
 
