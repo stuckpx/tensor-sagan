@@ -682,7 +682,13 @@ Today is {date_str}. Generate authentic Friday sermon summaries for:
 
 FOR EACH MOSQUE, provide:
 - **topic**: A meaningful Islamic topic appropriate for this week
-- **summary**: A detailed 4-6 sentence summary of the sermon's key messages, Quranic references, and lessons. """
+- **summary**: A detailed 4-6 sentence summary of the sermon's key messages, Quranic references, and lessons.
+
+IMPORTANT — honorifics: whenever you refer to Prophet Muhammad (including as
+"the Prophet" or "the Messenger of Allah"), follow the reference with the
+ligature (ﷺ) in parentheses — e.g. "the Prophet (ﷺ) said". Do not write PBUH,
+SAW, or "peace be upon him" instead. Never place (ﷺ) after any other prophet
+(Ibrahim, Musa, Isa, Nuh, Yusuf, ...) — for them use "(peace be upon him)". """
 
     if makkah_uri or madinah_uri:
         prompt += "\n\nI have provided recordings of the sermons. Please listen to them to generate accurate summaries from the actual Arabic khutbahs. "
@@ -783,6 +789,11 @@ FOR EACH MOSQUE, provide:
             # Parse failure / empty response — let --auto retry next tick
             # instead of shipping a draft with blank summaries (2026-05-22).
             content["ai_failed"] = True
+        # The prompt asks for (ﷺ), but the model is inconsistent about it, so
+        # normalise deterministically rather than trusting the instruction.
+        for field in ("makkah_topic", "makkah_summary",
+                      "madinah_topic", "madinah_summary", "introduction"):
+            content[field] = add_prophetic_honorific(content[field])
         return content
 
     except Exception as e:
@@ -816,6 +827,67 @@ def parse_sermon_json(text: str) -> dict:
             "madinah": {"topic": "Friday Sermon", "summary": ""},
             "introduction": ""
         }
+
+
+# ---------------------------------------------------------------------------
+# Prophetic honorific
+# ---------------------------------------------------------------------------
+
+SALLALLAHU = "ﷺ"  # ﷺ  ARABIC LIGATURE SALLALLAHOU ALAYHE WASALLAM
+
+# ﷺ belongs to Prophet Muhammad alone — other prophets take عليه السلام — so
+# "Prophet Ibrahim/Musa/Nuh/Yusuf/..." must never be touched. That's why the
+# reference pattern below refuses any "Prophet <Capitalised name>" that isn't
+# one of Muhammad's spellings.
+_MUHAMMAD = r"(?:Muhammad|Muhammed|Mohammad|Mohammed)"
+_POSS = r"(?:'s|’s)"
+
+# A reference to Prophet Muhammad, in the forms that occur in our summaries.
+# Possessive alternatives precede bare ones so "the Prophet's" isn't split.
+_MUHAMMAD_REF = (
+    r"Prophet\s+" + _MUHAMMAD + _POSS + r"?"
+    r"|(?:[Tt]he\s+)?Messenger\s+of\s+Allah" + _POSS + r"?"
+    r"|His\s+Messenger" + _POSS + r"?"
+    r"|[Tt]he\s+Prophet" + _POSS +
+    r"|[Tt]he\s+Prophet\b(?!\s+[A-Z])"
+)
+
+# An honorific already attached to that reference, in any form Gemini emits.
+# Matched as part of the reference (not via lookahead) so it gets replaced
+# rather than duplicated — and, critically, so a "(PBUH)" trailing some *other*
+# prophet is left untouched: "peace be upon him" is right for them, ﷺ is not.
+_ATTACHED_HONORIFIC = (
+    r"\s*[\(\[]\s*(?i:" + SALLALLAHU + r"|PBUH|SAWS|SAW"
+    r"|peace\s+and\s+blessings\s+be\s+upon\s+him|peace\s+be\s+upon\s+him"
+    r"|sallallahu[^\)\],]*)\s*[\)\]]"
+    r"|\s*" + SALLALLAHU +
+    r"|,\s*(?i:peace\s+and\s+blessings\s+be\s+upon\s+him|peace\s+be\s+upon\s+him"
+    r"|sallallahu[^,\.]*),"
+)
+
+_PROPHET_REF = re.compile(
+    r"(?<![\w'’])(" + _MUHAMMAD_REF + r")(?P<hon>" + _ATTACHED_HONORIFIC + r")?"
+)
+
+
+def _honorific_sub(match: "re.Match") -> str:
+    honorific = match.group("hon") or ""
+    # The ", peace be upon him," form carries a trailing comma; keep it.
+    tail = "," if honorific.endswith(",") else ""
+    return f"{match.group(1)} ({SALLALLAHU}){tail}"
+
+
+def add_prophetic_honorific(text: str) -> str:
+    """Append " (ﷺ)" after references to Prophet Muhammad.
+
+    Idempotent, and safe on text that already carries an honorific in any form
+    — (PBUH), (SAW), ", peace be upon him," and bare ﷺ are normalised rather
+    than duplicated. Other prophets are left exactly as-is: ﷺ is specific to
+    Muhammad, and a generic "(PBUH)" after Musa or Ibrahim is already correct.
+    """
+    if not text:
+        return text
+    return _PROPHET_REF.sub(_honorific_sub, text)
 
 
 def get_imam_bio(imam_name: str) -> str:

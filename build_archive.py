@@ -14,6 +14,9 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
+# Single source of truth for the (ﷺ) convention — see friday_sermon_email.py
+from friday_sermon_email import add_prophetic_honorific
+
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -314,8 +317,10 @@ Format your response ONLY as a JSON array (no markdown):
         for item in summaries:
             idx = item.get("index", 0) - 1
             if 0 <= idx < len(sermons_batch):
-                sermons_batch[idx]["topic"] = item.get("topic", "Friday Sermon")
-                sermons_batch[idx]["summary"] = item.get("summary", "")
+                sermons_batch[idx]["topic"] = add_prophetic_honorific(
+                    item.get("topic", "Friday Sermon"))
+                sermons_batch[idx]["summary"] = add_prophetic_honorific(
+                    item.get("summary", ""))
 
     except Exception as e:
         print(f"  ⚠️ Gemini API error: {e}")
