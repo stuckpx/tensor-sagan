@@ -11,3 +11,4 @@ venv/
 debug_scraping.py
 .gemini/
 .vercel
+print/*.html
