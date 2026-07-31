@@ -15,6 +15,7 @@ import requests
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.utils import formataddr
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import firebase_admin
@@ -29,6 +30,10 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 # is the right fit for summarisation; revisit periodically — these go stale.
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 SMTP_EMAIL = os.getenv("SMTP_EMAIL")
+# Display name on the From line. Subscribers see this rather than a bare
+# address, which matters more now that mail comes from a project account
+# instead of a personal one.
+SENDER_NAME = os.getenv("SENDER_NAME", "Haramain Fridays")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
@@ -1114,7 +1119,7 @@ def send_email_to_subscriber(html_content: str, email: str, token: str = None, s
     try:
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject or f"🕌 Friday Sermon Summary - {datetime.now().strftime('%B %d, %Y')}"
-        msg['From'] = SMTP_EMAIL
+        msg['From'] = formataddr((SENDER_NAME, SMTP_EMAIL))
         msg['To'] = email
         
         # Plain text fallback
@@ -1382,7 +1387,7 @@ def update_draft_status(date_str: str, status: str):
 # ---------------------------------------------------------------------------
 
 # Tunables for --auto
-AUTO_REVIEWER_EMAIL = "mjeelani@gmail.com"
+AUTO_REVIEWER_EMAIL = os.getenv("REVIEWER_EMAIL", "mjeelani@gmail.com")
 AUTO_MAX_REMINDERS = 5            # max reminder emails after the initial draft email
 AUTO_REMINDER_INTERVAL_HOURS = 2  # hours between reminders
 
@@ -1503,7 +1508,7 @@ def _send_admin_alert(subject: str, body_text: str):
     try:
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
-        msg['From'] = SMTP_EMAIL
+        msg['From'] = formataddr((SENDER_NAME, SMTP_EMAIL))
         msg['To'] = AUTO_REVIEWER_EMAIL
         msg.attach(MIMEText(body_text, 'plain'))
         context = ssl.create_default_context()
@@ -1789,7 +1794,7 @@ def main():
     print("=" * 60)
     print("🕌 Haramain Fridays - Friday Sermon Email Automation")
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Mode: {'📝 DRAFT (mjeelani@gmail.com only)' if is_draft_mode else '🚀 SEND (All Subscribers)'}")
+    print(f"Mode: {f'📝 DRAFT ({AUTO_REVIEWER_EMAIL} only)' if is_draft_mode else '🚀 SEND (All Subscribers)'}")
     print("=" * 60)
     
     today = datetime.now().strftime("%Y-%m-%d")
@@ -1829,8 +1834,8 @@ def main():
         html_content = html_content.replace('<body>', f'<body>\n{draft_notice}')
         
         # Send only to the reviewer
-        if send_email_to_subscriber(html_content, "mjeelani@gmail.com", None):
-            print("  ✓ Draft email sent to mjeelani@gmail.com")
+        if send_email_to_subscriber(html_content, AUTO_REVIEWER_EMAIL, None):
+            print(f"  ✓ Draft email sent to {AUTO_REVIEWER_EMAIL}")
         else:
             print("  ⚠️ Failed to send draft email.")
             
@@ -1849,8 +1854,8 @@ def main():
             # Optional: Send a notification that it was aborted
             msg = MIMEMultipart('alternative')
             msg['Subject'] = f"⚠️ Friday Sermon Send Aborted"
-            msg['From'] = SMTP_EMAIL
-            msg['To'] = "mjeelani@gmail.com"
+            msg['From'] = formataddr((SENDER_NAME, SMTP_EMAIL))
+            msg['To'] = AUTO_REVIEWER_EMAIL
             msg.attach(MIMEText(f"The 6 PM Friday Sermon email blast was aborted because the draft ({today}) was not approved. Current status: {status}.", 'plain'))
             
             try:
@@ -1858,7 +1863,7 @@ def main():
                 with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
                     server.starttls(context=context)
                     server.login(SMTP_EMAIL, SMTP_PASSWORD)
-                    server.sendmail(SMTP_EMAIL, "mjeelani@gmail.com", msg.as_string())
+                    server.sendmail(SMTP_EMAIL, AUTO_REVIEWER_EMAIL, msg.as_string())
             except Exception as e:
                 pass
             return
