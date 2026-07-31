@@ -869,6 +869,14 @@ _PROPHET_REF = re.compile(
     r"(?<![\w'’])(" + _MUHAMMAD_REF + r")(?P<hon>" + _ATTACHED_HONORIFIC + r")?"
 )
 
+# A bare "Muhammad" is ambiguous — imams carry the name too ("Sheikh Salah bin
+# Muhammad Al-Budair") — so only upgrade one that already carries an honorific,
+# which settles who is meant. e.g. "prophets like Muhammad (PBUH)".
+_BARE_MUHAMMAD = re.compile(
+    r"(?<!bin )(?<!ibn )(?<!bint )(?<![\w'’])"
+    r"(" + _MUHAMMAD + _POSS + r"?)(?P<hon>" + _ATTACHED_HONORIFIC + r")"
+)
+
 
 def _honorific_sub(match: "re.Match") -> str:
     honorific = match.group("hon") or ""
@@ -887,7 +895,8 @@ def add_prophetic_honorific(text: str) -> str:
     """
     if not text:
         return text
-    return _PROPHET_REF.sub(_honorific_sub, text)
+    text = _PROPHET_REF.sub(_honorific_sub, text)
+    return _BARE_MUHAMMAD.sub(_honorific_sub, text)
 
 
 def get_imam_bio(imam_name: str) -> str:
