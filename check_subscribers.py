@@ -18,10 +18,17 @@ inactive = []
 
 for doc in docs:
     d = doc.to_dict()
+    attr = d.get('attribution') or {}
+    src = attr.get('utm_source') or ''
+    if not src and attr.get('referrer'):
+        # Show the referring host rather than the full URL.
+        src = attr['referrer'].split('//')[-1].split('/')[0]
     entry = {
         'email': d.get('email', 'N/A'),
         'active': d.get('active', False),
         'subscribed': str(d.get('subscribed_at', 'N/A'))[:19],
+        'source': src or ('direct' if attr else '—'),
+        'country': attr.get('country', ''),
     }
     if entry['active']:
         active.append(entry)
@@ -32,10 +39,16 @@ for doc in docs:
 active.sort(key=lambda x: x['subscribed'], reverse=True)
 
 print(f"\n🕌 Haramain Fridays — {len(active)} active subscriber(s)\n")
-print(f"{'#':<4} {'Email':<40} {'Subscribed'}")
-print('-' * 65)
+print(f"{'#':<4} {'Email':<38} {'Subscribed':<20} {'Source':<12} {'Cty'}")
+print('-' * 86)
 for i, s in enumerate(active, 1):
-    print(f"{i:<4} {s['email']:<40} {s['subscribed']}")
+    print(f"{i:<4} {s['email']:<38} {s['subscribed']:<20} {s['source']:<12} {s['country']}")
+
+# Channel rollup — the number that decides where effort goes next.
+from collections import Counter
+tally = Counter(s['source'] for s in active)
+print(f"\n📊 By source: " + ", ".join(f"{k}={v}" for k, v in tally.most_common()))
+print("   ('—' predates attribution tracking, added 2026-07-31)")
 
 if inactive:
     print(f"\n⏸  {len(inactive)} inactive:")

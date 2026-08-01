@@ -246,6 +246,29 @@ def archive_data():
     return resp
 
 
+def _acquisition(data: dict) -> dict:
+    """Where this signup came from, for channel attribution.
+
+    Values arrive from attribution.js (first touch of the session). Everything
+    is truncated because it is client-supplied. No IP address is stored — the
+    country code is resolved by Vercel at the edge, so we never see one.
+    Empty fields are dropped so direct visits don't write noise.
+    """
+    def clean(key, maxlen):
+        value = data.get(key)
+        return value.strip()[:maxlen] if isinstance(value, str) else ''
+
+    fields = {
+        'utm_source': clean('utm_source', 60),
+        'utm_medium': clean('utm_medium', 60),
+        'utm_campaign': clean('utm_campaign', 60),
+        'referrer': clean('referrer', 200),
+        'landing_page': clean('landing_page', 200),
+        'country': (request.headers.get('x-vercel-ip-country') or '')[:4],
+    }
+    return {k: v for k, v in fields.items() if v}
+
+
 @app.route('/subscribe', methods=['POST'])
 def subscribe():
     """Handle new email subscriptions."""
@@ -275,10 +298,12 @@ def subscribe():
         for doc in query:
             user_data = doc.to_dict()
             if not user_data.get('active', True):
-                # Reactivate
+                # Reactivate. Record the new source too — a returning
+                # subscriber is a real acquisition and tells us what's working.
                 users_ref.document(doc.id).update({
                     'active': True,
-                    'subscribed_at': datetime.now().isoformat()
+                    'subscribed_at': datetime.now().isoformat(),
+                    'attribution': _acquisition(data),
                 })
                 return jsonify({'message': 'Welcome back! Subscription reactivated.'}), 200
             else:
@@ -289,7 +314,8 @@ def subscribe():
             'email': email,
             'token': generate_token(email),
             'subscribed_at': datetime.now().isoformat(),
-            'active': True
+            'active': True,
+            'attribution': _acquisition(data),
         }
         
         users_ref.add(new_subscriber)
@@ -439,6 +465,10 @@ def sermon_page(slug):
         <title>{{ sermon.topic }} | {{ imam_name }} | Friday Sermon</title>
         <meta name="description" content="{{ sermon.summary }}">
         <link rel="canonical" href="{{ canonical_url }}">
+
+        <!-- See index.html — cookieless, first-party, no consent banner needed. -->
+        <script src="/attribution.js"></script>
+        <script defer src="/_vercel/insights/script.js"></script>
 
         <!-- Open Graph (Facebook, WhatsApp, LinkedIn, iMessage) -->
         <meta property="og:title" content="{{ sermon.topic }} — {{ mosque_name }}">
@@ -594,7 +624,8 @@ def sermon_page(slug):
                     const resp = await fetch('/subscribe', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: email })
+                        body: JSON.stringify(Object.assign({ email: email },
+                            window.haramainAttribution ? window.haramainAttribution() : {}))
                     });
                     
                     const data = await resp.json();

@@ -9,6 +9,12 @@
         content="Subscribe to receive weekly Friday sermon summaries from Masjid al-Haram and Masjid an-Nabawi.">
     <link rel="canonical" href="https://www.haramainfridays.com/">
 
+    <!-- Cookieless, first-party telemetry. attribution.js only records how a
+         visitor arrived and sends nothing unless they subscribe; the Vercel
+         script counts pageviews without cookies. Neither needs consent. -->
+    <script src="/attribution.js"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
+
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Haramain Fridays">
@@ -203,7 +209,9 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email, language }),
+                    body: JSON.stringify(Object.assign(
+                        { email, language },
+                        window.haramainAttribution ? window.haramainAttribution() : {})),
                 });
 
                 const data = await response.json();
