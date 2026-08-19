@@ -220,6 +220,25 @@ tensor-sagan/
 - `tail ~/Library/Logs/haramain-fridays.log` — every tick logs its target Friday + decided action
 - Most common cause on Friday morning: neither YouTube nor haramain.info has the khutbah up yet → the script correctly waits
 
+### Archive commits pile up locally but never reach GitHub
+- Symptom: `git log origin/main..HEAD` shows unpushed "Auto-sync sermon archive"
+  commits, and `~/Library/Logs/haramain-fridays.log` contains
+  `archive push failed (committed locally): remote: Permission to
+  stuckpx/tensor-sagan.git denied to <other-account>`.
+- Cause: this Mac has two GitHub accounts authenticated in `gh`, and the
+  *active* one is not the account that owns this repo. Git resolves
+  credentials through the macOS keychain, so `gh auth switch` alone does not
+  fix it.
+- Fix (already applied, recorded here in case it regresses): the remote is
+  `https://stuckpx@github.com/...` and the repo sets
+  `git config --local credential.username stuckpx`, which pins this
+  repository to the owning account regardless of which account `gh` has
+  active.
+- Note the send itself is unaffected — the git sync is deliberately
+  best-effort and cannot break the weekly email — which is exactly why this
+  failed quietly for two Fridays (2026-08-07 and 2026-08-14) before anyone
+  noticed.
+
 ### Subscribers never got the email
 - Did you click the "Approve Draft" link? Without that, status stays `pending` and `--auto` won't send. (You'll be reminded up to 5 times.)
 - Check `drafts/<friday-date>` in Firestore — `status` should be `sent` once it's been blasted
