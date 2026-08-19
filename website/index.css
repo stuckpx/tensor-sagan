@@ -574,17 +574,44 @@ footer {
 
 /* ===== Responsive Design ===== */
 @media (max-width: 968px) {
+    /* Most arrivals here are phones scanning the masjid flyer's QR code, and
+       the signup field previously sat ~790px down an 812px viewport — below
+       the fold, so the call to action was invisible on landing. The wrapper
+       is dissolved with display:contents so the form can be ordered directly
+       under the headline, with the decorative mosque badges moved beneath it.
+       Desktop keeps its two-column layout untouched. */
+    .hero {
+        padding: 20px 0 60px;
+    }
+
     .hero .container {
-        grid-template-columns: 1fr;
-        gap: 48px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
     }
 
     .hero-content {
-        max-width: 100%;
+        display: contents;
+    }
+
+    .hero-title {
+        order: 1;
         text-align: center;
+        margin-bottom: 0;
+    }
+
+    .hero-subtitle {
+        order: 2;
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    .subscribe-card {
+        order: 3;
     }
 
     .features {
+        order: 4;
         justify-content: center;
     }
 
