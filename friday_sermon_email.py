@@ -695,14 +695,24 @@ ligature (ﷺ) in parentheses — e.g. "the Prophet (ﷺ) said". Do not write PB
 SAW, or "peace be upon him" instead. Never place (ﷺ) after any other prophet
 (Ibrahim, Musa, Isa, Nuh, Yusuf, ...) — for them use "(peace be upon him)". """
 
-    if makkah_uri or madinah_uri:
-        prompt += "\n\nI have provided recordings of the sermons. Please listen to them to generate accurate summaries from the actual Arabic khutbahs. "
-        if makkah_uri and madinah_uri:
-            prompt += "The FIRST recording attached is Makkah's khutbah, and the SECOND recording attached is Madinah's khutbah."
-        elif makkah_uri:
-            prompt += "The attached recording is Makkah's khutbah. For Madinah, provide a general but realistic summary."
-        elif madinah_uri:
-            prompt += "The attached recording is Madinah's khutbah. For Makkah, provide a general but realistic summary."
+    # Both recordings are required. On 2026-10-02 a network outage meant neither
+    # could be fetched, and the prompt's old "provide a general but realistic
+    # summary" fallback produced two confident, entirely invented summaries
+    # attributed to named imams. For religious content a missing recording has
+    # to be a hard stop, not a graceful degradation — the tick retries hourly,
+    # which is the correct behaviour when a source is temporarily unreachable.
+    if not (makkah_uri and madinah_uri):
+        missing = [m for m, u in (("Makkah", makkah_uri), ("Madinah", madinah_uri)) if not u]
+        print(f"  ⚠️ no usable recording for: {', '.join(missing)} — refusing to "
+              f"summarise without audio; will retry next tick")
+        fallback = generate_fallback_content(sermon_data)
+        fallback["ai_failed"] = True
+        return fallback
+
+    prompt += ("\n\nI have provided recordings of both sermons. Base every summary strictly "
+               "on what is actually said in the audio. The FIRST recording is Makkah's khutbah, "
+               "the SECOND is Madinah's. Do not invent, infer or generalise content that you "
+               "cannot hear — if a recording is unclear, say so rather than filling the gap.")
             
     prompt += f"""\n\nFormat your response ONLY as JSON (no markdown):
 {{
@@ -764,7 +774,11 @@ SAW, or "peace be upon him" instead. Never place (ﷺ) after any other prophet
     try:
         # YouTube URLs are fetched/processed server-side inside this call,
         # which can take several minutes — far longer than uploaded audio.
-        response = requests.post(url, json=payload, timeout=600)
+        # Two ~35-minute videos. A healthy call is ~40s, but under degraded
+        # network conditions 2026-10-04 took 576s against a 600s ceiling —
+        # too close. Overlapping ticks are safe: the draft save and the send
+        # are both guarded by Firestore transactions.
+        response = requests.post(url, json=payload, timeout=1800)
         response.raise_for_status()
         
         result = response.json()
